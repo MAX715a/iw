@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX ULTRA LUXURY UI LIBRARY (Fixed Layout 2026 Engine)
--- 🌐 Full Clean & Fully Expanded Text Production Code
+-- 👑 MAX ULTRA LUXURY UI LIBRARY (Clean & Welcome Engine)
+-- 🌐 Full GitHub Production Code
 -- ============================================================
 
 local MAX_UI = {}
@@ -16,7 +16,7 @@ local LocalPlayer = Players.LocalPlayer
 local IsMobile    = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 local DeviceType  = IsMobile and "Mobile 📱" or "PC 🖥️"
 
--- 🔓 فك قفل الفريمات تلقائياً
+-- 🔓 فك قفل الفريمات
 pcall(function()
     if setfpscap then setfpscap(240)
     elseif set_fps_cap then set_fps_cap(240) end
@@ -34,16 +34,16 @@ local Theme = {
     Border      = Color3.fromRGB(30, 32, 42)
 }
 
--- 🎨 مكتبة الألوان بأسماء كاملة
+-- 🎨 مكتبة الألوان المجهزة
 local ColorPalette = {
-    { Name = "بنفسجي ملكي نيون", Color = Color3.fromRGB(138, 43, 226) },
-    { Name = "أزرق نيون مشع",     Color = Color3.fromRGB(0, 170, 255) },
-    { Name = "أحمر قرمزي ناري",   Color = Color3.fromRGB(255, 45, 85) },
-    { Name = "أخضر زمردي براق",   Color = Color3.fromRGB(0, 230, 118) },
-    { Name = "أصفر ذهبي ساطع",   Color = Color3.fromRGB(255, 193, 7) },
-    { Name = "وردي نيون ساحر",     Color = Color3.fromRGB(255, 0, 127) },
-    { Name = "سماوي ثلجي هادئ",   Color = Color3.fromRGB(0, 229, 255) },
-    { Name = "برتقالي ناري مميز",  Color = Color3.fromRGB(255, 109, 0) }
+    { Name = "بنفسجي ملكي", Color = Color3.fromRGB(138, 43, 226) },
+    { Name = "أزرق نيون",    Color = Color3.fromRGB(0, 170, 255) },
+    { Name = "أحمر قرمزي",  Color = Color3.fromRGB(255, 45, 85) },
+    { Name = "أخضر زمردي", Color = Color3.fromRGB(0, 230, 118) },
+    { Name = "أصفر ذهبي",  Color = Color3.fromRGB(255, 193, 7) },
+    { Name = "وردي نيون",    Color = Color3.fromRGB(255, 0, 127) },
+    { Name = "سماوي ثلجي", Color = Color3.fromRGB(0, 229, 255) },
+    { Name = "برتقالي ناري",Color = Color3.fromRGB(255, 109, 0) }
 }
 
 local function GetSmartGreeting()
@@ -63,18 +63,18 @@ function MAX_UI:CreateWindow(Options)
     local LogoId    = Options.Logo or "rbxassetid://6031075931"
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V8") then
-        ParentGui.MAX_LuxuryEngine_V8:Destroy()
+    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V9") then
+        ParentGui.MAX_LuxuryEngine_V9:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_LuxuryEngine_V8"
+    ScreenGui.Name = "MAX_LuxuryEngine_V9"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Parent = ParentGui
 
-    local DefaultSize = IsMobile and UDim2.new(0, 500, 0, 320) or UDim2.new(0, 640, 0, 420)
-    local DefaultPos  = IsMobile and UDim2.new(0.5, -250, 0.5, -160) or UDim2.new(0.5, -320, 0.5, -210)
+    local DefaultSize = IsMobile and UDim2.new(0, 480, 0, 300) or UDim2.new(0, 620, 0, 400)
+    local DefaultPos  = IsMobile and UDim2.new(0.5, -240, 0.5, -150) or UDim2.new(0.5, -310, 0.5, -200)
 
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
@@ -134,12 +134,12 @@ function MAX_UI:CreateWindow(Options)
         ReopenBtn.Visible = false
     end)
 
-    -- 🔔 نظام الإشعارات الفخم المعدل بالكامل (Modern Toast Notification)
+    -- 🔔 نظام الترحيب الانسيابي المخصص (Toast Welcome Notification)
     function MAX_UI:Notify(Title, Content, Duration)
         Duration = Duration or 3.5
         local NotifyFrame = Instance.new("Frame")
-        NotifyFrame.Size = UDim2.new(0, 250, 0, 54)
-        NotifyFrame.Position = UDim2.new(1, 20, 1, -80)
+        NotifyFrame.Size = UDim2.new(0, 240, 0, 52)
+        NotifyFrame.Position = UDim2.new(1, 20, 1, -75)
         NotifyFrame.BackgroundColor3 = Theme.Header
         NotifyFrame.ClipsDescendants = true
         NotifyFrame.Parent = ScreenGui
@@ -154,15 +154,15 @@ function MAX_UI:CreateWindow(Options)
         NStroke.Parent = NotifyFrame
 
         local NIcon = Instance.new("ImageLabel")
-        NIcon.Size = UDim2.new(0, 24, 0, 24)
-        NIcon.Position = UDim2.new(0, 10, 0, 10)
+        NIcon.Size = UDim2.new(0, 22, 0, 22)
+        NIcon.Position = UDim2.new(0, 10, 0, 8)
         NIcon.BackgroundTransparency = 1
         NIcon.Image = LogoId
         NIcon.Parent = NotifyFrame
 
         local NTitle = Instance.new("TextLabel")
-        NTitle.Size = UDim2.new(1, -44, 0, 18)
-        NTitle.Position = UDim2.new(0, 40, 0, 8)
+        NTitle.Size = UDim2.new(1, -40, 0, 20)
+        NTitle.Position = UDim2.new(0, 36, 0, 6)
         NTitle.BackgroundTransparency = 1
         NTitle.Text = Title
         NTitle.TextColor3 = Theme.Accent
@@ -172,8 +172,8 @@ function MAX_UI:CreateWindow(Options)
         NTitle.Parent = NotifyFrame
 
         local NText = Instance.new("TextLabel")
-        NText.Size = UDim2.new(1, -44, 0, 18)
-        NText.Position = UDim2.new(0, 40, 0, 26)
+        NText.Size = UDim2.new(1, -16, 0, 20)
+        NText.Position = UDim2.new(0, 10, 0, 26)
         NText.BackgroundTransparency = 1
         NText.Text = Content
         NText.TextColor3 = Theme.TextPrimary
@@ -189,11 +189,11 @@ function MAX_UI:CreateWindow(Options)
         TimeBar.BorderSizePixel = 0
         TimeBar.Parent = NotifyFrame
 
-        TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, -265, 1, -80)}):Play()
+        TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, -255, 1, -75)}):Play()
         TweenService:Create(TimeBar, TweenInfo.new(Duration, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 3)}):Play()
 
         task.delay(Duration, function()
-            TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, 20, 1, -80)}):Play()
+            TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, 20, 1, -75)}):Play()
             task.wait(0.35)
             NotifyFrame:Destroy()
         end)
@@ -610,7 +610,7 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🎨 قائمة الألوان العمودية الممتدة بالعرض الكامل (بدون أي تقطيع للكلمات)
+        -- 🎨 قائمة الألوان العمودية
         function TabElements:AddColorPicker(Text, Callback)
             Callback = Callback or function() end
 
@@ -702,6 +702,9 @@ function MAX_UI:CreateWindow(Options)
     SettingsTab:AddColorPicker("تحديد لون الثيم المفضل", function(selectedColor)
         ApplyColor(selectedColor)
     end)
+
+    -- 🌟 إطلاق إشعار الترحيب المباشر عند الفتح فقط
+    MAX_UI:Notify(GetSmartGreeting(), "مرحباً بك يا " .. LocalPlayer.DisplayName .. " في MAX HUB", 4)
 
     return WindowObj
 end
