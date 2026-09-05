@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX ULTRA LUXURY UI LIBRARY (No-Truncate 2026 Engine)
--- 🌐 Full Clean & Fixed Grid Production Code
+-- 👑 MAX ULTRA LUXURY UI LIBRARY (Clean Elements 2026 Engine)
+-- 🌐 Full Production Code (No Auto-Notifications on Buttons)
 -- ============================================================
 
 local MAX_UI = {}
@@ -34,7 +34,7 @@ local Theme = {
     Border      = Color3.fromRGB(30, 32, 42)
 }
 
--- 🎨 مكتبة الألوان بأسماء مباشرة
+-- 🎨 مكتبة الألوان المجهزة
 local ColorPalette = {
     { Name = "بنفسجي", Color = Color3.fromRGB(138, 43, 226) },
     { Name = "أزرق",   Color = Color3.fromRGB(0, 170, 255) },
@@ -63,18 +63,18 @@ function MAX_UI:CreateWindow(Options)
     local LogoId    = Options.Logo or "rbxassetid://6031075931"
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V6") then
-        ParentGui.MAX_LuxuryEngine_V6:Destroy()
+    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V7") then
+        ParentGui.MAX_LuxuryEngine_V7:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_LuxuryEngine_V6"
+    ScreenGui.Name = "MAX_LuxuryEngine_V7"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Parent = ParentGui
 
-    local DefaultSize = IsMobile and UDim2.new(0, 490, 0, 310) or UDim2.new(0, 630, 0, 410)
-    local DefaultPos  = IsMobile and UDim2.new(0.5, -245, 0.5, -155) or UDim2.new(0.5, -315, 0.5, -205)
+    local DefaultSize = IsMobile and UDim2.new(0, 480, 0, 300) or UDim2.new(0, 620, 0, 400)
+    local DefaultPos  = IsMobile and UDim2.new(0.5, -240, 0.5, -150) or UDim2.new(0.5, -310, 0.5, -200)
 
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
@@ -133,61 +133,6 @@ function MAX_UI:CreateWindow(Options)
         MainFrame.Visible = true
         ReopenBtn.Visible = false
     end)
-
-    -- 🔔 نظام الإشعارات
-    function MAX_UI:Notify(Title, Content, Duration)
-        Duration = Duration or 3.5
-        local NotifyFrame = Instance.new("Frame")
-        NotifyFrame.Size = UDim2.new(0, 240, 0, 52)
-        NotifyFrame.Position = UDim2.new(1, 20, 1, -75)
-        NotifyFrame.BackgroundColor3 = Theme.Background
-        NotifyFrame.Parent = ScreenGui
-
-        local NCorner = Instance.new("UICorner")
-        NCorner.CornerRadius = UDim.new(0, 10)
-        NCorner.Parent = NotifyFrame
-
-        local NStroke = Instance.new("UIStroke")
-        NStroke.Color = Theme.Accent
-        NStroke.Thickness = 1.2
-        NStroke.Parent = NotifyFrame
-
-        local NIcon = Instance.new("ImageLabel")
-        NIcon.Size = UDim2.new(0, 22, 0, 22)
-        NIcon.Position = UDim2.new(0, 10, 0, 8)
-        NIcon.BackgroundTransparency = 1
-        NIcon.Image = LogoId
-        NIcon.Parent = NotifyFrame
-
-        local NTitle = Instance.new("TextLabel")
-        NTitle.Size = UDim2.new(1, -40, 0, 20)
-        NTitle.Position = UDim2.new(0, 36, 0, 6)
-        NTitle.BackgroundTransparency = 1
-        NTitle.Text = Title
-        NTitle.TextColor3 = Theme.Accent
-        NTitle.Font = Enum.Font.GothamBold
-        NTitle.TextSize = 11
-        NTitle.TextXAlignment = Enum.TextXAlignment.Left
-        NTitle.Parent = NotifyFrame
-
-        local NText = Instance.new("TextLabel")
-        NText.Size = UDim2.new(1, -16, 0, 20)
-        NText.Position = UDim2.new(0, 10, 0, 26)
-        NText.BackgroundTransparency = 1
-        NText.Text = Content
-        NText.TextColor3 = Theme.TextPrimary
-        NText.Font = Enum.Font.GothamMedium
-        NText.TextSize = 10
-        NText.TextXAlignment = Enum.TextXAlignment.Left
-        NText.Parent = NotifyFrame
-
-        TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, -255, 1, -75)}):Play()
-        task.delay(Duration, function()
-            TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, 20, 1, -75)}):Play()
-            task.wait(0.35)
-            NotifyFrame:Destroy()
-        end)
-    end
 
     -- 📊 الهيدر العلوي
     local Topbar = Instance.new("Frame")
@@ -303,7 +248,7 @@ function MAX_UI:CreateWindow(Options)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    -- 👑 بطاقة الترحيب الجانبية
+    -- 👑 بطاقة الترحيب الجانبية الفاخرة
     local WelcomeCard = Instance.new("Frame")
     WelcomeCard.Size = UDim2.new(1, -12, 0, 50)
     WelcomeCard.Position = UDim2.new(0, 6, 0, 6)
@@ -600,7 +545,7 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🎨 لوحة اختيار الألوان الموسعة المصممة خصيصاً للجوال والبيسي (كاملة وبدون قطعات)
+        -- 🎨 لوحة اختيار الألوان الموسعة
         function TabElements:AddColorPicker(Text, Callback)
             Callback = Callback or function() end
 
@@ -686,7 +631,6 @@ function MAX_UI:CreateWindow(Options)
         CardStroke.Color = col
         GreetingLabel.TextColor3 = col
         for _, updateFunc in ipairs(WindowObj.Accents) do updateFunc(col) end
-        MAX_UI:Notify("👑 MAX ENGINE", "تم تحديث ثيم الواجهة بنجاح!", 2)
     end
 
     SettingsTab:AddColorPicker("تحديد لون الثيم المفضل", function(selectedColor)
