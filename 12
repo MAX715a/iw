@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX ULTRA LUXURY UI LIBRARY (Fast & Clean 2026 Engine)
--- 🌐 Full GitHub Production Code (PC & Mobile Adaptive)
+-- 👑 MAX ULTRA LUXURY UI ENGINE (Universal Roblox GUI)
+-- 🌐 Full Clean & Optimized Production Code
 -- ============================================================
 
 local MAX_UI = {}
@@ -34,7 +34,7 @@ local Theme = {
     Border      = Color3.fromRGB(30, 32, 42)
 }
 
--- 🎨 مكتبة الألوان الضخمة المجهزة
+-- 🎨 مكتبة الألوان المجهزة
 local ColorPalette = {
     { Name = "بنفسجي ملكي", Color = Color3.fromRGB(138, 43, 226) },
     { Name = "أزرق نيون",    Color = Color3.fromRGB(0, 170, 255) },
@@ -64,12 +64,12 @@ function MAX_UI:CreateWindow(Options)
     local LogoId    = Options.Logo or "rbxassetid://6031075931"
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V4") then
-        ParentGui.MAX_LuxuryEngine_V4:Destroy()
+    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V5") then
+        ParentGui.MAX_LuxuryEngine_V5:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_LuxuryEngine_V4"
+    ScreenGui.Name = "MAX_LuxuryEngine_V5"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Parent = ParentGui
@@ -136,7 +136,7 @@ function MAX_UI:CreateWindow(Options)
         ReopenBtn.Visible = false
     end)
 
-    -- 🔔 نظام الإشعارات الفخم المستقل (Toast Notifications)
+    -- 🔔 نظام الإشعارات
     function MAX_UI:Notify(Title, Content, Duration)
         Duration = Duration or 3.5
         local NotifyFrame = Instance.new("Frame")
@@ -191,7 +191,7 @@ function MAX_UI:CreateWindow(Options)
         end)
     end
 
-    -- 📊 الهيدر العلوي والشريط البرمجي
+    -- 📊 الهيدر العلوي
     local Topbar = Instance.new("Frame")
     Topbar.Size = UDim2.new(1, -16, 0, 34)
     Topbar.Position = UDim2.new(0, 8, 0, 8)
@@ -220,14 +220,14 @@ function MAX_UI:CreateWindow(Options)
     StatsLabel.Text = TitleText .. "  |  ⚡ FPS: ...  |  📡 Ping: ..."
     StatsLabel.Parent = Topbar
 
-    -- 🔘 أزرار التحكم الفخمة الحقيقية (Minimalist Modern Controls)
+    -- 🔘 أزرار التحكم الفخمة
     local ControlFrame = Instance.new("Frame")
     ControlFrame.Size = UDim2.new(0, 68, 1, 0)
     ControlFrame.Position = UDim2.new(1, -72, 0, 0)
     ControlFrame.BackgroundTransparency = 1
     ControlFrame.Parent = Topbar
 
-    -- زر التصغير (Minus Icon Frame)
+    -- زر التصغير
     local MinimizeBtn = Instance.new("TextButton")
     MinimizeBtn.Size = UDim2.new(0, 26, 0, 22)
     MinimizeBtn.Position = UDim2.new(0, 4, 0.5, -11)
@@ -247,7 +247,7 @@ function MAX_UI:CreateWindow(Options)
     MinLine.BorderSizePixel = 0
     MinLine.Parent = MinimizeBtn
 
-    -- زر الإغلاق (Close Icon Frame)
+    -- زر الإغلاق
     local CloseBtn = Instance.new("TextButton")
     CloseBtn.Size = UDim2.new(0, 26, 0, 22)
     CloseBtn.Position = UDim2.new(0, 36, 0.5, -11)
@@ -295,7 +295,7 @@ function MAX_UI:CreateWindow(Options)
         end
     end)
 
-    -- 📁 الشريط الجانبي (Sidebar)
+    -- 📁 الشريط الجانبي
     local SidebarWidth = IsMobile and 145 or 175
     local Sidebar = Instance.new("Frame")
     Sidebar.Size = UDim2.new(0, SidebarWidth, 1, -54)
@@ -307,7 +307,7 @@ function MAX_UI:CreateWindow(Options)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    -- 👑 بطاقة الترحيب الجانبية الفاخرة (VIP Welcome Card)
+    -- 👑 بطاقة الترحيب الجانبية
     local WelcomeCard = Instance.new("Frame")
     WelcomeCard.Size = UDim2.new(1, -12, 0, 50)
     WelcomeCard.Position = UDim2.new(0, 6, 0, 6)
@@ -356,6 +356,7 @@ function MAX_UI:CreateWindow(Options)
     UserDisplayName.Font = Enum.Font.GothamBold
     UserDisplayName.TextSize = 10
     UserDisplayName.TextXAlignment = Enum.TextXAlignment.Left
+    UserDisplayName.TextTruncate = Enum.TextTruncate.AtEnd
     UserDisplayName.Parent = WelcomeCard
 
     local BadgeLabel = Instance.new("TextLabel")
@@ -419,6 +420,7 @@ function MAX_UI:CreateWindow(Options)
         TabTitle.Font = Enum.Font.GothamMedium
         TabTitle.TextSize = IsMobile and 10 or 11
         TabTitle.TextXAlignment = Enum.TextXAlignment.Left
+        TabTitle.TextTruncate = Enum.TextTruncate.AtEnd
         TabTitle.Parent = TabButton
 
         local PageFrame = Instance.new("ScrollingFrame")
@@ -458,6 +460,7 @@ function MAX_UI:CreateWindow(Options)
             Btn.TextColor3 = Theme.TextPrimary
             Btn.Font = Enum.Font.GothamBold
             Btn.TextSize = 11
+            Btn.TextTruncate = Enum.TextTruncate.AtEnd
             Btn.Parent = PageFrame
 
             local Corner = Instance.new("UICorner")
@@ -494,6 +497,7 @@ function MAX_UI:CreateWindow(Options)
             Label.Font = Enum.Font.GothamMedium
             Label.TextSize = 11
             Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.TextTruncate = Enum.TextTruncate.AtEnd
             Label.Parent = Frame
 
             local Indicator = Instance.new("TextButton")
@@ -542,6 +546,7 @@ function MAX_UI:CreateWindow(Options)
             Label.Font = Enum.Font.GothamMedium
             Label.TextSize = 11
             Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.TextTruncate = Enum.TextTruncate.AtEnd
             Label.Parent = Frame
 
             local ValLabel = Instance.new("TextLabel")
@@ -636,6 +641,7 @@ function MAX_UI:CreateWindow(Options)
                 ColorBtn.Font = Enum.Font.GothamMedium
                 ColorBtn.TextSize = 10
                 ColorBtn.TextXAlignment = Enum.TextXAlignment.Left
+                ColorBtn.TextTruncate = Enum.TextTruncate.AtEnd
                 ColorBtn.Parent = GridFrame
 
                 local Corner = Instance.new("UICorner")
