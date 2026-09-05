@@ -1,0 +1,363 @@
+-- ============================================================
+-- 👑 MAX LUXURY UI LIBRARY (Universal Edition)
+-- 🌐 GitHub Executable Loadstring
+-- ============================================================
+
+local MAX_UI = {}
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+
+-- ألوان الواجهة الافتراضية (قابلة للتغيير من الإعدادات)
+local Theme = {
+    Background = Color3.fromRGB(15, 15, 20),
+    Sidebar = Color3.fromRGB(10, 10, 14),
+    Accent = Color3.fromRGB(140, 80, 255), -- اللون الرئيسي (المميز)
+    Text = Color3.fromRGB(240, 240, 245),
+    DarkText = Color3.fromRGB(150, 150, 160),
+    ItemBg = Color3.fromRGB(22, 22, 30),
+    ItemHover = Color3.fromRGB(30, 30, 42)
+}
+
+function MAX_UI:CreateWindow(Options)
+    Options = Options or {}
+    local TitleText = Options.Name or "MAX HUB | LUXURY"
+    local LogoId = Options.Logo or "rbxassetid://6031075931"
+
+    -- حماية من التكرار
+    local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
+    if ParentGui:FindFirstChild("MAX_LuxuryUI") then
+        ParentGui.MAX_LuxuryUI:Destroy()
+    end
+
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "MAX_LuxuryUI"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.Parent = ParentGui
+
+    -- النافذة الرئيسية
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Name = "MainFrame"
+    MainFrame.Size = UDim2.new(0, 580, 0, 360)
+    MainFrame.Position = UDim2.new(0.5, -290, 0.5, -180)
+    MainFrame.BackgroundColor3 = Theme.Background
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Active = true
+    MainFrame.Draggable = true
+    MainFrame.ClipsDescendants = true
+    MainFrame.Parent = ScreenGui
+
+    local MainCorner = Instance.new("UICorner")
+    MainCorner.CornerRadius = UDim.new(0, 10)
+    MainCorner.Parent = MainFrame
+
+    local MainStroke = Instance.new("UIStroke")
+    MainStroke.Color = Theme.Accent
+    MainStroke.Thickness = 1.5
+    MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    MainStroke.Parent = MainFrame
+
+    -- الشريط الجانبي (Sidebar)
+    local Sidebar = Instance.new("Frame")
+    Sidebar.Name = "Sidebar"
+    Sidebar.Size = UDim2.new(0, 160, 1, 0)
+    Sidebar.BackgroundColor3 = Theme.Sidebar
+    Sidebar.BorderSizePixel = 0
+    Sidebar.Parent = MainFrame
+
+    local SidebarCorner = Instance.new("UICorner")
+    SidebarCorner.CornerRadius = UDim.new(0, 10)
+    SidebarCorner.Parent = Sidebar
+
+    -- اللوجو والعنوان
+    local LogoImage = Instance.new("ImageLabel")
+    LogoImage.Size = UDim2.new(0, 32, 0, 32)
+    LogoImage.Position = UDim2.new(0, 12, 0, 12)
+    LogoImage.BackgroundTransparency = 1
+    LogoImage.Image = LogoId
+    LogoImage.Parent = Sidebar
+
+    local TitleLabel = Instance.new("TextLabel")
+    TitleLabel.Size = UDim2.new(1, -55, 0, 32)
+    TitleLabel.Position = UDim2.new(0, 48, 0, 12)
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Text = TitleText
+    TitleLabel.TextColor3 = Theme.Text
+    TitleLabel.Font = Enum.Font.GothamBold
+    TitleLabel.TextSize = 13
+    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TitleLabel.Parent = Sidebar
+
+    -- حاوية الأقسام (Tabs Container)
+    local TabButtonContainer = Instance.new("ScrollingFrame")
+    TabButtonContainer.Size = UDim2.new(1, -16, 1, -60)
+    TabButtonContainer.Position = UDim2.new(0, 8, 0, 52)
+    TabButtonContainer.BackgroundTransparency = 1
+    TabButtonContainer.ScrollBarThickness = 0
+    TabButtonContainer.Parent = Sidebar
+
+    local TabListLayout = Instance.new("UIListLayout")
+    TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TabListLayout.Padding = UDim.new(0, 6)
+    TabListLayout.Parent = TabButtonContainer
+
+    -- منطقة المحتوى الرئيسي
+    local ContentArea = Instance.new("Frame")
+    ContentArea.Name = "ContentArea"
+    ContentArea.Size = UDim2.new(1, -170, 1, -20)
+    ContentArea.Position = UDim2.new(0, 165, 0, 10)
+    ContentArea.BackgroundTransparency = 1
+    ContentArea.Parent = MainFrame
+
+    local WindowObj = {
+        Tabs = {},
+        CurrentTab = nil
+    }
+
+    -- إضافة تبويب جديد
+    function WindowObj:CreateTab(TabName)
+        local TabButton = Instance.new("TextButton")
+        TabButton.Size = UDim2.new(1, 0, 0, 32)
+        TabButton.BackgroundColor3 = Theme.ItemBg
+        TabButton.Text = "  " .. TabName
+        TabButton.TextColor3 = Theme.DarkText
+        TabButton.Font = Enum.Font.GothamMedium
+        TabButton.TextSize = 12
+        TabButton.TextXAlignment = Enum.TextXAlignment.Left
+        TabButton.AutoButtonColor = false
+        TabButton.Parent = TabButtonContainer
+
+        local BtnCorner = Instance.new("UICorner")
+        BtnCorner.CornerRadius = UDim.new(0, 6)
+        BtnCorner.Parent = TabButton
+
+        local PageFrame = Instance.new("ScrollingFrame")
+        PageFrame.Size = UDim2.new(1, 0, 1, 0)
+        PageFrame.BackgroundTransparency = 1
+        PageFrame.Visible = false
+        PageFrame.ScrollBarThickness = 2
+        PageFrame.ScrollBarImageColor3 = Theme.Accent
+        PageFrame.Parent = ContentArea
+
+        local PageListLayout = Instance.new("UIListLayout")
+        PageListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        PageListLayout.Padding = UDim.new(0, 8)
+        PageListLayout.Parent = PageFrame
+
+        TabButton.MouseButton1Click:Connect(function()
+            for _, tab in ipairs(WindowObj.Tabs) do
+                tab.Page.Visible = false
+                tab.Button.TextColor3 = Theme.DarkText
+                tab.Button.BackgroundColor3 = Theme.ItemBg
+            end
+            PageFrame.Visible = true
+            TabButton.TextColor3 = Theme.Text
+            TabButton.BackgroundColor3 = Theme.Accent
+        end)
+
+        local TabElements = {
+            Page = PageFrame,
+            Button = TabButton
+        }
+
+        -- عنصر 1: زر (Button)
+        function TabElements:AddButton(Text, Callback)
+            Callback = Callback or function() end
+            local Btn = Instance.new("TextButton")
+            Btn.Size = UDim2.new(1, -10, 0, 34)
+            Btn.BackgroundColor3 = Theme.ItemBg
+            Btn.Text = Text
+            Btn.TextColor3 = Theme.Text
+            Btn.Font = Enum.Font.GothamBold
+            Btn.TextSize = 12
+            Btn.Parent = PageFrame
+
+            local Corner = Instance.new("UICorner")
+            Corner.CornerRadius = UDim.new(0, 6)
+            Corner.Parent = Btn
+
+            Btn.MouseButton1Click:Connect(function()
+                TweenService:Create(Btn, TweenInfo.new(0.1), {BackgroundColor3 = Theme.Accent}):Play()
+                task.wait(0.1)
+                TweenService:Create(Btn, TweenInfo.new(0.1), {BackgroundColor3 = Theme.ItemBg}):Play()
+                Callback()
+            end)
+        end
+
+        -- عنصر 2: مفتاح تفعيل (Toggle)
+        function TabElements:AddToggle(Text, Default, Callback)
+            Callback = Callback or function() end
+            local Toggled = Default or false
+
+            local Frame = Instance.new("Frame")
+            Frame.Size = UDim2.new(1, -10, 0, 34)
+            Frame.BackgroundColor3 = Theme.ItemBg
+            Frame.Parent = PageFrame
+
+            local Corner = Instance.new("UICorner")
+            Corner.CornerRadius = UDim.new(0, 6)
+            Corner.Parent = Frame
+
+            local Label = Instance.new("TextLabel")
+            Label.Size = UDim2.new(1, -50, 1, 0)
+            Label.Position = UDim2.new(0, 10, 0, 0)
+            Label.BackgroundTransparency = 1
+            Label.Text = Text
+            Label.TextColor3 = Theme.Text
+            Label.Font = Enum.Font.GothamMedium
+            Label.TextSize = 12
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.Parent = Frame
+
+            local Indicator = Instance.new("TextButton")
+            Indicator.Size = UDim2.new(0, 20, 0, 20)
+            Indicator.Position = UDim2.new(1, -30, 0.5, -10)
+            Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(40, 40, 50)
+            Indicator.Text = ""
+            Indicator.Parent = Frame
+
+            local IndCorner = Instance.new("UICorner")
+            IndCorner.CornerRadius = UDim.new(0, 4)
+            IndCorner.Parent = Indicator
+
+            local function UpdateToggle()
+                Toggled = not Toggled
+                Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(40, 40, 50)
+                Callback(Toggled)
+            end
+
+            Indicator.MouseButton1Click:Connect(UpdateToggle)
+            Frame.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    UpdateToggle()
+                end
+            end)
+        end
+
+        -- عنصر 3: شريط سحب (Slider)
+        function TabElements:AddSlider(Text, Min, Max, Default, Callback)
+            Callback = Callback or function() end
+            local Value = Default or Min
+
+            local Frame = Instance.new("Frame")
+            Frame.Size = UDim2.new(1, -10, 0, 45)
+            Frame.BackgroundColor3 = Theme.ItemBg
+            Frame.Parent = PageFrame
+
+            local Corner = Instance.new("UICorner")
+            Corner.CornerRadius = UDim.new(0, 6)
+            Corner.Parent = Frame
+
+            local Label = Instance.new("TextLabel")
+            Label.Size = UDim2.new(1, -60, 0, 20)
+            Label.Position = UDim2.new(0, 10, 0, 4)
+            Label.BackgroundTransparency = 1
+            Label.Text = Text
+            Label.TextColor3 = Theme.Text
+            Label.Font = Enum.Font.GothamMedium
+            Label.TextSize = 12
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.Parent = Frame
+
+            local ValLabel = Instance.new("TextLabel")
+            ValLabel.Size = UDim2.new(0, 50, 0, 20)
+            ValLabel.Position = UDim2.new(1, -55, 0, 4)
+            ValLabel.BackgroundTransparency = 1
+            ValLabel.Text = tostring(Value)
+            ValLabel.TextColor3 = Theme.Accent
+            ValLabel.Font = Enum.Font.GothamBold
+            ValLabel.TextSize = 12
+            ValLabel.Parent = Frame
+
+            local SliderBar = Instance.new("Frame")
+            SliderBar.Size = UDim2.new(1, -20, 0, 6)
+            SliderBar.Position = UDim2.new(0, 10, 1, -12)
+            SliderBar.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+            SliderBar.Parent = Frame
+
+            local SliderFill = Instance.new("Frame")
+            SliderFill.Size = UDim2.new((Value - Min)/(Max - Min), 0, 1, 0)
+            SliderFill.BackgroundColor3 = Theme.Accent
+            SliderFill.BorderSizePixel = 0
+            SliderFill.Parent = SliderBar
+
+            local Dragging = false
+
+            local function Update(input)
+                local pos = math.clamp((input.Position.X - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
+                Value = math.floor(Min + (Max - Min) * pos)
+                ValLabel.Text = tostring(Value)
+                SliderFill.Size = UDim2.new(pos, 0, 1, 0)
+                Callback(Value)
+            end
+
+            SliderBar.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    Dragging = true
+                    Update(input)
+                end
+            end)
+
+            UserInputService.InputEnded:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    Dragging = false
+                end
+            end)
+
+            UserInputService.InputChanged:Connect(function(input)
+                if Dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+                    Update(input)
+                end
+            end)
+        end
+
+        table.insert(WindowObj.Tabs, TabElements)
+
+        -- فتح أول تبويب تلقائياً
+        if #WindowObj.Tabs == 1 then
+            PageFrame.Visible = true
+            TabButton.TextColor3 = Theme.Text
+            TabButton.BackgroundColor3 = Theme.Accent
+        end
+
+        return TabElements
+    end
+
+    -- ============================================================
+    -- ⚙️ تبويب الإعدادات التلقائي (تغيير الحجم والألوان)
+    -- ============================================================
+    local SettingsTab = WindowObj:CreateTab("⚙️ الإعدادات")
+
+    SettingsTab:AddButton("🎨 تغيير لون الحدود (أزرق فخم)", function()
+        MainStroke.Color = Color3.fromRGB(0, 150, 255)
+    end)
+
+    SettingsTab:AddButton("🎨 تغيير لون الحدود (بنفسجي نيون)", function()
+        MainStroke.Color = Color3.fromRGB(140, 80, 255)
+    end)
+
+    SettingsTab:AddButton("🎨 تغيير لون الحدود (أحمر رياضي)", function()
+        MainStroke.Color = Color3.fromRGB(255, 50, 50)
+    end)
+
+    SettingsTab:AddButton("📱 حجم الواجهة (صغير للجوال)", function()
+        MainFrame.Size = UDim2.new(0, 460, 0, 280)
+    end)
+
+    SettingsTab:AddButton("🖥️ حجم الواجهة (كبير للبيسي)", function()
+        MainFrame.Size = UDim2.new(0, 580, 0, 360)
+    end)
+
+    SettingsTab:AddButton("👁️ إخفاء / إظهار الواجهة", function()
+        MainFrame.Visible = not MainFrame.Visible
+    end)
+
+    return WindowObj
+end
+
+return MAX_UI
