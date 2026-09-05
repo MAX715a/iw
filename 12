@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX ULTRA LUXURY UI ENGINE (Universal Roblox GUI)
--- 🌐 Full Clean & Optimized Production Code
+-- 👑 MAX ULTRA LUXURY UI LIBRARY (No-Truncate 2026 Engine)
+-- 🌐 Full Clean & Fixed Grid Production Code
 -- ============================================================
 
 local MAX_UI = {}
@@ -16,37 +16,36 @@ local LocalPlayer = Players.LocalPlayer
 local IsMobile    = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 local DeviceType  = IsMobile and "Mobile 📱" or "PC 🖥️"
 
--- 🔓 فك قفل الفريمات تلقائياً
+-- 🔓 فك قفل الفريمات
 pcall(function()
     if setfpscap then setfpscap(240)
     elseif set_fps_cap then set_fps_cap(240) end
 end)
 
--- 🎨 ثيم الألوان الأساسي المريح للعين
+-- 🎨 ثيم الألوان الأساسي
 local Theme = {
     Background  = Color3.fromRGB(11, 12, 16),
     Sidebar     = Color3.fromRGB(8, 9, 12),
     Header      = Color3.fromRGB(15, 16, 22),
-    Accent      = Color3.fromRGB(138, 43, 226), -- بنفسجي ملكي نيون
+    Accent      = Color3.fromRGB(138, 43, 226),
     TextPrimary = Color3.fromRGB(255, 255, 255),
     TextDark    = Color3.fromRGB(160, 165, 180),
     ItemBg      = Color3.fromRGB(18, 19, 26),
     Border      = Color3.fromRGB(30, 32, 42)
 }
 
--- 🎨 مكتبة الألوان المجهزة
+-- 🎨 مكتبة الألوان بأسماء مباشرة
 local ColorPalette = {
-    { Name = "بنفسجي ملكي", Color = Color3.fromRGB(138, 43, 226) },
-    { Name = "أزرق نيون",    Color = Color3.fromRGB(0, 170, 255) },
-    { Name = "أحمر قرمزي",  Color = Color3.fromRGB(255, 45, 85) },
-    { Name = "أخضر زمردي", Color = Color3.fromRGB(0, 230, 118) },
-    { Name = "أصفر ذهبي",  Color = Color3.fromRGB(255, 193, 7) },
-    { Name = "وردي نيون",    Color = Color3.fromRGB(255, 0, 127) },
-    { Name = "سماوي ثلجي", Color = Color3.fromRGB(0, 229, 255) },
-    { Name = "برتقالي ناري",Color = Color3.fromRGB(255, 109, 0) }
+    { Name = "بنفسجي", Color = Color3.fromRGB(138, 43, 226) },
+    { Name = "أزرق",   Color = Color3.fromRGB(0, 170, 255) },
+    { Name = "أحمر",   Color = Color3.fromRGB(255, 45, 85) },
+    { Name = "أخضر",  Color = Color3.fromRGB(0, 230, 118) },
+    { Name = "أصفر",  Color = Color3.fromRGB(255, 193, 7) },
+    { Name = "وردي",   Color = Color3.fromRGB(255, 0, 127) },
+    { Name = "سماوي",  Color = Color3.fromRGB(0, 229, 255) },
+    { Name = "برتقالي", Color = Color3.fromRGB(255, 109, 0) }
 }
 
--- 🧠 تحية ذكية حسب الوقت اللحظي
 local function GetSmartGreeting()
     local hour = tonumber(os.date("%H")) or 12
     if hour >= 5 and hour < 12 then
@@ -64,20 +63,19 @@ function MAX_UI:CreateWindow(Options)
     local LogoId    = Options.Logo or "rbxassetid://6031075931"
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V5") then
-        ParentGui.MAX_LuxuryEngine_V5:Destroy()
+    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V6") then
+        ParentGui.MAX_LuxuryEngine_V6:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_LuxuryEngine_V5"
+    ScreenGui.Name = "MAX_LuxuryEngine_V6"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Parent = ParentGui
 
-    local DefaultSize = IsMobile and UDim2.new(0, 480, 0, 300) or UDim2.new(0, 620, 0, 400)
-    local DefaultPos  = IsMobile and UDim2.new(0.5, -240, 0.5, -150) or UDim2.new(0.5, -310, 0.5, -200)
+    local DefaultSize = IsMobile and UDim2.new(0, 490, 0, 310) or UDim2.new(0, 630, 0, 410)
+    local DefaultPos  = IsMobile and UDim2.new(0.5, -245, 0.5, -155) or UDim2.new(0.5, -315, 0.5, -205)
 
-    -- النافذة الرئيسية
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
     MainFrame.Size = DefaultSize
@@ -98,7 +96,7 @@ function MAX_UI:CreateWindow(Options)
     MainStroke.Thickness = 1.5
     MainStroke.Parent = MainFrame
 
-    -- 🔲 زر التصغير المربع بالشعار
+    -- 🔲 زر التصغير المربع
     local ReopenBtn = Instance.new("Frame")
     ReopenBtn.Name = "ReopenSquare"
     ReopenBtn.Size = UDim2.new(0, 46, 0, 46)
@@ -220,14 +218,13 @@ function MAX_UI:CreateWindow(Options)
     StatsLabel.Text = TitleText .. "  |  ⚡ FPS: ...  |  📡 Ping: ..."
     StatsLabel.Parent = Topbar
 
-    -- 🔘 أزرار التحكم الفخمة
+    -- 🔘 أزرار التحكم
     local ControlFrame = Instance.new("Frame")
     ControlFrame.Size = UDim2.new(0, 68, 1, 0)
     ControlFrame.Position = UDim2.new(1, -72, 0, 0)
     ControlFrame.BackgroundTransparency = 1
     ControlFrame.Parent = Topbar
 
-    -- زر التصغير
     local MinimizeBtn = Instance.new("TextButton")
     MinimizeBtn.Size = UDim2.new(0, 26, 0, 22)
     MinimizeBtn.Position = UDim2.new(0, 4, 0.5, -11)
@@ -247,7 +244,6 @@ function MAX_UI:CreateWindow(Options)
     MinLine.BorderSizePixel = 0
     MinLine.Parent = MinimizeBtn
 
-    -- زر الإغلاق
     local CloseBtn = Instance.new("TextButton")
     CloseBtn.Size = UDim2.new(0, 26, 0, 22)
     CloseBtn.Position = UDim2.new(0, 36, 0.5, -11)
@@ -277,7 +273,7 @@ function MAX_UI:CreateWindow(Options)
         ScreenGui:Destroy()
     end)
 
-    -- حساب الفريمات اللحظية
+    -- حساب الفريمات
     local frameCount = 0
     local lastTime = tick()
     RunService.RenderStepped:Connect(function()
@@ -356,7 +352,6 @@ function MAX_UI:CreateWindow(Options)
     UserDisplayName.Font = Enum.Font.GothamBold
     UserDisplayName.TextSize = 10
     UserDisplayName.TextXAlignment = Enum.TextXAlignment.Left
-    UserDisplayName.TextTruncate = Enum.TextTruncate.AtEnd
     UserDisplayName.Parent = WelcomeCard
 
     local BadgeLabel = Instance.new("TextLabel")
@@ -420,7 +415,6 @@ function MAX_UI:CreateWindow(Options)
         TabTitle.Font = Enum.Font.GothamMedium
         TabTitle.TextSize = IsMobile and 10 or 11
         TabTitle.TextXAlignment = Enum.TextXAlignment.Left
-        TabTitle.TextTruncate = Enum.TextTruncate.AtEnd
         TabTitle.Parent = TabButton
 
         local PageFrame = Instance.new("ScrollingFrame")
@@ -433,7 +427,7 @@ function MAX_UI:CreateWindow(Options)
 
         local PageListLayout = Instance.new("UIListLayout")
         PageListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        PageListLayout.Padding = UDim.new(0, 6)
+        PageListLayout.Padding = UDim.new(0, 8)
         PageListLayout.Parent = PageFrame
 
         TabButton.MouseButton1Click:Connect(function()
@@ -460,7 +454,6 @@ function MAX_UI:CreateWindow(Options)
             Btn.TextColor3 = Theme.TextPrimary
             Btn.Font = Enum.Font.GothamBold
             Btn.TextSize = 11
-            Btn.TextTruncate = Enum.TextTruncate.AtEnd
             Btn.Parent = PageFrame
 
             local Corner = Instance.new("UICorner")
@@ -497,7 +490,6 @@ function MAX_UI:CreateWindow(Options)
             Label.Font = Enum.Font.GothamMedium
             Label.TextSize = 11
             Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.TextTruncate = Enum.TextTruncate.AtEnd
             Label.Parent = Frame
 
             local Indicator = Instance.new("TextButton")
@@ -546,7 +538,6 @@ function MAX_UI:CreateWindow(Options)
             Label.Font = Enum.Font.GothamMedium
             Label.TextSize = 11
             Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.TextTruncate = Enum.TextTruncate.AtEnd
             Label.Parent = Frame
 
             local ValLabel = Instance.new("TextLabel")
@@ -609,39 +600,35 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🎨 لوحة اختيار الألوان البصرية البارزة
+        -- 🎨 لوحة اختيار الألوان الموسعة المصممة خصيصاً للجوال والبيسي (كاملة وبدون قطعات)
         function TabElements:AddColorPicker(Text, Callback)
             Callback = Callback or function() end
 
             local TitleLabel = Instance.new("TextLabel")
-            TitleLabel.Size = UDim2.new(1, -6, 0, 20)
+            TitleLabel.Size = UDim2.new(1, -6, 0, 22)
             TitleLabel.BackgroundTransparency = 1
             TitleLabel.Text = "🎨 " .. Text
             TitleLabel.TextColor3 = Theme.TextPrimary
             TitleLabel.Font = Enum.Font.GothamBold
-            TitleLabel.TextSize = 11
+            TitleLabel.TextSize = 12
             TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
             TitleLabel.Parent = PageFrame
 
             local GridFrame = Instance.new("Frame")
-            GridFrame.Size = UDim2.new(1, -6, 0, math.ceil(#ColorPalette / 2) * 32)
+            GridFrame.Size = UDim2.new(1, -6, 0, math.ceil(#ColorPalette / 2) * 38)
             GridFrame.BackgroundTransparency = 1
             GridFrame.Parent = PageFrame
 
             local GridLayout = Instance.new("UIGridLayout")
-            GridLayout.CellSize = UDim2.new(0.48, 0, 0, 28)
-            GridLayout.CellPadding = UDim2.new(0.04, 0, 0, 4)
+            GridLayout.CellSize = UDim2.new(0.48, 0, 0, 34)
+            GridLayout.CellPadding = UDim2.new(0.03, 0, 0, 5)
             GridLayout.Parent = GridFrame
 
             for _, item in ipairs(ColorPalette) do
                 local ColorBtn = Instance.new("TextButton")
                 ColorBtn.BackgroundColor3 = Theme.ItemBg
-                ColorBtn.Text = "      " .. item.Name
-                ColorBtn.TextColor3 = Theme.TextPrimary
-                ColorBtn.Font = Enum.Font.GothamMedium
-                ColorBtn.TextSize = 10
-                ColorBtn.TextXAlignment = Enum.TextXAlignment.Left
-                ColorBtn.TextTruncate = Enum.TextTruncate.AtEnd
+                ColorBtn.Text = ""
+                ColorBtn.AutoButtonColor = false
                 ColorBtn.Parent = GridFrame
 
                 local Corner = Instance.new("UICorner")
@@ -649,14 +636,25 @@ function MAX_UI:CreateWindow(Options)
                 Corner.Parent = ColorBtn
 
                 local Box = Instance.new("Frame")
-                Box.Size = UDim2.new(0, 14, 0, 14)
-                Box.Position = UDim2.new(0, 6, 0.5, -7)
+                Box.Size = UDim2.new(0, 18, 0, 18)
+                Box.Position = UDim2.new(0, 8, 0.5, -9)
                 Box.BackgroundColor3 = item.Color
                 Box.Parent = ColorBtn
 
                 local BoxCorner = Instance.new("UICorner")
                 BoxCorner.CornerRadius = UDim.new(0, 4)
                 BoxCorner.Parent = Box
+
+                local BtnText = Instance.new("TextLabel")
+                BtnText.Size = UDim2.new(1, -34, 1, 0)
+                BtnText.Position = UDim2.new(0, 32, 0, 0)
+                BtnText.BackgroundTransparency = 1
+                BtnText.Text = item.Name
+                BtnText.TextColor3 = Theme.TextPrimary
+                BtnText.Font = Enum.Font.GothamMedium
+                BtnText.TextSize = 11
+                BtnText.TextXAlignment = Enum.TextXAlignment.Left
+                BtnText.Parent = ColorBtn
 
                 ColorBtn.MouseButton1Click:Connect(function()
                     Callback(item.Color)
@@ -688,7 +686,7 @@ function MAX_UI:CreateWindow(Options)
         CardStroke.Color = col
         GreetingLabel.TextColor3 = col
         for _, updateFunc in ipairs(WindowObj.Accents) do updateFunc(col) end
-        MAX_UI:Notify("👑 MAX ENGINE", "تم تحديث الثيم بنجاح!", 2)
+        MAX_UI:Notify("👑 MAX ENGINE", "تم تحديث ثيم الواجهة بنجاح!", 2)
     end
 
     SettingsTab:AddColorPicker("تحديد لون الثيم المفضل", function(selectedColor)
