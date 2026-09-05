@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX ULTRA LUXURY UI LIBRARY (Fast & No-Lag 2026 Engine)
--- 🌐 Full GitHub Production Code (Mobile & PC Universal)
+-- 👑 MAX ULTRA LUXURY ENGINE (Universal 2026 Edition)
+-- 🌐 Full GitHub Production Code (PC & Mobile Adaptive)
 -- ============================================================
 
 local MAX_UI = {}
@@ -22,43 +22,45 @@ pcall(function()
 end)
 
 local Theme = {
-    Background = Color3.fromRGB(13, 14, 18),
-    Sidebar = Color3.fromRGB(9, 10, 13),
+    Background = Color3.fromRGB(12, 13, 17),
+    Sidebar = Color3.fromRGB(8, 9, 12),
     Accent = Color3.fromRGB(140, 80, 255),
-    Text = Color3.fromRGB(245, 245, 250),
-    DarkText = Color3.fromRGB(140, 145, 160),
-    ItemBg = Color3.fromRGB(20, 22, 28)
+    Text = Color3.fromRGB(250, 250, 255),
+    DarkText = Color3.fromRGB(150, 155, 170),
+    ItemBg = Color3.fromRGB(19, 20, 26)
 }
 
-local ColorLibrary = {
-    ["بنفسجي فاخر"] = Color3.fromRGB(140, 80, 255),
-    ["أزرق نيون"] = Color3.fromRGB(0, 170, 255),
-    ["أحمر قرمزي"] = Color3.fromRGB(255, 45, 85),
-    ["أخضر زمردي"] = Color3.fromRGB(0, 230, 118),
-    ["أصفر ذهبي"] = Color3.fromRGB(255, 193, 7),
-    ["وردي نيون"] = Color3.fromRGB(255, 0, 127),
-    ["سماوي ثلجي"] = Color3.fromRGB(0, 229, 255),
-    ["برتقالي ناري"] = Color3.fromRGB(255, 109, 0)
+-- مكتبة الألوان مع أشكال المعاينة
+local ColorPalette = {
+    { Name = "بنفسجي ملكي | Royal Purple", Color = Color3.fromRGB(140, 80, 255) },
+    { Name = "أزرق نيون | Neon Blue",       Color = Color3.fromRGB(0, 170, 255) },
+    { Name = "أحمر قرمزي | Crimson Red",   Color = Color3.fromRGB(255, 45, 85) },
+    { Name = "أخضر زمردي | Emerald Green",Color = Color3.fromRGB(0, 230, 118) },
+    { Name = "أصفر ذهبي | Golden Yellow", Color = Color3.fromRGB(255, 193, 7) },
+    { Name = "وردي نيون | Neon Pink",       Color = Color3.fromRGB(255, 0, 127) },
+    { Name = "سماوي ثلجي | Cyan Ice",       Color = Color3.fromRGB(0, 229, 255) },
+    { Name = "برتقالي ناري | Flame Orange", Color = Color3.fromRGB(255, 109, 0) }
 }
 
 function MAX_UI:CreateWindow(Options)
     Options = Options or {}
-    local TitleText = Options.Name or "MAX HUB | ULTRA"
+    local TitleText = Options.Name or "MAX HUB"
     local LogoId = Options.Logo or "rbxassetid://6031075931"
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_UltraLuxuryUI") then
-        ParentGui.MAX_UltraLuxuryUI:Destroy()
+    if ParentGui:FindFirstChild("MAX_LuxuryUI_V2") then
+        ParentGui.MAX_LuxuryUI_V2:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_UltraLuxuryUI"
+    ScreenGui.Name = "MAX_LuxuryUI_V2"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.Parent = ParentGui
 
-    local DefaultSize = IsMobile and UDim2.new(0, 460, 0, 280) or UDim2.new(0, 580, 0, 360)
-    local DefaultPos = IsMobile and UDim2.new(0.5, -230, 0.5, -140) or UDim2.new(0.5, -290, 0.5, -180)
+    local DefaultSize = IsMobile and UDim2.new(0, 470, 0, 290) or UDim2.new(0, 610, 0, 380)
+    local DefaultPos = IsMobile and UDim2.new(0.5, -235, 0.5, -145) or UDim2.new(0.5, -305, 0.5, -190)
 
+    -- 🏢 النافذة الرئيسية
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
     MainFrame.Size = DefaultSize
@@ -71,7 +73,7 @@ function MAX_UI:CreateWindow(Options)
     MainFrame.Parent = ScreenGui
 
     local MainCorner = Instance.new("UICorner")
-    MainCorner.CornerRadius = UDim.new(0, 14)
+    MainCorner.CornerRadius = UDim.new(0, 12)
     MainCorner.Parent = MainFrame
 
     local MainStroke = Instance.new("UIStroke")
@@ -79,17 +81,57 @@ function MAX_UI:CreateWindow(Options)
     MainStroke.Thickness = 1.5
     MainStroke.Parent = MainFrame
 
-    -- 🔔 نظام الإشعارات الفخم المستقل
+    -- 🔲 زر الإخفاء المربع العصري بالشعار (Square Reopen Button)
+    local ReopenBtn = Instance.new("Frame")
+    ReopenBtn.Name = "ReopenSquareButton"
+    ReopenBtn.Size = UDim2.new(0, 44, 0, 44)
+    ReopenBtn.Position = UDim2.new(0, 20, 0.2, 0)
+    ReopenBtn.BackgroundColor3 = Theme.Background
+    ReopenBtn.Visible = false
+    ReopenBtn.Active = true
+    ReopenBtn.Parent = ScreenGui
+
+    local ReopenCorner = Instance.new("UICorner")
+    ReopenCorner.CornerRadius = UDim.new(0, 10)
+    ReopenCorner.Parent = ReopenBtn
+
+    local ReopenStroke = Instance.new("UIStroke")
+    ReopenStroke.Color = Theme.Accent
+    ReopenStroke.Thickness = 1.5
+    ReopenStroke.Parent = ReopenBtn
+
+    local ReopenLogo = Instance.new("ImageLabel")
+    ReopenLogo.Size = UDim2.new(0, 28, 0, 28)
+    ReopenLogo.Position = UDim2.new(0.5, -14, 0.5, -14)
+    ReopenLogo.BackgroundTransparency = 1
+    ReopenLogo.Image = LogoId
+    ReopenLogo.Parent = ReopenBtn
+
+    local ClickTrigger = Instance.new("TextButton")
+    ClickTrigger.Size = UDim2.new(1, 0, 1, 0)
+    ClickTrigger.BackgroundTransparency = 1
+    ClickTrigger.Text = ""
+    ClickTrigger.Parent = ReopenBtn
+
+    -- إمكانية سحب المربع على الشاشة
+    ReopenBtn.Draggable = true
+
+    ClickTrigger.MouseButton1Click:Connect(function()
+        MainFrame.Visible = true
+        ReopenBtn.Visible = false
+    end)
+
+    -- 🔔 نظام الإشعارات المستقل الفخم (Modern Toast Notification)
     function MAX_UI:Notify(Title, Content, Duration)
-        Duration = Duration or 3
+        Duration = Duration or 3.5
         local NotifyFrame = Instance.new("Frame")
-        NotifyFrame.Size = UDim2.new(0, 210, 0, 48)
-        NotifyFrame.Position = UDim2.new(1, 10, 1, -65)
+        NotifyFrame.Size = UDim2.new(0, 230, 0, 52)
+        NotifyFrame.Position = UDim2.new(1, 10, 1, -70)
         NotifyFrame.BackgroundColor3 = Theme.Background
         NotifyFrame.Parent = ScreenGui
 
         local NCorner = Instance.new("UICorner")
-        NCorner.CornerRadius = UDim.new(0, 8)
+        NCorner.CornerRadius = UDim.new(0, 10)
         NCorner.Parent = NotifyFrame
 
         local NStroke = Instance.new("UIStroke")
@@ -97,9 +139,16 @@ function MAX_UI:CreateWindow(Options)
         NStroke.Thickness = 1
         NStroke.Parent = NotifyFrame
 
+        local NIcon = Instance.new("ImageLabel")
+        NIcon.Size = UDim2.new(0, 20, 0, 20)
+        NIcon.Position = UDim2.new(0, 10, 0, 8)
+        NIcon.BackgroundTransparency = 1
+        NIcon.Image = LogoId
+        NIcon.Parent = NotifyFrame
+
         local NTitle = Instance.new("TextLabel")
-        NTitle.Size = UDim2.new(1, -10, 0, 18)
-        NTitle.Position = UDim2.new(0, 8, 0, 4)
+        NTitle.Size = UDim2.new(1, -38, 0, 20)
+        NTitle.Position = UDim2.new(0, 34, 0, 6)
         NTitle.BackgroundTransparency = 1
         NTitle.Text = Title
         NTitle.TextColor3 = Theme.Accent
@@ -109,8 +158,8 @@ function MAX_UI:CreateWindow(Options)
         NTitle.Parent = NotifyFrame
 
         local NText = Instance.new("TextLabel")
-        NText.Size = UDim2.new(1, -10, 0, 18)
-        NText.Position = UDim2.new(0, 8, 0, 22)
+        NText.Size = UDim2.new(1, -16, 0, 20)
+        NText.Position = UDim2.new(0, 10, 0, 26)
         NText.BackgroundTransparency = 1
         NText.Text = Content
         NText.TextColor3 = Theme.Text
@@ -119,44 +168,17 @@ function MAX_UI:CreateWindow(Options)
         NText.TextXAlignment = Enum.TextXAlignment.Left
         NText.Parent = NotifyFrame
 
-        TweenService:Create(NotifyFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart), {Position = UDim2.new(1, -225, 1, -65)}):Play()
+        TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, -245, 1, -70)}):Play()
         task.delay(Duration, function()
-            TweenService:Create(NotifyFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart), {Position = UDim2.new(1, 10, 1, -65)}):Play()
-            task.wait(0.3)
+            TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, 10, 1, -70)}):Play()
+            task.wait(0.35)
             NotifyFrame:Destroy()
         end)
     end
 
-    -- 🔘 زر الإخفاء العائم (Floating Reopen Icon)
-    local ReopenBtn = Instance.new("TextButton")
-    ReopenBtn.Name = "ReopenButton"
-    ReopenBtn.Size = UDim2.new(0, 42, 0, 42)
-    ReopenBtn.Position = UDim2.new(0, 15, 0.2, 0)
-    ReopenBtn.BackgroundColor3 = Theme.Background
-    ReopenBtn.Text = "👑"
-    ReopenBtn.TextSize = 18
-    ReopenBtn.Visible = false
-    ReopenBtn.Active = true
-    ReopenBtn.Draggable = true
-    ReopenBtn.Parent = ScreenGui
-
-    local ReopenCorner = Instance.new("UICorner")
-    ReopenCorner.CornerRadius = UDim.new(1, 0)
-    ReopenCorner.Parent = ReopenBtn
-
-    local ReopenStroke = Instance.new("UIStroke")
-    ReopenStroke.Color = Theme.Accent
-    ReopenStroke.Thickness = 1.5
-    ReopenStroke.Parent = ReopenBtn
-
-    ReopenBtn.MouseButton1Click:Connect(function()
-        MainFrame.Visible = true
-        ReopenBtn.Visible = false
-    end)
-
-    -- 📊 الشريط العلوي (Topbar)
+    -- 📊 الشريط العلوي (Topbar Header)
     local Topbar = Instance.new("Frame")
-    Topbar.Size = UDim2.new(1, -16, 0, 28)
+    Topbar.Size = UDim2.new(1, -16, 0, 32)
     Topbar.Position = UDim2.new(0, 8, 0, 8)
     Topbar.BackgroundColor3 = Theme.Sidebar
     Topbar.Parent = MainFrame
@@ -165,17 +187,26 @@ function MAX_UI:CreateWindow(Options)
     TopbarCorner.CornerRadius = UDim.new(0, 8)
     TopbarCorner.Parent = Topbar
 
+    -- الشعار أعلى الزاوية اليسرى من الهيدر
+    local HeaderLogo = Instance.new("ImageLabel")
+    HeaderLogo.Size = UDim2.new(0, 20, 0, 20)
+    HeaderLogo.Position = UDim2.new(0, 8, 0.5, -10)
+    HeaderLogo.BackgroundTransparency = 1
+    HeaderLogo.Image = LogoId
+    HeaderLogo.Parent = Topbar
+
     local StatsLabel = Instance.new("TextLabel")
-    StatsLabel.Size = UDim2.new(1, -80, 1, 0)
-    StatsLabel.Position = UDim2.new(0, 10, 0, 0)
+    StatsLabel.Size = UDim2.new(1, -110, 1, 0)
+    StatsLabel.Position = UDim2.new(0, 34, 0, 0)
     StatsLabel.BackgroundTransparency = 1
     StatsLabel.TextColor3 = Theme.Text
     StatsLabel.Font = Enum.Font.GothamBold
     StatsLabel.TextSize = IsMobile and 10 or 11
     StatsLabel.TextXAlignment = Enum.TextXAlignment.Left
-    StatsLabel.Text = "⚡ FPS: ... | 📡 Ping: ... | " .. DeviceType
+    StatsLabel.Text = TitleText .. " | ⚡ FPS: ... | 📡 Ping: ..."
     StatsLabel.Parent = Topbar
 
+    -- أزرار التحكم العلوي (إغلاق / إخفاء)
     local ControlFrame = Instance.new("Frame")
     ControlFrame.Size = UDim2.new(0, 60, 1, 0)
     ControlFrame.Position = UDim2.new(1, -65, 0, 0)
@@ -187,17 +218,17 @@ function MAX_UI:CreateWindow(Options)
     MinimizeBtn.Position = UDim2.new(0, 2, 0.5, -12)
     MinimizeBtn.BackgroundTransparency = 1
     MinimizeBtn.Text = "-"
-    MinimizeBtn.TextColor3 = Theme.DarkText
+    MinimizeBtn.TextColor3 = Theme.Text
     MinimizeBtn.Font = Enum.Font.GothamBold
-    MinimizeBtn.TextSize = 16
+    MinimizeBtn.TextSize = 18
     MinimizeBtn.Parent = ControlFrame
 
     local CloseBtn = Instance.new("TextButton")
     CloseBtn.Size = UDim2.new(0, 24, 0, 24)
     CloseBtn.Position = UDim2.new(0, 30, 0.5, -12)
     CloseBtn.BackgroundTransparency = 1
-    CloseBtn.Text = "X"
-    CloseBtn.TextColor3 = Color3.fromRGB(255, 75, 75)
+    CloseBtn.Text = "✕"
+    CloseBtn.TextColor3 = Color3.fromRGB(255, 70, 70)
     CloseBtn.Font = Enum.Font.GothamBold
     CloseBtn.TextSize = 13
     CloseBtn.Parent = ControlFrame
@@ -205,14 +236,14 @@ function MAX_UI:CreateWindow(Options)
     MinimizeBtn.MouseButton1Click:Connect(function()
         MainFrame.Visible = false
         ReopenBtn.Visible = true
-        MAX_UI:Notify("👑 MAX HUB", "تم إخفاء الواجهة، اضغط علامة 👑 لإظهارها", 2)
+        MAX_UI:Notify("👑 " .. TitleText, "تم تصغير الواجهة، اضغط المربع للفتح", 2)
     end)
 
     CloseBtn.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
     end)
 
-    -- حساب الفريمات بدون لاغ
+    -- حساب الفريمات اللحظية
     local frameCount = 0
     local lastTime = tick()
     RunService.RenderStepped:Connect(function()
@@ -224,17 +255,17 @@ function MAX_UI:CreateWindow(Options)
             pcall(function()
                 pingVal = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
             end)
-            StatsLabel.Text = string.format("⚡ FPS: %d  |  📡 Ping: %dms  |  %s", realFPS, pingVal, DeviceType)
+            StatsLabel.Text = string.format("%s | ⚡ FPS: %d | 📡 Ping: %dms", TitleText, realFPS, pingVal)
             frameCount = 0
             lastTime = currentTime
         end
     end)
 
-    -- 📁 الشريط الجانبي
-    local SidebarWidth = IsMobile and 130 or 160
+    -- 📁 الشريط الجانبي (Sidebar)
+    local SidebarWidth = IsMobile and 135 or 165
     local Sidebar = Instance.new("Frame")
-    Sidebar.Size = UDim2.new(0, SidebarWidth, 1, -48)
-    Sidebar.Position = UDim2.new(0, 8, 0, 42)
+    Sidebar.Size = UDim2.new(0, SidebarWidth, 1, -52)
+    Sidebar.Position = UDim2.new(0, 8, 0, 44)
     Sidebar.BackgroundColor3 = Theme.Sidebar
     Sidebar.Parent = MainFrame
 
@@ -242,28 +273,10 @@ function MAX_UI:CreateWindow(Options)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    local LogoImage = Instance.new("ImageLabel")
-    LogoImage.Size = UDim2.new(0, 26, 0, 26)
-    LogoImage.Position = UDim2.new(0, 8, 0, 8)
-    LogoImage.BackgroundTransparency = 1
-    LogoImage.Image = LogoId
-    LogoImage.Parent = Sidebar
-
-    local TitleLabel = Instance.new("TextLabel")
-    TitleLabel.Size = UDim2.new(1, -42, 0, 26)
-    TitleLabel.Position = UDim2.new(0, 38, 0, 8)
-    TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Text = TitleText
-    TitleLabel.TextColor3 = Theme.Text
-    TitleLabel.Font = Enum.Font.GothamBold
-    TitleLabel.TextSize = IsMobile and 10 or 11
-    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-    TitleLabel.Parent = Sidebar
-
     -- 👤 بروفايل المستخدم الفاخر
     local UserFrame = Instance.new("Frame")
-    UserFrame.Size = UDim2.new(1, -12, 0, 40)
-    UserFrame.Position = UDim2.new(0, 6, 1, -45)
+    UserFrame.Size = UDim2.new(1, -12, 0, 42)
+    UserFrame.Position = UDim2.new(0, 6, 1, -48)
     UserFrame.BackgroundColor3 = Theme.ItemBg
     UserFrame.Parent = Sidebar
 
@@ -285,7 +298,7 @@ function MAX_UI:CreateWindow(Options)
     AvatarCorner.Parent = UserAvatar
 
     local UserDisplayName = Instance.new("TextLabel")
-    UserDisplayName.Size = UDim2.new(1, -40, 0, 15)
+    UserDisplayName.Size = UDim2.new(1, -40, 0, 16)
     UserDisplayName.Position = UDim2.new(0, 38, 0, 5)
     UserDisplayName.BackgroundTransparency = 1
     UserDisplayName.Text = LocalPlayer.DisplayName
@@ -296,8 +309,8 @@ function MAX_UI:CreateWindow(Options)
     UserDisplayName.Parent = UserFrame
 
     local UsernameLabel = Instance.new("TextLabel")
-    UsernameLabel.Size = UDim2.new(1, -40, 0, 13)
-    UsernameLabel.Position = UDim2.new(0, 38, 0, 20)
+    UsernameLabel.Size = UDim2.new(1, -40, 0, 14)
+    UsernameLabel.Position = UDim2.new(0, 38, 0, 21)
     UsernameLabel.BackgroundTransparency = 1
     UsernameLabel.Text = "@" .. LocalPlayer.Name
     UsernameLabel.TextColor3 = Theme.DarkText
@@ -307,8 +320,8 @@ function MAX_UI:CreateWindow(Options)
     UsernameLabel.Parent = UserFrame
 
     local TabButtonContainer = Instance.new("ScrollingFrame")
-    TabButtonContainer.Size = UDim2.new(1, -12, 1, -95)
-    TabButtonContainer.Position = UDim2.new(0, 6, 0, 42)
+    TabButtonContainer.Size = UDim2.new(1, -12, 1, -58)
+    TabButtonContainer.Position = UDim2.new(0, 6, 0, 8)
     TabButtonContainer.BackgroundTransparency = 1
     TabButtonContainer.ScrollBarThickness = 0
     TabButtonContainer.Parent = Sidebar
@@ -319,8 +332,8 @@ function MAX_UI:CreateWindow(Options)
     TabListLayout.Parent = TabButtonContainer
 
     local ContentArea = Instance.new("Frame")
-    ContentArea.Size = UDim2.new(1, -(SidebarWidth + 24), 1, -48)
-    ContentArea.Position = UDim2.new(0, SidebarWidth + 16, 0, 42)
+    ContentArea.Size = UDim2.new(1, -(SidebarWidth + 24), 1, -52)
+    ContentArea.Position = UDim2.new(0, SidebarWidth + 16, 0, 44)
     ContentArea.BackgroundTransparency = 1
     ContentArea.Parent = MainFrame
 
@@ -329,7 +342,7 @@ function MAX_UI:CreateWindow(Options)
     function WindowObj:CreateTab(TabName, IconId)
         IconId = IconId or "rbxassetid://6031075929"
         local TabButton = Instance.new("TextButton")
-        TabButton.Size = UDim2.new(1, 0, 0, 28)
+        TabButton.Size = UDim2.new(1, 0, 0, 30)
         TabButton.BackgroundColor3 = Theme.ItemBg
         TabButton.Text = ""
         TabButton.AutoButtonColor = false
@@ -389,7 +402,7 @@ function MAX_UI:CreateWindow(Options)
         function TabElements:AddButton(Text, Callback)
             Callback = Callback or function() end
             local Btn = Instance.new("TextButton")
-            Btn.Size = UDim2.new(1, -6, 0, 30)
+            Btn.Size = UDim2.new(1, -6, 0, 32)
             Btn.BackgroundColor3 = Theme.ItemBg
             Btn.Text = Text
             Btn.TextColor3 = Theme.Text
@@ -414,7 +427,7 @@ function MAX_UI:CreateWindow(Options)
             local Toggled = Default or false
 
             local Frame = Instance.new("Frame")
-            Frame.Size = UDim2.new(1, -6, 0, 30)
+            Frame.Size = UDim2.new(1, -6, 0, 32)
             Frame.BackgroundColor3 = Theme.ItemBg
             Frame.Parent = PageFrame
 
@@ -424,7 +437,7 @@ function MAX_UI:CreateWindow(Options)
 
             local Label = Instance.new("TextLabel")
             Label.Size = UDim2.new(1, -40, 1, 0)
-            Label.Position = UDim2.new(0, 8, 0, 0)
+            Label.Position = UDim2.new(0, 10, 0, 0)
             Label.BackgroundTransparency = 1
             Label.Text = Text
             Label.TextColor3 = Theme.Text
@@ -435,7 +448,7 @@ function MAX_UI:CreateWindow(Options)
 
             local Indicator = Instance.new("TextButton")
             Indicator.Size = UDim2.new(0, 18, 0, 18)
-            Indicator.Position = UDim2.new(1, -24, 0.5, -9)
+            Indicator.Position = UDim2.new(1, -26, 0.5, -9)
             Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(40, 40, 50)
             Indicator.Text = ""
             Indicator.Parent = Frame
@@ -457,13 +470,12 @@ function MAX_UI:CreateWindow(Options)
             Indicator.MouseButton1Click:Connect(UpdateToggle)
         end
 
-        -- 🚀 السلايدر المحدث بـ Throttle لمنع التعليق عند السحب السريع
         function TabElements:AddSlider(Text, Min, Max, Default, Callback)
             Callback = Callback or function() end
             local Value = Default or Min
 
             local Frame = Instance.new("Frame")
-            Frame.Size = UDim2.new(1, -6, 0, 40)
+            Frame.Size = UDim2.new(1, -6, 0, 42)
             Frame.BackgroundColor3 = Theme.ItemBg
             Frame.Parent = PageFrame
 
@@ -473,7 +485,7 @@ function MAX_UI:CreateWindow(Options)
 
             local Label = Instance.new("TextLabel")
             Label.Size = UDim2.new(1, -50, 0, 18)
-            Label.Position = UDim2.new(0, 8, 0, 2)
+            Label.Position = UDim2.new(0, 10, 0, 4)
             Label.BackgroundTransparency = 1
             Label.Text = Text
             Label.TextColor3 = Theme.Text
@@ -484,7 +496,7 @@ function MAX_UI:CreateWindow(Options)
 
             local ValLabel = Instance.new("TextLabel")
             ValLabel.Size = UDim2.new(0, 40, 0, 18)
-            ValLabel.Position = UDim2.new(1, -45, 0, 2)
+            ValLabel.Position = UDim2.new(1, -45, 0, 4)
             ValLabel.BackgroundTransparency = 1
             ValLabel.Text = tostring(Value)
             ValLabel.TextColor3 = Theme.Accent
@@ -495,8 +507,8 @@ function MAX_UI:CreateWindow(Options)
             table.insert(WindowObj.Accents, function(col) ValLabel.TextColor3 = col end)
 
             local SliderBar = Instance.new("Frame")
-            SliderBar.Size = UDim2.new(1, -16, 0, 5)
-            SliderBar.Position = UDim2.new(0, 8, 1, -10)
+            SliderBar.Size = UDim2.new(1, -20, 0, 5)
+            SliderBar.Position = UDim2.new(0, 10, 1, -10)
             SliderBar.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
             SliderBar.Parent = Frame
 
@@ -513,7 +525,7 @@ function MAX_UI:CreateWindow(Options)
 
             local function Update(input)
                 local now = tick()
-                if now - lastUpdate < 0.02 then return end -- حماية السحب السريع لتجنب اللاق
+                if now - lastUpdate < 0.02 then return end
                 lastUpdate = now
 
                 local pos = math.clamp((input.Position.X - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
@@ -542,8 +554,8 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🎨 الخيارات المنسدلة للألوان (Dropdown List)
-        function TabElements:AddDropdown(Text, Options, Callback)
+        -- 🎨 قائمة الألوان المنسدلة مع مربع المعاينة (Dropdown Palette)
+        function TabElements:AddColorDropdown(Text, Callback)
             Callback = Callback or function() end
             local Expanded = false
 
@@ -578,41 +590,52 @@ function MAX_UI:CreateWindow(Options)
             Arrow.Parent = Frame
 
             local Container = Instance.new("Frame")
-            Container.Size = UDim2.new(1, -12, 0, #Options * 26)
+            Container.Size = UDim2.new(1, -12, 0, #ColorPalette * 28)
             Container.Position = UDim2.new(0, 6, 0, 34)
             Container.BackgroundTransparency = 1
             Container.Parent = Frame
 
             local CLayout = Instance.new("UIListLayout")
-            CLayout.Padding = UDim.new(0, 2)
+            CLayout.Padding = UDim.new(0, 3)
             CLayout.Parent = Container
 
-            for _, opt in ipairs(Options) do
-                local Item = Instance.new("TextButton")
-                Item.Size = UDim2.new(1, 0, 0, 24)
-                Item.BackgroundColor3 = Color3.fromRGB(28, 30, 38)
-                Item.Text = opt
-                Item.TextColor3 = Theme.DarkText
-                Item.Font = Enum.Font.GothamMedium
-                Item.TextSize = 10
-                Item.Parent = Container
+            for _, item in ipairs(ColorPalette) do
+                local ItemBtn = Instance.new("TextButton")
+                ItemBtn.Size = UDim2.new(1, 0, 0, 25)
+                ItemBtn.BackgroundColor3 = Color3.fromRGB(26, 28, 36)
+                ItemBtn.Text = "      " .. item.Name
+                ItemBtn.TextColor3 = Theme.Text
+                ItemBtn.Font = Enum.Font.GothamMedium
+                ItemBtn.TextSize = 10
+                ItemBtn.TextXAlignment = Enum.TextXAlignment.Left
+                ItemBtn.Parent = Container
 
                 local ICorner = Instance.new("UICorner")
                 ICorner.CornerRadius = UDim.new(0, 4)
-                ICorner.Parent = Item
+                ICorner.Parent = ItemBtn
 
-                Item.MouseButton1Click:Connect(function()
-                    DropBtn.Text = "  " .. Text .. " (" .. opt .. ")"
+                -- مربع معاينة شكل اللون بجانب الاسم
+                local ColorBox = Instance.new("Frame")
+                ColorBox.Size = UDim2.new(0, 14, 0, 14)
+                ColorBox.Position = UDim2.new(0, 6, 0.5, -7)
+                ColorBox.BackgroundColor3 = item.Color
+                ColorBox.Parent = ItemBtn
+
+                local BoxCorner = Instance.new("UICorner")
+                BoxCorner.CornerRadius = UDim.new(0, 3)
+                BoxCorner.Parent = ColorBox
+
+                ItemBtn.MouseButton1Click:Connect(function()
                     Expanded = false
                     TweenService:Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(1, -6, 0, 32)}):Play()
                     Arrow.Text = "▼"
-                    Callback(opt)
+                    Callback(item.Color)
                 end)
             end
 
             DropBtn.MouseButton1Click:Connect(function()
                 Expanded = not Expanded
-                local targetHeight = Expanded and (38 + #Options * 26) or 32
+                local targetHeight = Expanded and (38 + #ColorPalette * 28) or 32
                 TweenService:Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(1, -6, 0, targetHeight)}):Play()
                 Arrow.Text = Expanded and "▲" or "▼"
             end)
@@ -631,7 +654,7 @@ function MAX_UI:CreateWindow(Options)
     end
 
     -- ============================================================
-    -- 🎨 تبويب الإعدادات مع القائمة المنسدلة للألوان
+    -- 🎨 تبويب الإعدادات مع منتقي الألوان المعاين
     -- ============================================================
     local SettingsTab = WindowObj:CreateTab("الإعدادات ⚙️")
 
@@ -640,18 +663,15 @@ function MAX_UI:CreateWindow(Options)
         MainStroke.Color = col
         ReopenStroke.Color = col
         for _, updateFunc in ipairs(WindowObj.Accents) do updateFunc(col) end
-        MAX_UI:Notify("👑 MAX HUB", "تم تحديث اللون بنجاح!", 2)
+        MAX_UI:Notify("👑 MAX HUB", "تم تحديث ثيم الواجهة!", 2)
     end
 
-    -- منسدلة خيارات الألوان المجهزة
-    local colorNames = {}
-    for name, _ in pairs(ColorLibrary) do table.insert(colorNames, name) end
-
-    SettingsTab:AddDropdown("اختر لون الواجهة", colorNames, function(selectedName)
-        if ColorLibrary[selectedName] then
-            ApplyColor(ColorLibrary[selectedName])
-        end
+    SettingsTab:AddColorDropdown("اختر لون الثيم الرئيسي", function(selectedColor)
+        ApplyColor(selectedColor)
     end)
+
+    -- 🌟 إرسال رسالة الترحيب الأنيقة عند تشغيل الواجهة
+    MAX_UI:Notify("مرحباً بك 👑", "أهلاً بك يا " .. LocalPlayer.DisplayName .. " في MAX HUB", 4)
 
     return WindowObj
 end
