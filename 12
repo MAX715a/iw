@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX TITAN ULTRA LUXURY UI LIBRARY (Engine V22 - Fixed & Optimized)
--- 🌐 Fixed Avatars / Crystal Clear Labels / Ultra Performance Booster
+-- 👑 MAX TITAN ULTRA LUXURY UI LIBRARY (Engine V22 - Fixed UI & Avatar)
+-- 🌐 Fixed Avatar Thumbnail / Perfect Arabic Text Alignment / Anti-Lag
 -- ============================================================
 
 local MAX_UI = {}
@@ -23,17 +23,18 @@ pcall(function()
     elseif set_fps_cap then set_fps_cap(240) end
 end)
 
--- 👤 جلب صورة سكن اللاعب بطريقة مضمونة ومباشرة
-local PlayerAvatarImage = "rbxassetid://6031075931" -- صورة افتراضية في حال التعثر
+-- 👤 جلب صورة أفاكتار اللاعب الحقيقي بدقة وتفادي أيقونات الصور الافتراضية
+local PlayerAvatarImage = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. LocalPlayer.UserId .. "&width=150&height=150&format=png"
+
 task.spawn(function()
     pcall(function()
-        local icon, isReady = Players:GetUserThumbnailAsync(
-            LocalPlayer.UserId, 
-            Enum.ThumbnailType.HeadShot, 
-            Enum.ThumbnailSize.Size100x100
+        local content, isReady = Players:GetUserThumbnailAsync(
+            LocalPlayer.UserId,
+            Enum.ThumbnailType.HeadShot,
+            Enum.ThumbnailSize.Size150x150
         )
-        if icon and isReady then
-            PlayerAvatarImage = icon
+        if isReady and content then
+            PlayerAvatarImage = content
         end
     end)
 end)
@@ -77,7 +78,7 @@ local function GetSmartGreeting()
     end
 end
 
--- 🔔 نظام الإشعارات المطور
+-- 🔔 نظام الإشعارات
 function MAX_UI:Notify(Title, Content, Duration)
     Duration = Duration or 3.5
     PlayNotifySound()
@@ -110,8 +111,8 @@ function MAX_UI:Notify(Title, Content, Duration)
     NStroke.Parent = NotifyFrame
 
     local NIcon = Instance.new("ImageLabel")
-    NIcon.Size = UDim2.new(0, 36, 0, 36)
-    NIcon.Position = UDim2.new(0, 10, 0, 13)
+    NIcon.Size = UDim2.new(0, 38, 0, 38)
+    NIcon.Position = UDim2.new(0, 10, 0, 12)
     NIcon.BackgroundTransparency = 1
     NIcon.Image = PlayerAvatarImage
     NIcon.Parent = NotifyFrame
@@ -122,7 +123,7 @@ function MAX_UI:Notify(Title, Content, Duration)
 
     local NTitle = Instance.new("TextLabel")
     NTitle.Size = UDim2.new(1, -56, 0, 18)
-    NTitle.Position = UDim2.new(0, 50, 0, 8)
+    NTitle.Position = UDim2.new(0, 52, 0, 8)
     NTitle.BackgroundTransparency = 1
     NTitle.Text = Title or "إشعار النظام"
     NTitle.TextColor3 = Theme.Accent
@@ -133,7 +134,7 @@ function MAX_UI:Notify(Title, Content, Duration)
 
     local NText = Instance.new("TextLabel")
     NText.Size = UDim2.new(1, -56, 0, 28)
-    NText.Position = UDim2.new(0, 50, 0, 26)
+    NText.Position = UDim2.new(0, 52, 0, 26)
     NText.BackgroundTransparency = 1
     NText.Text = Content or ""
     NText.TextColor3 = Theme.TextPrimary
@@ -343,7 +344,7 @@ function MAX_UI:CreateWindow(Options)
         ScreenGui:Destroy()
     end)
 
-    -- حساب الأداء الحقيقي
+    -- حساب الفريمات الحقيقي
     task.spawn(function()
         local lastCalc = tick()
         local frames = 0
@@ -375,7 +376,7 @@ function MAX_UI:CreateWindow(Options)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    -- بطاقة اللاعب
+    -- بطاقة بروفايل اللاعب
     local WelcomeCard = Instance.new("Frame")
     WelcomeCard.Size = UDim2.new(1, -12, 0, 56)
     WelcomeCard.Position = UDim2.new(0, 6, 0, 6)
@@ -403,7 +404,7 @@ function MAX_UI:CreateWindow(Options)
     CardAvatarCorner.Parent = CardAvatar
 
     local GreetingLabel = Instance.new("TextLabel")
-    GreetingLabel.Size = UDim2.new(1, -50, 0, 14)
+    GreetingLabel.Size = UDim2.new(1, -52, 0, 14)
     GreetingLabel.Position = UDim2.new(0, 50, 0, 6)
     GreetingLabel.BackgroundTransparency = 1
     GreetingLabel.Text = GetSmartGreeting()
@@ -414,7 +415,7 @@ function MAX_UI:CreateWindow(Options)
     GreetingLabel.Parent = WelcomeCard
 
     local UserDisplayName = Instance.new("TextLabel")
-    UserDisplayName.Size = UDim2.new(1, -50, 0, 16)
+    UserDisplayName.Size = UDim2.new(1, -52, 0, 16)
     UserDisplayName.Position = UDim2.new(0, 50, 0, 20)
     UserDisplayName.BackgroundTransparency = 1
     UserDisplayName.Text = LocalPlayer.DisplayName
@@ -425,7 +426,7 @@ function MAX_UI:CreateWindow(Options)
     UserDisplayName.Parent = WelcomeCard
 
     local BadgeLabel = Instance.new("TextLabel")
-    BadgeLabel.Size = UDim2.new(1, -50, 0, 12)
+    BadgeLabel.Size = UDim2.new(1, -52, 0, 12)
     BadgeLabel.Position = UDim2.new(0, 50, 0, 36)
     BadgeLabel.BackgroundTransparency = 1
     BadgeLabel.Text = "[عضو VIP]"
@@ -435,16 +436,12 @@ function MAX_UI:CreateWindow(Options)
     BadgeLabel.TextXAlignment = Enum.TextXAlignment.Left
     BadgeLabel.Parent = WelcomeCard
 
-    -- تحديث الصورة تلقائياً فور تجهيزها
+    -- تحديث الصورة تلقائياً فور تجهيزها من السيرفر
     task.spawn(function()
-        while task.wait(0.5) do
-            if CardAvatar.Image ~= PlayerAvatarImage then
-                CardAvatar.Image = PlayerAvatarImage
-                HeaderAvatar.Image = PlayerAvatarImage
-                ReopenAvatar.Image = PlayerAvatarImage
-                break
-            end
-        end
+        task.wait(1)
+        CardAvatar.Image = PlayerAvatarImage
+        HeaderAvatar.Image = PlayerAvatarImage
+        ReopenAvatar.Image = PlayerAvatarImage
     end)
 
     local TabButtonContainer = Instance.new("ScrollingFrame")
@@ -529,7 +526,7 @@ function MAX_UI:CreateWindow(Options)
 
         local TabElements = { Page = PageFrame, Button = TabButton, Icon = TabAvatar, Title = TabTitle }
 
-        -- 🔘 الأزرار
+        -- 🔘 1. الأزرار
         function TabElements:AddButton(Text, Callback)
             Callback = Callback or function() end
             local Btn = Instance.new("TextButton")
@@ -554,7 +551,7 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🔘 المفاتيح
+        -- 🔘 2. المفاتيح
         function TabElements:AddToggle(Text, Default, Callback)
             Callback = Callback or function() end
             local Toggled = Default or false
@@ -599,7 +596,7 @@ function MAX_UI:CreateWindow(Options)
             Indicator.MouseButton1Click:Connect(UpdateToggle)
         end
 
-        -- 🔘 شريط السحب
+        -- 🔘 3. شريط السحب
         function TabElements:AddSlider(Text, Min, Max, Default, Callback)
             Callback = Callback or function() end
             local Value = Default or Min
@@ -699,7 +696,7 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🔘 صندوق النصوص
+        -- 🔘 4. صندوق النصوص
         function TabElements:AddTextbox(Text, Placeholder, Callback)
             Callback = Callback or function() end
 
@@ -746,7 +743,7 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🔘 القوائم المنسدلة
+        -- 🔘 5. القوائم المنسدلة
         function TabElements:AddDropdown(Text, ListOptions, Callback)
             Callback = Callback or function() end
             ListOptions = ListOptions or {}
@@ -830,7 +827,7 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🔘 النصوص العادية
+        -- 🔘 6. الكروت النصية
         function TabElements:AddLabel(Text)
             local Frame = Instance.new("Frame")
             Frame.Size = UDim2.new(1, -6, 0, 30)
@@ -864,10 +861,10 @@ function MAX_UI:CreateWindow(Options)
         return TabElements
     end
 
-    -- ⚙️ قسم الإعدادات وتخفيف الجهاز
+    -- ⚙️ قسم الإعدادات
     local SettingsTab = WindowObj:CreateTab("الإعدادات", PlayerAvatarImage)
 
-    SettingsTab:AddLabel("👑 أدوات تسريع الفريمات وتخفيف اللعبة (Ultra FPS Boost)")
+    SettingsTab:AddLabel("👑 أدوات تحسين الأداء والدعم - MAX TITAN ENGINE")
 
     SettingsTab:AddButton("نسخ رابط سيرفر الديسكورد (Discord) 💬", function()
         pcall(function()
@@ -876,19 +873,14 @@ function MAX_UI:CreateWindow(Options)
         MAX_UI:Notify("MAX Discord", "تم نسخ رابط الديسكورد بنجاح! 🚀", 3.5)
     end)
 
-    -- 🔥 أداة تخفيف اللعبة الشاملة والقوية
     SettingsTab:AddButton("تخفيف اللعبة وإلغاء اللاغ (Boost Game FPS) 🚀", function()
         task.spawn(function()
             pcall(function()
-                -- 1. تنظيف الذاكرة
                 collectgarbage("collect")
-                
-                -- 2. إيقاف الجرافيكس الثقيل
                 Lighting.GlobalShadows = false
                 Lighting.FogEnd = 9e9
                 Lighting.Technology = Enum.Technology.Compatibility
                 
-                -- 3. تبسيط الخامات والمجسمات
                 for _, obj in ipairs(game:GetDescendants()) do
                     if obj:IsA("BasePart") then
                         obj.Material = Enum.Material.SmoothPlastic
