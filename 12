@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX TITAN ENGINE V24 - OMNI PRO (ULTIMATE NO-LAG)
--- 🌐 Custom Asset ID / Zero Drag Lag / Full UI Components
+-- 👑 MAX TITAN ENGINE V25 - GAME ICON EDITION
+-- 🌐 Dynamic Game Icon / Zero Drag Lag / Full UI Components
 -- ============================================================
 
 local MAX_UI = {}
@@ -17,16 +17,17 @@ local Lighting        = game:GetService("Lighting")
 local LocalPlayer = Players.LocalPlayer
 local IsMobile    = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 
--- 🔓 فك قفل الشاشة للفريمات العالية
+-- 🔓 فك قفل الفريمات
 pcall(function()
     if setfpscap then setfpscap(240)
     elseif set_fps_cap then set_fps_cap(240) end
 end)
 
--- 🖼️ صورة اللوجو المخصصة التي طلبتها بدلاً من سكن اللاعب
+-- 🖼️ صور النظام: الشعار المخصص + صورة اللعبة المباشرة
 local CustomLogoImage = "rbxassetid://96007556931310"
+local GameIconImage   = "rbxthumb://type=GameIcon&id=" .. game.PlaceId .. "&w=150&h=150"
 
--- 🎨 ثيم Cyber Dark Neon الفاخر
+-- 🎨 ثيم Cyber Dark Neon
 local Theme = {
     Background  = Color3.fromRGB(11, 12, 17),
     Sidebar     = Color3.fromRGB(8, 9, 13),
@@ -65,7 +66,7 @@ local function GetSmartGreeting()
     end
 end
 
--- 🔔 نظام الإشعارات السلس
+-- 🔔 نظام الإشعارات
 function MAX_UI:Notify(Title, Content, Duration)
     Duration = Duration or 3.5
     PlayNotifySound()
@@ -169,12 +170,12 @@ function MAX_UI:CreateWindow(Options)
     local ToggleKey = Options.Keybind or Enum.KeyCode.RightControl
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_TitanEngine_V24") then
-        ParentGui.MAX_TitanEngine_V24:Destroy()
+    if ParentGui:FindFirstChild("MAX_TitanEngine_V25") then
+        ParentGui.MAX_TitanEngine_V25:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_TitanEngine_V24"
+    ScreenGui.Name = "MAX_TitanEngine_V25"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Parent = ParentGui
@@ -201,7 +202,7 @@ function MAX_UI:CreateWindow(Options)
     MainStroke.Thickness = 2
     MainStroke.Parent = MainFrame
 
-    -- ⚡ نظام سحب حقيقي وسلس للغاية يمنع التقطيع والتعليق عند التحريك السريع
+    -- نظام سحب سلس بدون لاغ
     local Dragging = false
     local DragInput, DragStart, StartPos
 
@@ -274,7 +275,7 @@ function MAX_UI:CreateWindow(Options)
         ReopenBtn.Visible = false
     end)
 
-    -- مفتاح الكيبورد العام لتأطير النافذة
+    -- مفتاح التعتيم من الكيبورد
     UserInputService.InputBegan:Connect(function(input, gpe)
         if not gpe and input.KeyCode == ToggleKey then
             MainFrame.Visible = not MainFrame.Visible
@@ -366,7 +367,7 @@ function MAX_UI:CreateWindow(Options)
         ScreenGui:Destroy()
     end)
 
-    -- حساب الأداء المباشر بدون ثقل برجمي
+    -- حساب الأداء المباشر
     task.spawn(function()
         local lastCalc = tick()
         local frames = 0
@@ -399,7 +400,7 @@ function MAX_UI:CreateWindow(Options)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    -- بطاقة التعريف العلوية
+    -- 🎮 بطاقة تعريف اللعبة (تم ربطها بصورة اللعبة الحالية)
     local WelcomeCard = Instance.new("Frame")
     WelcomeCard.Size = UDim2.new(1, -12, 0, 52)
     WelcomeCard.Position = UDim2.new(0, 6, 0, 6)
@@ -415,16 +416,20 @@ function MAX_UI:CreateWindow(Options)
     CardStroke.Thickness = 1.4
     CardStroke.Parent = WelcomeCard
 
-    local CardLogo = Instance.new("ImageLabel")
-    CardLogo.Size = UDim2.new(0, 36, 0, 36)
-    CardLogo.Position = UDim2.new(0, 8, 0.5, -18)
-    CardLogo.BackgroundTransparency = 1
-    CardLogo.Image = CustomLogoImage
-    CardLogo.Parent = WelcomeCard
+    local GameIcon = Instance.new("ImageLabel")
+    GameIcon.Size = UDim2.new(0, 38, 0, 38)
+    GameIcon.Position = UDim2.new(0, 7, 0.5, -19)
+    GameIcon.BackgroundTransparency = 1
+    GameIcon.Image = GameIconImage
+    GameIcon.Parent = WelcomeCard
+
+    local GameIconCorner = Instance.new("UICorner")
+    GameIconCorner.CornerRadius = UDim.new(0, 6)
+    GameIconCorner.Parent = GameIcon
 
     local GreetingLabel = Instance.new("TextLabel")
     GreetingLabel.Size = UDim2.new(1, -52, 0, 16)
-    GreetingLabel.Position = UDim2.new(0, 48, 0, 8)
+    GreetingLabel.Position = UDim2.new(0, 50, 0, 8)
     GreetingLabel.BackgroundTransparency = 1
     GreetingLabel.Text = GetSmartGreeting()
     GreetingLabel.TextColor3 = Theme.Cyan
@@ -435,7 +440,7 @@ function MAX_UI:CreateWindow(Options)
 
     local UserDisplayName = Instance.new("TextLabel")
     UserDisplayName.Size = UDim2.new(1, -52, 0, 18)
-    UserDisplayName.Position = UDim2.new(0, 48, 0, 24)
+    UserDisplayName.Position = UDim2.new(0, 50, 0, 24)
     UserDisplayName.BackgroundTransparency = 1
     UserDisplayName.Text = LocalPlayer.DisplayName
     UserDisplayName.TextColor3 = Theme.TextPrimary
@@ -522,7 +527,7 @@ function MAX_UI:CreateWindow(Options)
 
         local TabElements = { Page = PageFrame, Button = TabButton, Icon = TabAvatar, Title = TabTitle }
 
-        -- 🔘 1. الأزرار العادية
+        -- 🔘 1. الأزرار
         function TabElements:AddButton(Text, Callback)
             Callback = Callback or function() end
             local Btn = Instance.new("TextButton")
@@ -547,7 +552,7 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🔘 2. مفاتيح التشغيل مع علامة الصح (✓)
+        -- 🔘 2. المفاتيح مع علامة الصح (✓)
         function TabElements:AddToggle(Text, Default, Callback)
             Callback = Callback or function() end
             local Toggled = Default or false
