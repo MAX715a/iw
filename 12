@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX TITAN ENGINE V23 - OMNI ULTIMATE EDITION
--- 🌐 Complete Standalone UI Engine | Cyber Glassmorphism Theme
+-- 👑 MAX TITAN ENGINE V24 - OMNI PRO (ULTIMATE NO-LAG)
+-- 🌐 Custom Asset ID / Zero Drag Lag / Full UI Components
 -- ============================================================
 
 local MAX_UI = {}
@@ -23,20 +23,20 @@ pcall(function()
     elseif set_fps_cap then set_fps_cap(240) end
 end)
 
--- 👤 جلب صورة وجه/سكن اللاعب الحقيقية بدقة $150 \times 150$ بدون أخطاء
-local PlayerAvatarImage = "rbxthumb://type=AvatarHeadShot&id=" .. LocalPlayer.UserId .. "&w=150&h=150"
+-- 🖼️ صورة اللوجو المخصصة التي طلبتها بدلاً من سكن اللاعب
+local CustomLogoImage = "rbxassetid://96007556931310"
 
--- 🎨 ثيم Cyber Neon المستقبلي والفاخر
+-- 🎨 ثيم Cyber Dark Neon الفاخر
 local Theme = {
-    Background  = Color3.fromRGB(10, 11, 16),
-    Sidebar     = Color3.fromRGB(7, 8, 12),
-    Header      = Color3.fromRGB(14, 15, 22),
-    Accent      = Color3.fromRGB(147, 51, 234),    -- نيون بنفسجي
-    Cyan        = Color3.fromRGB(6, 182, 212),     -- نيون سايان
-    TextPrimary = Color3.fromRGB(243, 244, 246),
-    TextDark    = Color3.fromRGB(156, 163, 175),
-    ItemBg      = Color3.fromRGB(18, 20, 29),
-    Border      = Color3.fromRGB(147, 51, 234)
+    Background  = Color3.fromRGB(11, 12, 17),
+    Sidebar     = Color3.fromRGB(8, 9, 13),
+    Header      = Color3.fromRGB(16, 17, 24),
+    Accent      = Color3.fromRGB(138, 43, 226),
+    Cyan        = Color3.fromRGB(6, 182, 212),
+    TextPrimary = Color3.fromRGB(255, 255, 255),
+    TextDark    = Color3.fromRGB(170, 175, 190),
+    ItemBg      = Color3.fromRGB(18, 19, 28),
+    Border      = Color3.fromRGB(138, 43, 226)
 }
 
 local ActiveNotifications = {}
@@ -65,7 +65,7 @@ local function GetSmartGreeting()
     end
 end
 
--- 🔔 نظام الإشعارات النيون المكدس والفاخر
+-- 🔔 نظام الإشعارات السلس
 function MAX_UI:Notify(Title, Content, Duration)
     Duration = Duration or 3.5
     PlayNotifySound()
@@ -98,14 +98,14 @@ function MAX_UI:Notify(Title, Content, Duration)
     NStroke.Parent = NotifyFrame
 
     local NIcon = Instance.new("ImageLabel")
-    NIcon.Size = UDim2.new(0, 42, 0, 42)
-    NIcon.Position = UDim2.new(0, 10, 0, 11)
+    NIcon.Size = UDim2.new(0, 40, 0, 40)
+    NIcon.Position = UDim2.new(0, 10, 0, 12)
     NIcon.BackgroundTransparency = 1
-    NIcon.Image = PlayerAvatarImage
+    NIcon.Image = CustomLogoImage
     NIcon.Parent = NotifyFrame
 
     local NIconCorner = Instance.new("UICorner")
-    NIconCorner.CornerRadius = UDim.new(1, 0)
+    NIconCorner.CornerRadius = UDim.new(0, 8)
     NIconCorner.Parent = NIcon
 
     local NTitle = Instance.new("TextLabel")
@@ -142,7 +142,7 @@ function MAX_UI:Notify(Title, Content, Duration)
     local function RepositionNotifications()
         for index, frame in ipairs(ActiveNotifications) do
             local targetY = -95 - ((#ActiveNotifications - index) * 74)
-            TweenService:Create(frame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+            TweenService:Create(frame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
                 Position = UDim2.new(1, -305, 1, targetY)
             }):Play()
         end
@@ -154,10 +154,10 @@ function MAX_UI:Notify(Title, Content, Duration)
     task.delay(Duration, function()
         local idx = table.find(ActiveNotifications, NotifyFrame)
         if idx then table.remove(ActiveNotifications, idx) end
-        TweenService:Create(NotifyFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+        TweenService:Create(NotifyFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
             Position = UDim2.new(1, 20, NotifyFrame.Position.Y.Scale, NotifyFrame.Position.Y.Offset)
         }):Play()
-        task.wait(0.3)
+        task.wait(0.25)
         NotifyFrame:Destroy()
         RepositionNotifications()
     end)
@@ -165,16 +165,16 @@ end
 
 function MAX_UI:CreateWindow(Options)
     Options = Options or {}
-    local TitleText = Options.Name or "MAX HUB | OMNI TITAN"
+    local TitleText = Options.Name or "MAX HUB | TITAN EDITION"
     local ToggleKey = Options.Keybind or Enum.KeyCode.RightControl
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_TitanEngine_V23") then
-        ParentGui.MAX_TitanEngine_V23:Destroy()
+    if ParentGui:FindFirstChild("MAX_TitanEngine_V24") then
+        ParentGui.MAX_TitanEngine_V24:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_TitanEngine_V23"
+    ScreenGui.Name = "MAX_TitanEngine_V24"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Parent = ParentGui
@@ -189,7 +189,6 @@ function MAX_UI:CreateWindow(Options)
     MainFrame.BackgroundColor3 = Theme.Background
     MainFrame.BorderSizePixel = 0
     MainFrame.Active = true
-    MainFrame.Draggable = true
     MainFrame.ClipsDescendants = true
     MainFrame.Parent = ScreenGui
 
@@ -202,10 +201,45 @@ function MAX_UI:CreateWindow(Options)
     MainStroke.Thickness = 2
     MainStroke.Parent = MainFrame
 
-    -- 🔲 زر التصغير العائم بسكن اللاعب
+    -- ⚡ نظام سحب حقيقي وسلس للغاية يمنع التقطيع والتعليق عند التحريك السريع
+    local Dragging = false
+    local DragInput, DragStart, StartPos
+
+    local function UpdateDrag(input)
+        local delta = input.Position - DragStart
+        MainFrame.Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + delta.X, StartPos.Y.Scale, StartPos.Y.Offset + delta.Y)
+    end
+
+    MainFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            Dragging = true
+            DragStart = input.Position
+            StartPos = MainFrame.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    Dragging = false
+                end
+            end)
+        end
+    end)
+
+    MainFrame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            DragInput = input
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input == DragInput and Dragging then
+            UpdateDrag(input)
+        end
+    end)
+
+    -- زر التصغير العائم
     local ReopenBtn = Instance.new("Frame")
     ReopenBtn.Name = "ReopenSquare"
-    ReopenBtn.Size = UDim2.new(0, 52, 0, 52)
+    ReopenBtn.Size = UDim2.new(0, 50, 0, 50)
     ReopenBtn.Position = UDim2.new(0, 20, 0.2, 0)
     ReopenBtn.BackgroundColor3 = Theme.Background
     ReopenBtn.Visible = false
@@ -214,7 +248,7 @@ function MAX_UI:CreateWindow(Options)
     ReopenBtn.Parent = ScreenGui
 
     local ReopenCorner = Instance.new("UICorner")
-    ReopenCorner.CornerRadius = UDim.new(0, 12)
+    ReopenCorner.CornerRadius = UDim.new(0, 10)
     ReopenCorner.Parent = ReopenBtn
 
     local ReopenStroke = Instance.new("UIStroke")
@@ -222,16 +256,12 @@ function MAX_UI:CreateWindow(Options)
     ReopenStroke.Thickness = 2
     ReopenStroke.Parent = ReopenBtn
 
-    local ReopenAvatar = Instance.new("ImageLabel")
-    ReopenAvatar.Size = UDim2.new(0, 40, 0, 40)
-    ReopenAvatar.Position = UDim2.new(0.5, -20, 0.5, -20)
-    ReopenAvatar.BackgroundTransparency = 1
-    ReopenAvatar.Image = PlayerAvatarImage
-    ReopenAvatar.Parent = ReopenBtn
-
-    local ReopenAvatarCorner = Instance.new("UICorner")
-    ReopenAvatarCorner.CornerRadius = UDim.new(1, 0)
-    ReopenAvatarCorner.Parent = ReopenAvatar
+    local ReopenLogo = Instance.new("ImageLabel")
+    ReopenLogo.Size = UDim2.new(0, 36, 0, 36)
+    ReopenLogo.Position = UDim2.new(0.5, -18, 0.5, -18)
+    ReopenLogo.BackgroundTransparency = 1
+    ReopenLogo.Image = CustomLogoImage
+    ReopenLogo.Parent = ReopenBtn
 
     local ReopenTrigger = Instance.new("TextButton")
     ReopenTrigger.Size = UDim2.new(1, 0, 1, 0)
@@ -244,7 +274,7 @@ function MAX_UI:CreateWindow(Options)
         ReopenBtn.Visible = false
     end)
 
-    -- مفتاح الكيبورد لإخفاء/إظهار الواجهة
+    -- مفتاح الكيبورد العام لتأطير النافذة
     UserInputService.InputBegan:Connect(function(input, gpe)
         if not gpe and input.KeyCode == ToggleKey then
             MainFrame.Visible = not MainFrame.Visible
@@ -263,16 +293,12 @@ function MAX_UI:CreateWindow(Options)
     TopbarCorner.CornerRadius = UDim.new(0, 8)
     TopbarCorner.Parent = Topbar
 
-    local HeaderAvatar = Instance.new("ImageLabel")
-    HeaderAvatar.Size = UDim2.new(0, 28, 0, 28)
-    HeaderAvatar.Position = UDim2.new(0, 8, 0.5, -14)
-    HeaderAvatar.BackgroundTransparency = 1
-    HeaderAvatar.Image = PlayerAvatarImage
-    HeaderAvatar.Parent = Topbar
-
-    local HeaderAvatarCorner = Instance.new("UICorner")
-    HeaderAvatarCorner.CornerRadius = UDim.new(1, 0)
-    HeaderAvatarCorner.Parent = HeaderAvatar
+    local HeaderLogo = Instance.new("ImageLabel")
+    HeaderLogo.Size = UDim2.new(0, 26, 0, 26)
+    HeaderLogo.Position = UDim2.new(0, 8, 0.5, -13)
+    HeaderLogo.BackgroundTransparency = 1
+    HeaderLogo.Image = CustomLogoImage
+    HeaderLogo.Parent = Topbar
 
     local StatsLabel = Instance.new("TextLabel")
     StatsLabel.Size = UDim2.new(1, -120, 1, 0)
@@ -340,7 +366,7 @@ function MAX_UI:CreateWindow(Options)
         ScreenGui:Destroy()
     end)
 
-    -- حساب مؤشرات الأداء بدون تسبب في أي تعليق
+    -- حساب الأداء المباشر بدون ثقل برجمي
     task.spawn(function()
         local lastCalc = tick()
         local frames = 0
@@ -373,9 +399,9 @@ function MAX_UI:CreateWindow(Options)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    -- بطاقة بروفايل اللاعب سكن حقيقي 100%
+    -- بطاقة التعريف العلوية
     local WelcomeCard = Instance.new("Frame")
-    WelcomeCard.Size = UDim2.new(1, -12, 0, 58)
+    WelcomeCard.Size = UDim2.new(1, -12, 0, 52)
     WelcomeCard.Position = UDim2.new(0, 6, 0, 6)
     WelcomeCard.BackgroundColor3 = Theme.ItemBg
     WelcomeCard.Parent = Sidebar
@@ -389,20 +415,16 @@ function MAX_UI:CreateWindow(Options)
     CardStroke.Thickness = 1.4
     CardStroke.Parent = WelcomeCard
 
-    local CardAvatar = Instance.new("ImageLabel")
-    CardAvatar.Size = UDim2.new(0, 42, 0, 42)
-    CardAvatar.Position = UDim2.new(0, 6, 0.5, -21)
-    CardAvatar.BackgroundTransparency = 1
-    CardAvatar.Image = PlayerAvatarImage
-    CardAvatar.Parent = WelcomeCard
-
-    local CardAvatarCorner = Instance.new("UICorner")
-    CardAvatarCorner.CornerRadius = UDim.new(1, 0)
-    CardAvatarCorner.Parent = CardAvatar
+    local CardLogo = Instance.new("ImageLabel")
+    CardLogo.Size = UDim2.new(0, 36, 0, 36)
+    CardLogo.Position = UDim2.new(0, 8, 0.5, -18)
+    CardLogo.BackgroundTransparency = 1
+    CardLogo.Image = CustomLogoImage
+    CardLogo.Parent = WelcomeCard
 
     local GreetingLabel = Instance.new("TextLabel")
-    GreetingLabel.Size = UDim2.new(1, -54, 0, 14)
-    GreetingLabel.Position = UDim2.new(0, 52, 0, 6)
+    GreetingLabel.Size = UDim2.new(1, -52, 0, 16)
+    GreetingLabel.Position = UDim2.new(0, 48, 0, 8)
     GreetingLabel.BackgroundTransparency = 1
     GreetingLabel.Text = GetSmartGreeting()
     GreetingLabel.TextColor3 = Theme.Cyan
@@ -412,8 +434,8 @@ function MAX_UI:CreateWindow(Options)
     GreetingLabel.Parent = WelcomeCard
 
     local UserDisplayName = Instance.new("TextLabel")
-    UserDisplayName.Size = UDim2.new(1, -54, 0, 16)
-    UserDisplayName.Position = UDim2.new(0, 52, 0, 20)
+    UserDisplayName.Size = UDim2.new(1, -52, 0, 18)
+    UserDisplayName.Position = UDim2.new(0, 48, 0, 24)
     UserDisplayName.BackgroundTransparency = 1
     UserDisplayName.Text = LocalPlayer.DisplayName
     UserDisplayName.TextColor3 = Theme.TextPrimary
@@ -422,20 +444,9 @@ function MAX_UI:CreateWindow(Options)
     UserDisplayName.TextXAlignment = Enum.TextXAlignment.Left
     UserDisplayName.Parent = WelcomeCard
 
-    local BadgeLabel = Instance.new("TextLabel")
-    BadgeLabel.Size = UDim2.new(1, -54, 0, 12)
-    BadgeLabel.Position = UDim2.new(0, 52, 0, 38)
-    BadgeLabel.BackgroundTransparency = 1
-    BadgeLabel.Text = "[عضو VIP]"
-    BadgeLabel.TextColor3 = Theme.Accent
-    BadgeLabel.Font = Enum.Font.GothamBlack
-    BadgeLabel.TextSize = 8
-    BadgeLabel.TextXAlignment = Enum.TextXAlignment.Left
-    BadgeLabel.Parent = WelcomeCard
-
     local TabButtonContainer = Instance.new("ScrollingFrame")
-    TabButtonContainer.Size = UDim2.new(1, -12, 1, -76)
-    TabButtonContainer.Position = UDim2.new(0, 6, 0, 70)
+    TabButtonContainer.Size = UDim2.new(1, -12, 1, -70)
+    TabButtonContainer.Position = UDim2.new(0, 6, 0, 64)
     TabButtonContainer.BackgroundTransparency = 1
     TabButtonContainer.ScrollBarThickness = 0
     TabButtonContainer.Parent = Sidebar
@@ -454,7 +465,7 @@ function MAX_UI:CreateWindow(Options)
     local WindowObj = { Tabs = {} }
 
     function WindowObj:CreateTab(TabName, CustomIcon)
-        local IconId = CustomIcon or PlayerAvatarImage
+        local IconId = CustomIcon or CustomLogoImage
 
         local TabButton = Instance.new("TextButton")
         TabButton.Size = UDim2.new(1, 0, 0, 36)
@@ -473,10 +484,6 @@ function MAX_UI:CreateWindow(Options)
         TabAvatar.BackgroundTransparency = 1
         TabAvatar.Image = IconId
         TabAvatar.Parent = TabButton
-
-        local TabAvatarCorner = Instance.new("UICorner")
-        TabAvatarCorner.CornerRadius = UDim.new(1, 0)
-        TabAvatarCorner.Parent = TabAvatar
 
         local TabTitle = Instance.new("TextLabel")
         TabTitle.Size = UDim2.new(1, -36, 1, 0)
@@ -515,7 +522,7 @@ function MAX_UI:CreateWindow(Options)
 
         local TabElements = { Page = PageFrame, Button = TabButton, Icon = TabAvatar, Title = TabTitle }
 
-        -- 🔘 1. الأزرار التفاعلية
+        -- 🔘 1. الأزرار العادية
         function TabElements:AddButton(Text, Callback)
             Callback = Callback or function() end
             local Btn = Instance.new("TextButton")
@@ -540,7 +547,7 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🔘 2. المفاتيح  (Toggle)
+        -- 🔘 2. مفاتيح التشغيل مع علامة الصح (✓)
         function TabElements:AddToggle(Text, Default, Callback)
             Callback = Callback or function() end
             local Toggled = Default or false
@@ -566,26 +573,30 @@ function MAX_UI:CreateWindow(Options)
             Label.Parent = Frame
 
             local Indicator = Instance.new("TextButton")
-            Indicator.Size = UDim2.new(0, 20, 0, 20)
-            Indicator.Position = UDim2.new(1, -28, 0.5, -10)
-            Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(40, 40, 50)
-            Indicator.Text = ""
+            Indicator.Size = UDim2.new(0, 22, 0, 22)
+            Indicator.Position = UDim2.new(1, -30, 0.5, -11)
+            Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(35, 38, 50)
+            Indicator.Text = Toggled and "✓" or ""
+            Indicator.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Indicator.Font = Enum.Font.GothamBlack
+            Indicator.TextSize = 12
             Indicator.Parent = Frame
 
             local IndCorner = Instance.new("UICorner")
-            IndCorner.CornerRadius = UDim.new(0, 5)
+            IndCorner.CornerRadius = UDim.new(0, 6)
             IndCorner.Parent = Indicator
 
             local function UpdateToggle()
                 Toggled = not Toggled
-                Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(40, 40, 50)
+                Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(35, 38, 50)
+                Indicator.Text = Toggled and "✓" or ""
                 task.defer(function() Callback(Toggled) end)
             end
 
             Indicator.MouseButton1Click:Connect(UpdateToggle)
         end
 
-        -- 🔘 3. شريط السحب السلس
+        -- 🔘 3. شريط السحب
         function TabElements:AddSlider(Text, Min, Max, Default, Callback)
             Callback = Callback or function() end
             local Value = Default or Min
@@ -651,7 +662,7 @@ function MAX_UI:CreateWindow(Options)
             KnobCorner.CornerRadius = UDim.new(1, 0)
             KnobCorner.Parent = DragKnob
 
-            local Dragging = false
+            local DraggingSlider = false
 
             local function Update(input)
                 local pos = math.clamp((input.Position.X - SliderTrack.AbsolutePosition.X) / SliderTrack.AbsoluteSize.X, 0, 1)
@@ -663,18 +674,18 @@ function MAX_UI:CreateWindow(Options)
 
             SliderTrack.InputBegan:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                    Dragging = true; Update(input)
+                    DraggingSlider = true; Update(input)
                 end
             end)
 
             UserInputService.InputEnded:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                    Dragging = false
+                    DraggingSlider = false
                 end
             end)
 
             UserInputService.InputChanged:Connect(function(input)
-                if Dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+                if DraggingSlider and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
                     Update(input)
                 end
             end)
@@ -889,9 +900,9 @@ function MAX_UI:CreateWindow(Options)
     end
 
     -- ⚙️ قسم الإعدادات
-    local SettingsTab = WindowObj:CreateTab("الإعدادات", PlayerAvatarImage)
+    local SettingsTab = WindowObj:CreateTab("الإعدادات", CustomLogoImage)
 
-    SettingsTab:AddLabel("👑 أدوات تحسين الأداء والدعم - MAX OMNI ENGINE")
+    SettingsTab:AddLabel("👑 أدوات تحسين الأداء والدعم - MAX TITAN ENGINE")
 
     SettingsTab:AddButton("نسخ رابط سيرفر الديسكورد (Discord) 💬", function()
         pcall(function()
