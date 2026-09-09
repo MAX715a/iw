@@ -1,10 +1,11 @@
 -- ============================================================
--- 👑 MAX ULTRA LUXURY UI LIBRARY (Fluent & Rayfield Style - Engine V17)
--- 🌐 Complete Universal Icon Mapper & Standalone Production Code
+-- 👑 MAX TITAN ULTRA LUXURY UI LIBRARY (Engine V20 - Royal Edition)
+-- 🌐 Full Standalone Production Code | Pure Royal Purple Theme
 -- ============================================================
 
 local MAX_UI = {}
 
+-- ⚙️ الخدمات الأساسية لنظام روبلوكس
 local UserInputService = game:GetService("UserInputService")
 local TweenService    = game:GetService("TweenService")
 local RunService      = game:GetService("RunService")
@@ -17,82 +18,43 @@ local Lighting        = game:GetService("Lighting")
 local LocalPlayer = Players.LocalPlayer
 local IsMobile    = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 
--- 🔓 فك قفل الفريمات تلقائياً
+-- 🔓 فتح سقف الفريمات فور تشغيل السكربت
 pcall(function()
     if setfpscap then setfpscap(240)
     elseif set_fps_cap then set_fps_cap(240) end
 end)
 
--- 🎨 ثيم الألوان الأساسي
+-- 🎨 ثيم البنفسجي الملكي الموحد والأسود الفاخر
 local Theme = {
-    Background  = Color3.fromRGB(11, 12, 16),
-    Sidebar     = Color3.fromRGB(8, 9, 12),
-    Header      = Color3.fromRGB(15, 16, 22),
-    Accent      = Color3.fromRGB(138, 43, 226),
+    Background  = Color3.fromRGB(10, 11, 15),
+    Sidebar     = Color3.fromRGB(7, 8, 11),
+    Header      = Color3.fromRGB(14, 15, 20),
+    Accent      = Color3.fromRGB(138, 43, 226), -- بنفسجي ملكي مشع
+    AccentDark  = Color3.fromRGB(90, 25, 150),
     TextPrimary = Color3.fromRGB(255, 255, 255),
-    TextDark    = Color3.fromRGB(160, 165, 180),
-    ItemBg      = Color3.fromRGB(18, 19, 26),
-    Border      = Color3.fromRGB(30, 32, 42)
+    TextDark    = Color3.fromRGB(170, 175, 190),
+    ItemBg      = Color3.fromRGB(16, 17, 24),
+    ItemHover   = Color3.fromRGB(24, 25, 36),
+    Border      = Color3.fromRGB(138, 43, 226),
+    Disabled    = Color3.fromRGB(35, 38, 48)
 }
 
--- 🖼️ مكتبة الأيقونات العالمية الشاملة (تغطي كافة الاحتياجات)
-local IconLibrary = {
-    ["Home"]     = "rbxassetid://6031075929", -- أيقونة البيت للرئيسية
-    ["Settings"] = "rbxassetid://6031280882", -- أيقونة الترس للإعدادات
-    ["Zap"]      = "rbxassetid://6031094678", -- طاقة / قدرات خارقة
-    ["User"]     = "rbxassetid://6031082533", -- لاعب / شخصية
-    ["Sword"]    = "rbxassetid://6031094670", -- سيف / أسلحة / قتال
-    ["Teleport"] = "rbxassetid://6034509993", -- انتقال / خريطة
-    ["Store"]    = "rbxassetid://6031097225", -- متجر / شراء
-    ["Shield"]   = "rbxassetid://6031082525", -- حماية / درع
-    ["Farm"]     = "rbxassetid://6034509980", -- مزارع / جمع
-    ["Info"]     = "rbxassetid://6031097229", -- معلومات
-}
+-- 🖼️ شعار المطور الخاص بك
+local DeveloperLogo = "rbxassetid://96007556931310"
 
--- 🧠 خوارزمية الربط الذكي للأيقونات حسب اسم التبويب
-local function ResolveIcon(TabName, ProvidedIcon)
-    if ProvidedIcon then
-        if IconLibrary[ProvidedIcon] then return IconLibrary[ProvidedIcon] end
-        if string.sub(tostring(ProvidedIcon), 1, 13) == "rbxassetid://" then return ProvidedIcon end
-    end
-
-    local LowerName = string.lower(TabName or "")
-    
-    if string.find(LowerName, "رئيس") or string.find(LowerName, "بيت") or string.find(LowerName, "home") or string.find(LowerName, "main") then
-        return IconLibrary["Home"]
-    elseif string.find(LowerName, "إعداد") or string.find(LowerName, "عدا") or string.find(LowerName, "setting") then
-        return IconLibrary["Settings"]
-    elseif string.find(LowerName, "قدر") or string.find(LowerName, "خارق") or string.find(LowerName, "power") or string.find(LowerName, "zap") then
-        return IconLibrary["Zap"]
-    elseif string.find(LowerName, "شخص") or string.find(LowerName, "لاعب") or string.find(LowerName, "player") or string.find(LowerName, "user") then
-        return IconLibrary["User"]
-    elseif string.find(LowerName, "سلاح") or string.find(LowerName, "قتال") or string.find(LowerName, "sword") or string.find(LowerName, "combat") then
-        return IconLibrary["Sword"]
-    elseif string.find(LowerName, "انتقال") or string.find(LowerName, "تلفوت") or string.find(LowerName, "tp") or string.find(LowerName, "teleport") then
-        return IconLibrary["Teleport"]
-    elseif string.find(LowerName, "متجر") or string.find(LowerName, "شراء") or string.find(LowerName, "shop") or string.find(LowerName, "store") then
-        return IconLibrary["Store"]
-    elseif string.find(LowerName, "مزارع") or string.find(LowerName, "جمع") or string.find(LowerName, "farm") or string.find(LowerName, "auto") then
-        return IconLibrary["Farm"]
-    elseif string.find(LowerName, "حماية") or string.find(LowerName, "درع") or string.find(LowerName, "shield") then
-        return IconLibrary["Shield"]
-    end
-
-    return IconLibrary["Home"]
+-- 🔊 دالة تشغيل صوت الإشعار الترحيبي والتنبيهي
+local function PlayNotifySound()
+    pcall(function()
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://4590662766"
+        sound.Volume = 0.65
+        sound.Parent = SoundService
+        sound:Play()
+        task.delay(2, function() sound:Destroy() end)
+    end)
 end
 
--- 🎨 قائمة الألوان العريضة المنسدلة
-local ColorPalette = {
-    { Name = "بنفسجي ملكي 💜", Color = Color3.fromRGB(138, 43, 226) },
-    { Name = "أزرق نيون 💙",    Color = Color3.fromRGB(0, 170, 255) },
-    { Name = "أحمر قرمزي ❤️",  Color = Color3.fromRGB(255, 45, 85) },
-    { Name = "أخضر زمردي 💚", Color = Color3.fromRGB(0, 230, 118) },
-    { Name = "أصفر ذهبي 💛",  Color = Color3.fromRGB(255, 193, 7) },
-    { Name = "وردي نيون 💗",    Color = Color3.fromRGB(255, 0, 127) },
-    { Name = "سماوي ثلجي 🩵", Color = Color3.fromRGB(0, 229, 255) },
-    { Name = "برتقالي ناري 🧡", Color = Color3.fromRGB(255, 109, 0) }
-}
-
+-- ⏰ دالة الترحيب الذكية حسب وقت اليوم
 local function GetSmartGreeting()
     local hour = tonumber(os.date("%H")) or 12
     if hour >= 5 and hour < 12 then
@@ -104,35 +66,26 @@ local function GetSmartGreeting()
     end
 end
 
-local function PlayNotifySound()
-    pcall(function()
-        local sound = Instance.new("Sound")
-        sound.SoundId = "rbxassetid://4590662766"
-        sound.Volume = 0.6
-        sound.Parent = SoundService
-        sound:Play()
-        task.delay(2, function() sound:Destroy() end)
-    end)
-end
-
+-- ============================================================
+-- 🛠️ النافذة الرئيسية للواجهة
+-- ============================================================
 function MAX_UI:CreateWindow(Options)
     Options = Options or {}
-    local TitleText     = Options.Name or "MAX HUB"
-    local DeveloperLogo = "rbxassetid://96007556931310" -- صورة المصمم
+    local TitleText = Options.Name or "MAX HUB | TITAN"
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_Engine_V17") then
-        ParentGui.MAX_Engine_V17:Destroy()
+    if ParentGui:FindFirstChild("MAX_TitanEngine_V20") then
+        ParentGui.MAX_TitanEngine_V20:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_Engine_V17"
+    ScreenGui.Name = "MAX_TitanEngine_V20"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Parent = ParentGui
 
-    local DefaultSize = IsMobile and UDim2.new(0, 500, 0, 320) or UDim2.new(0, 640, 0, 420)
-    local DefaultPos  = IsMobile and UDim2.new(0.5, -250, 0.5, -160) or UDim2.new(0.5, -320, 0.5, -210)
+    local DefaultSize = IsMobile and UDim2.new(0, 520, 0, 330) or UDim2.new(0, 660, 0, 430)
+    local DefaultPos  = IsMobile and UDim2.new(0.5, -260, 0.5, -165) or UDim2.new(0.5, -330, 0.5, -215)
 
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
@@ -151,13 +104,13 @@ function MAX_UI:CreateWindow(Options)
 
     local MainStroke = Instance.new("UIStroke")
     MainStroke.Color = Theme.Accent
-    MainStroke.Thickness = 1.5
+    MainStroke.Thickness = 1.8
     MainStroke.Parent = MainFrame
 
-    -- 🔲 زر التصغير العائم
+    -- 🔲 زر الإعادة / التصغير العائم بشعار المطور
     local ReopenBtn = Instance.new("Frame")
     ReopenBtn.Name = "ReopenSquare"
-    ReopenBtn.Size = UDim2.new(0, 46, 0, 46)
+    ReopenBtn.Size = UDim2.new(0, 48, 0, 48)
     ReopenBtn.Position = UDim2.new(0, 20, 0.2, 0)
     ReopenBtn.BackgroundColor3 = Theme.Background
     ReopenBtn.Visible = false
@@ -171,12 +124,12 @@ function MAX_UI:CreateWindow(Options)
 
     local ReopenStroke = Instance.new("UIStroke")
     ReopenStroke.Color = Theme.Accent
-    ReopenStroke.Thickness = 1.5
+    ReopenStroke.Thickness = 1.8
     ReopenStroke.Parent = ReopenBtn
 
     local ReopenLogo = Instance.new("ImageLabel")
-    ReopenLogo.Size = UDim2.new(0, 30, 0, 30)
-    ReopenLogo.Position = UDim2.new(0.5, -15, 0.5, -15)
+    ReopenLogo.Size = UDim2.new(0, 32, 0, 32)
+    ReopenLogo.Position = UDim2.new(0.5, -16, 0.5, -16)
     ReopenLogo.BackgroundTransparency = 1
     ReopenLogo.Image = DeveloperLogo
     ReopenLogo.Parent = ReopenBtn
@@ -196,14 +149,14 @@ function MAX_UI:CreateWindow(Options)
         ReopenBtn.Visible = false
     end)
 
-    -- 🔔 نظام الإشعارات السفلي
+    -- 🔔 نظام الإشعارات الملكي السفلي المصحوب بالصوت
     local function NotifySystem(Title, Content, Duration)
-        Duration = Duration or 3.5
+        Duration = Duration or 3
         PlayNotifySound()
 
         local NotifyFrame = Instance.new("Frame")
-        NotifyFrame.Size = UDim2.new(0, 250, 0, 54)
-        NotifyFrame.Position = UDim2.new(1, 20, 1, -80)
+        NotifyFrame.Size = UDim2.new(0, 260, 0, 56)
+        NotifyFrame.Position = UDim2.new(1, 20, 1, -85)
         NotifyFrame.BackgroundColor3 = Theme.Header
         NotifyFrame.ClipsDescendants = true
         NotifyFrame.Parent = ScreenGui
@@ -214,11 +167,11 @@ function MAX_UI:CreateWindow(Options)
 
         local NStroke = Instance.new("UIStroke")
         NStroke.Color = Theme.Accent
-        NStroke.Thickness = 1.2
+        NStroke.Thickness = 1.4
         NStroke.Parent = NotifyFrame
 
         local NIcon = Instance.new("ImageLabel")
-        NIcon.Size = UDim2.new(0, 26, 0, 26)
+        NIcon.Size = UDim2.new(0, 28, 0, 28)
         NIcon.Position = UDim2.new(0, 10, 0, 14)
         NIcon.BackgroundTransparency = 1
         NIcon.Image = DeveloperLogo
@@ -229,23 +182,23 @@ function MAX_UI:CreateWindow(Options)
         NIconCorner.Parent = NIcon
 
         local NTitle = Instance.new("TextLabel")
-        NTitle.Size = UDim2.new(1, -48, 0, 18)
-        NTitle.Position = UDim2.new(0, 42, 0, 8)
+        NTitle.Size = UDim2.new(1, -50, 0, 18)
+        NTitle.Position = UDim2.new(0, 44, 0, 8)
         NTitle.BackgroundTransparency = 1
         NTitle.Text = Title
         NTitle.TextColor3 = Theme.Accent
         NTitle.Font = Enum.Font.GothamBold
-        NTitle.TextSize = 11
+        NTitle.TextSize = 12
         NTitle.TextXAlignment = Enum.TextXAlignment.Left
         NTitle.Parent = NotifyFrame
 
         local NText = Instance.new("TextLabel")
-        NText.Size = UDim2.new(1, -48, 0, 18)
-        NText.Position = UDim2.new(0, 42, 0, 26)
+        NText.Size = UDim2.new(1, -50, 0, 18)
+        NText.Position = UDim2.new(0, 44, 0, 28)
         NText.BackgroundTransparency = 1
         NText.Text = Content
         NText.TextColor3 = Theme.TextPrimary
-        NText.Font = Enum.Font.GothamMedium
+        NText.Font = Enum.Font.GothamBold
         NText.TextSize = 10
         NText.TextXAlignment = Enum.TextXAlignment.Left
         NText.Parent = NotifyFrame
@@ -257,11 +210,11 @@ function MAX_UI:CreateWindow(Options)
         TimeBar.BorderSizePixel = 0
         TimeBar.Parent = NotifyFrame
 
-        TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, -265, 1, -80)}):Play()
+        TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, -275, 1, -85)}):Play()
         TweenService:Create(TimeBar, TweenInfo.new(Duration, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 3)}):Play()
 
         task.delay(Duration, function()
-            TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, 20, 1, -80)}):Play()
+            TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, 20, 1, -85)}):Play()
             task.wait(0.35)
             NotifyFrame:Destroy()
         end)
@@ -271,7 +224,7 @@ function MAX_UI:CreateWindow(Options)
 
     -- 📊 الهيدر العلوي
     local Topbar = Instance.new("Frame")
-    Topbar.Size = UDim2.new(1, -16, 0, 34)
+    Topbar.Size = UDim2.new(1, -16, 0, 36)
     Topbar.Position = UDim2.new(0, 8, 0, 8)
     Topbar.BackgroundColor3 = Theme.Header
     Topbar.Parent = MainFrame
@@ -281,8 +234,8 @@ function MAX_UI:CreateWindow(Options)
     TopbarCorner.Parent = Topbar
 
     local HeaderLogo = Instance.new("ImageLabel")
-    HeaderLogo.Size = UDim2.new(0, 22, 0, 22)
-    HeaderLogo.Position = UDim2.new(0, 8, 0.5, -11)
+    HeaderLogo.Size = UDim2.new(0, 24, 0, 24)
+    HeaderLogo.Position = UDim2.new(0, 8, 0.5, -12)
     HeaderLogo.BackgroundTransparency = 1
     HeaderLogo.Image = DeveloperLogo
     HeaderLogo.Parent = Topbar
@@ -293,7 +246,7 @@ function MAX_UI:CreateWindow(Options)
 
     local StatsLabel = Instance.new("TextLabel")
     StatsLabel.Size = UDim2.new(1, -120, 1, 0)
-    StatsLabel.Position = UDim2.new(0, 36, 0, 0)
+    StatsLabel.Position = UDim2.new(0, 38, 0, 0)
     StatsLabel.BackgroundTransparency = 1
     StatsLabel.TextColor3 = Theme.TextPrimary
     StatsLabel.Font = Enum.Font.GothamBold
@@ -302,7 +255,7 @@ function MAX_UI:CreateWindow(Options)
     StatsLabel.Text = TitleText .. "  |  ⚡ FPS: ...  |  📡 Ping: ..."
     StatsLabel.Parent = Topbar
 
-    -- 🔘 أزرار التحكم
+    -- 🔘 أزرار التحكم بالنافذة
     local ControlFrame = Instance.new("Frame")
     ControlFrame.Size = UDim2.new(0, 68, 1, 0)
     ControlFrame.Position = UDim2.new(1, -72, 0, 0)
@@ -357,6 +310,7 @@ function MAX_UI:CreateWindow(Options)
         ScreenGui:Destroy()
     end)
 
+    -- حساب الفريمات واستجابة السيرفر
     local frameCount = 0
     local lastTime = tick()
     RunService.RenderStepped:Connect(function()
@@ -374,11 +328,11 @@ function MAX_UI:CreateWindow(Options)
         end
     end)
 
-    -- 📁 الشريط الجانبي
-    local SidebarWidth = IsMobile and 145 or 175
+    -- 📁 الشريط الجانبي للتبويبات
+    local SidebarWidth = IsMobile and 150 or 180
     local Sidebar = Instance.new("Frame")
-    Sidebar.Size = UDim2.new(0, SidebarWidth, 1, -54)
-    Sidebar.Position = UDim2.new(0, 8, 0, 46)
+    Sidebar.Size = UDim2.new(0, SidebarWidth, 1, -56)
+    Sidebar.Position = UDim2.new(0, 8, 0, 48)
     Sidebar.BackgroundColor3 = Theme.Sidebar
     Sidebar.Parent = MainFrame
 
@@ -386,9 +340,9 @@ function MAX_UI:CreateWindow(Options)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    -- 👑 بطاقة البروفايل
+    -- 👑 بطاقة المطور والبروفايل
     local WelcomeCard = Instance.new("Frame")
-    WelcomeCard.Size = UDim2.new(1, -12, 0, 50)
+    WelcomeCard.Size = UDim2.new(1, -12, 0, 52)
     WelcomeCard.Position = UDim2.new(0, 6, 0, 6)
     WelcomeCard.BackgroundColor3 = Theme.ItemBg
     WelcomeCard.Parent = Sidebar
@@ -399,12 +353,12 @@ function MAX_UI:CreateWindow(Options)
 
     local CardStroke = Instance.new("UIStroke")
     CardStroke.Color = Theme.Accent
-    CardStroke.Thickness = 1
+    CardStroke.Thickness = 1.2
     CardStroke.Parent = WelcomeCard
 
     local UserAvatar = Instance.new("ImageLabel")
-    UserAvatar.Size = UDim2.new(0, 34, 0, 34)
-    UserAvatar.Position = UDim2.new(0, 6, 0.5, -17)
+    UserAvatar.Size = UDim2.new(0, 36, 0, 36)
+    UserAvatar.Position = UDim2.new(0, 6, 0.5, -18)
     UserAvatar.BackgroundTransparency = 1
     UserAvatar.Image = DeveloperLogo
     UserAvatar.Parent = WelcomeCard
@@ -414,8 +368,8 @@ function MAX_UI:CreateWindow(Options)
     AvatarCorner.Parent = UserAvatar
 
     local GreetingLabel = Instance.new("TextLabel")
-    GreetingLabel.Size = UDim2.new(1, -46, 0, 14)
-    GreetingLabel.Position = UDim2.new(0, 44, 0, 6)
+    GreetingLabel.Size = UDim2.new(1, -48, 0, 14)
+    GreetingLabel.Position = UDim2.new(0, 46, 0, 6)
     GreetingLabel.BackgroundTransparency = 1
     GreetingLabel.Text = GetSmartGreeting()
     GreetingLabel.TextColor3 = Theme.Accent
@@ -425,8 +379,8 @@ function MAX_UI:CreateWindow(Options)
     GreetingLabel.Parent = WelcomeCard
 
     local UserDisplayName = Instance.new("TextLabel")
-    UserDisplayName.Size = UDim2.new(1, -46, 0, 14)
-    UserDisplayName.Position = UDim2.new(0, 44, 0, 18)
+    UserDisplayName.Size = UDim2.new(1, -48, 0, 14)
+    UserDisplayName.Position = UDim2.new(0, 46, 0, 19)
     UserDisplayName.BackgroundTransparency = 1
     UserDisplayName.Text = LocalPlayer.DisplayName
     UserDisplayName.TextColor3 = Theme.TextPrimary
@@ -436,19 +390,19 @@ function MAX_UI:CreateWindow(Options)
     UserDisplayName.Parent = WelcomeCard
 
     local BadgeLabel = Instance.new("TextLabel")
-    BadgeLabel.Size = UDim2.new(1, -46, 0, 12)
-    BadgeLabel.Position = UDim2.new(0, 44, 0, 32)
+    BadgeLabel.Size = UDim2.new(1, -48, 0, 12)
+    BadgeLabel.Position = UDim2.new(0, 46, 0, 33)
     BadgeLabel.BackgroundTransparency = 1
     BadgeLabel.Text = "[VIP MEMBER]"
-    BadgeLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
+    BadgeLabel.TextColor3 = Theme.Accent
     BadgeLabel.Font = Enum.Font.GothamBold
     BadgeLabel.TextSize = 8
     BadgeLabel.TextXAlignment = Enum.TextXAlignment.Left
     BadgeLabel.Parent = WelcomeCard
 
     local TabButtonContainer = Instance.new("ScrollingFrame")
-    TabButtonContainer.Size = UDim2.new(1, -12, 1, -68)
-    TabButtonContainer.Position = UDim2.new(0, 6, 0, 60)
+    TabButtonContainer.Size = UDim2.new(1, -12, 1, -70)
+    TabButtonContainer.Position = UDim2.new(0, 6, 0, 64)
     TabButtonContainer.BackgroundTransparency = 1
     TabButtonContainer.ScrollBarThickness = 0
     TabButtonContainer.Parent = Sidebar
@@ -459,18 +413,19 @@ function MAX_UI:CreateWindow(Options)
     TabListLayout.Parent = TabButtonContainer
 
     local ContentArea = Instance.new("Frame")
-    ContentArea.Size = UDim2.new(1, -(SidebarWidth + 24), 1, -54)
-    ContentArea.Position = UDim2.new(0, SidebarWidth + 16, 0, 46)
+    ContentArea.Size = UDim2.new(1, -(SidebarWidth + 24), 1, -56)
+    ContentArea.Position = UDim2.new(0, SidebarWidth + 16, 0, 48)
     ContentArea.BackgroundTransparency = 1
     ContentArea.Parent = MainFrame
 
-    local WindowObj = { Tabs = {}, Accents = {}, Notify = NotifySystem }
+    local WindowObj = { Tabs = {}, Notify = NotifySystem }
 
+    -- 🌟 دالة إنشاء التبويبات مع اختيار الشعار والآيدي الخاص بك
     function WindowObj:CreateTab(TabName, CustomIcon)
-        local IconId = ResolveIcon(TabName, CustomIcon)
+        local IconId = CustomIcon or DeveloperLogo
 
         local TabButton = Instance.new("TextButton")
-        TabButton.Size = UDim2.new(1, 0, 0, 32)
+        TabButton.Size = UDim2.new(1, 0, 0, 34)
         TabButton.BackgroundColor3 = Theme.ItemBg
         TabButton.Text = ""
         TabButton.AutoButtonColor = false
@@ -481,20 +436,23 @@ function MAX_UI:CreateWindow(Options)
         BtnCorner.Parent = TabButton
 
         local TabIcon = Instance.new("ImageLabel")
-        TabIcon.Size = UDim2.new(0, 16, 0, 16)
-        TabIcon.Position = UDim2.new(0, 8, 0.5, -8)
+        TabIcon.Size = UDim2.new(0, 18, 0, 18)
+        TabIcon.Position = UDim2.new(0, 8, 0.5, -9)
         TabIcon.BackgroundTransparency = 1
         TabIcon.Image = IconId
-        TabIcon.ImageColor3 = Theme.TextDark
         TabIcon.Parent = TabButton
 
+        local TabIconCorner = Instance.new("UICorner")
+        TabIconCorner.CornerRadius = UDim.new(1, 0)
+        TabIconCorner.Parent = TabIcon
+
         local TabTitle = Instance.new("TextLabel")
-        TabTitle.Size = UDim2.new(1, -30, 1, 0)
-        TabTitle.Position = UDim2.new(0, 28, 0, 0)
+        TabTitle.Size = UDim2.new(1, -32, 1, 0)
+        TabTitle.Position = UDim2.new(0, 30, 0, 0)
         TabTitle.BackgroundTransparency = 1
         TabTitle.Text = TabName
         TabTitle.TextColor3 = Theme.TextDark
-        TabTitle.Font = Enum.Font.GothamMedium
+        TabTitle.Font = Enum.Font.GothamBold
         TabTitle.TextSize = IsMobile and 10 or 11
         TabTitle.TextXAlignment = Enum.TextXAlignment.Left
         TabTitle.Parent = TabButton
@@ -515,22 +473,21 @@ function MAX_UI:CreateWindow(Options)
         TabButton.MouseButton1Click:Connect(function()
             for _, tab in ipairs(WindowObj.Tabs) do
                 tab.Page.Visible = false
-                tab.Icon.ImageColor3 = Theme.TextDark
                 tab.Title.TextColor3 = Theme.TextDark
                 tab.Button.BackgroundColor3 = Theme.ItemBg
             end
             PageFrame.Visible = true
-            TabIcon.ImageColor3 = Theme.TextPrimary
             TabTitle.TextColor3 = Theme.TextPrimary
             TabButton.BackgroundColor3 = Theme.Accent
         end)
 
         local TabElements = { Page = PageFrame, Button = TabButton, Icon = TabIcon, Title = TabTitle }
 
+        -- 🔘 1. عنصر الأزرار العامة (Button)
         function TabElements:AddButton(Text, Callback)
             Callback = Callback or function() end
             local Btn = Instance.new("TextButton")
-            Btn.Size = UDim2.new(1, -6, 0, 32)
+            Btn.Size = UDim2.new(1, -6, 0, 34)
             Btn.BackgroundColor3 = Theme.ItemBg
             Btn.Text = Text
             Btn.TextColor3 = Theme.TextPrimary
@@ -547,15 +504,17 @@ function MAX_UI:CreateWindow(Options)
                 task.wait(0.1)
                 TweenService:Create(Btn, TweenInfo.new(0.1), {BackgroundColor3 = Theme.ItemBg}):Play()
                 Callback()
+                NotifySystem(TitleText, "تم تفعيل: " .. Text, 2.5)
             end)
         end
 
+        -- 🔘 2. عنصر مفاتيح التشغيل والإيقاف (Toggle)
         function TabElements:AddToggle(Text, Default, Callback)
             Callback = Callback or function() end
             local Toggled = Default or false
 
             local Frame = Instance.new("Frame")
-            Frame.Size = UDim2.new(1, -6, 0, 32)
+            Frame.Size = UDim2.new(1, -6, 0, 34)
             Frame.BackgroundColor3 = Theme.ItemBg
             Frame.Parent = PageFrame
 
@@ -569,7 +528,7 @@ function MAX_UI:CreateWindow(Options)
             Label.BackgroundTransparency = 1
             Label.Text = Text
             Label.TextColor3 = Theme.TextPrimary
-            Label.Font = Enum.Font.GothamMedium
+            Label.Font = Enum.Font.GothamBold
             Label.TextSize = 11
             Label.TextXAlignment = Enum.TextXAlignment.Left
             Label.Parent = Frame
@@ -581,10 +540,6 @@ function MAX_UI:CreateWindow(Options)
             Indicator.Text = ""
             Indicator.Parent = Frame
 
-            table.insert(WindowObj.Accents, function(col)
-                if Toggled then Indicator.BackgroundColor3 = col end
-            end)
-
             local IndCorner = Instance.new("UICorner")
             IndCorner.CornerRadius = UDim.new(0, 4)
             IndCorner.Parent = Indicator
@@ -593,17 +548,20 @@ function MAX_UI:CreateWindow(Options)
                 Toggled = not Toggled
                 Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(40, 40, 50)
                 Callback(Toggled)
+                local Status = Toggled and "تم تشغيل: " or "تم إيقاف: "
+                NotifySystem(TitleText, Status .. Text, 2.5)
             end
 
             Indicator.MouseButton1Click:Connect(UpdateToggle)
         end
 
+        -- 🔘 3. عنصر شريط السحب والأرقام (Slider)
         function TabElements:AddSlider(Text, Min, Max, Default, Callback)
             Callback = Callback or function() end
             local Value = Default or Min
 
             local Frame = Instance.new("Frame")
-            Frame.Size = UDim2.new(1, -6, 0, 42)
+            Frame.Size = UDim2.new(1, -6, 0, 44)
             Frame.BackgroundColor3 = Theme.ItemBg
             Frame.Parent = PageFrame
 
@@ -617,7 +575,7 @@ function MAX_UI:CreateWindow(Options)
             Label.BackgroundTransparency = 1
             Label.Text = Text
             Label.TextColor3 = Theme.TextPrimary
-            Label.Font = Enum.Font.GothamMedium
+            Label.Font = Enum.Font.GothamBold
             Label.TextSize = 11
             Label.TextXAlignment = Enum.TextXAlignment.Left
             Label.Parent = Frame
@@ -632,8 +590,6 @@ function MAX_UI:CreateWindow(Options)
             ValLabel.TextSize = 11
             ValLabel.Parent = Frame
 
-            table.insert(WindowObj.Accents, function(col) ValLabel.TextColor3 = col end)
-
             local SliderBar = Instance.new("Frame")
             SliderBar.Size = UDim2.new(1, -20, 0, 5)
             SliderBar.Position = UDim2.new(0, 10, 1, -10)
@@ -645,8 +601,6 @@ function MAX_UI:CreateWindow(Options)
             SliderFill.BackgroundColor3 = Theme.Accent
             SliderFill.BorderSizePixel = 0
             SliderFill.Parent = SliderBar
-
-            table.insert(WindowObj.Accents, function(col) SliderFill.BackgroundColor3 = col end)
 
             local Dragging = false
             local lastUpdate = 0
@@ -682,8 +636,58 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        function TabElements:AddColorDropdown(Text, Callback)
+        -- 🔘 4. عنصر صندوق النصوص (Text Input)
+        function TabElements:AddTextbox(Text, Placeholder, Callback)
             Callback = Callback or function() end
+
+            local Frame = Instance.new("Frame")
+            Frame.Size = UDim2.new(1, -6, 0, 36)
+            Frame.BackgroundColor3 = Theme.ItemBg
+            Frame.Parent = PageFrame
+
+            local Corner = Instance.new("UICorner")
+            Corner.CornerRadius = UDim.new(0, 6)
+            Corner.Parent = Frame
+
+            local Label = Instance.new("TextLabel")
+            Label.Size = UDim2.new(0.5, 0, 1, 0)
+            Label.Position = UDim2.new(0, 10, 0, 0)
+            Label.BackgroundTransparency = 1
+            Label.Text = Text
+            Label.TextColor3 = Theme.TextPrimary
+            Label.Font = Enum.Font.GothamBold
+            Label.TextSize = 11
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.Parent = Frame
+
+            local InputBox = Instance.new("TextBox")
+            InputBox.Size = UDim2.new(0.45, 0, 0.7, 0)
+            InputBox.Position = UDim2.new(0.52, 0, 0.15, 0)
+            InputBox.BackgroundColor3 = Color3.fromRGB(25, 27, 38)
+            InputBox.Text = ""
+            InputBox.PlaceholderText = Placeholder or "اكتب هنا..."
+            InputBox.TextColor3 = Theme.Accent
+            InputBox.PlaceholderColor3 = Theme.TextDark
+            InputBox.Font = Enum.Font.GothamBold
+            InputBox.TextSize = 10
+            InputBox.Parent = Frame
+
+            local BoxCorner = Instance.new("UICorner")
+            BoxCorner.CornerRadius = UDim.new(0, 5)
+            BoxCorner.Parent = InputBox
+
+            InputBox.FocusLost:Connect(function(enterPressed)
+                if enterPressed then
+                    Callback(InputBox.Text)
+                    NotifySystem(TitleText, "تم إدخال: " .. InputBox.Text, 2.5)
+                end
+            end)
+        end
+
+        -- 🔘 5. عنصر القوائم المنسدلة (Dropdown)
+        function TabElements:AddDropdown(Text, ListOptions, Callback)
+            Callback = Callback or function() end
+            ListOptions = ListOptions or {}
             local Expanded = false
 
             local DropdownMain = Instance.new("Frame")
@@ -706,7 +710,7 @@ function MAX_UI:CreateWindow(Options)
             Title.Size = UDim2.new(1, -40, 1, 0)
             Title.Position = UDim2.new(0, 10, 0, 0)
             Title.BackgroundTransparency = 1
-            Title.Text = "🎨 " .. Text
+            Title.Text = Text
             Title.TextColor3 = Theme.TextPrimary
             Title.Font = Enum.Font.GothamBold
             Title.TextSize = 11
@@ -724,7 +728,7 @@ function MAX_UI:CreateWindow(Options)
             Arrow.Parent = HeaderBtn
 
             local ItemsHolder = Instance.new("Frame")
-            ItemsHolder.Size = UDim2.new(1, -12, 0, #ColorPalette * 30)
+            ItemsHolder.Size = UDim2.new(1, -12, 0, #ListOptions * 28)
             ItemsHolder.Position = UDim2.new(0, 6, 0, 38)
             ItemsHolder.BackgroundTransparency = 1
             ItemsHolder.Parent = DropdownMain
@@ -734,60 +738,64 @@ function MAX_UI:CreateWindow(Options)
             ListLayout.Padding = UDim.new(0, 4)
             ListLayout.Parent = ItemsHolder
 
-            for _, item in ipairs(ColorPalette) do
+            for _, opt in ipairs(ListOptions) do
                 local ItemBtn = Instance.new("TextButton")
-                ItemBtn.Size = UDim2.new(1, 0, 0, 26)
-                ItemBtn.BackgroundColor3 = Color3.fromRGB(24, 26, 36)
-                ItemBtn.Text = ""
-                ItemBtn.AutoButtonColor = false
+                ItemBtn.Size = UDim2.new(1, 0, 0, 24)
+                ItemBtn.BackgroundColor3 = Color3.fromRGB(25, 27, 38)
+                ItemBtn.Text = opt
+                ItemBtn.TextColor3 = Theme.TextPrimary
+                ItemBtn.Font = Enum.Font.GothamBold
+                ItemBtn.TextSize = 10
                 ItemBtn.Parent = ItemsHolder
 
                 local ItemCorner = Instance.new("UICorner")
                 ItemCorner.CornerRadius = UDim.new(0, 4)
                 ItemCorner.Parent = ItemBtn
 
-                local Box = Instance.new("Frame")
-                Box.Size = UDim2.new(0, 14, 0, 14)
-                Box.Position = UDim2.new(0, 8, 0.5, -7)
-                Box.BackgroundColor3 = item.Color
-                Box.Parent = ItemBtn
-
-                local BoxCorner = Instance.new("UICorner")
-                BoxCorner.CornerRadius = UDim.new(0, 3)
-                BoxCorner.Parent = Box
-
-                local ItemText = Instance.new("TextLabel")
-                ItemText.Size = UDim2.new(1, -32, 1, 0)
-                ItemText.Position = UDim2.new(0, 28, 0, 0)
-                ItemText.BackgroundTransparency = 1
-                ItemText.Text = item.Name
-                ItemText.TextColor3 = Theme.TextPrimary
-                ItemText.Font = Enum.Font.GothamMedium
-                ItemText.TextSize = 10
-                ItemText.TextXAlignment = Enum.TextXAlignment.Left
-                ItemText.Parent = ItemBtn
-
                 ItemBtn.MouseButton1Click:Connect(function()
                     Expanded = false
                     Arrow.Text = "▼"
                     TweenService:Create(DropdownMain, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(1, -6, 0, 36)}):Play()
-                    Callback(item.Color)
+                    Callback(opt)
+                    NotifySystem(TitleText, "تم تحديد: " .. opt, 2.5)
                 end)
             end
 
             HeaderBtn.MouseButton1Click:Connect(function()
                 Expanded = not Expanded
                 Arrow.Text = Expanded and "▲" or "▼"
-                local TargetHeight = Expanded and (42 + #ColorPalette * 30) or 36
+                local TargetHeight = Expanded and (42 + #ListOptions * 28) or 36
                 TweenService:Create(DropdownMain, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(1, -6, 0, TargetHeight)}):Play()
             end)
+        end
+
+        -- 🔘 6. عنصر الكروت والملاحظات النصية (Label Banner)
+        function TabElements:AddLabel(Text)
+            local Frame = Instance.new("Frame")
+            Frame.Size = UDim2.new(1, -6, 0, 30)
+            Frame.BackgroundColor3 = Theme.ItemBg
+            Frame.Parent = PageFrame
+
+            local Corner = Instance.new("UICorner")
+            Corner.CornerRadius = UDim.new(0, 6)
+            Corner.Parent = Frame
+
+            local Label = Instance.new("TextLabel")
+            Label.Size = UDim2.new(1, -12, 1, 0)
+            Label.Position = UDim2.new(0, 6, 0, 0)
+            Label.BackgroundTransparency = 1
+            Label.Text = Text
+            Label.TextColor3 = Theme.Accent
+            Label.Font = Enum.Font.GothamBold
+            Label.TextSize = 10
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.Parent = Frame
         end
 
         table.insert(WindowObj.Tabs, TabElements)
 
         if #WindowObj.Tabs == 1 then
             PageFrame.Visible = true
-            TabIcon.ImageColor3 = Theme.TextPrimary
             TabTitle.TextColor3 = Theme.TextPrimary
             TabButton.BackgroundColor3 = Theme.Accent
         end
@@ -796,28 +804,15 @@ function MAX_UI:CreateWindow(Options)
     end
 
     -- ============================================================
-    -- ⚙️ تبويب الإعدادات التلقائي
+    -- ⚙️ قسم الإعدادات وأدوات تسريع اللعبة الفعالة
     -- ============================================================
-    local SettingsTab = WindowObj:CreateTab("الإعدادات", "Settings")
+    local SettingsTab = WindowObj:CreateTab("الإعدادات", DeveloperLogo)
 
-    local function ApplyColor(col)
-        Theme.Accent = col
-        MainStroke.Color = col
-        ReopenStroke.Color = col
-        CardStroke.Color = col
-        GreetingLabel.TextColor3 = col
-        for _, updateFunc in ipairs(WindowObj.Accents) do updateFunc(col) end
-        NotifySystem("👑 MAX ENGINE", "تم تطبيق اللون بنجاح!", 2)
-    end
-
-    SettingsTab:AddColorDropdown("اختيار لون الثيم المفضل", function(selectedColor)
-        ApplyColor(selectedColor)
-    end)
+    SettingsTab:AddLabel("👑 MAX TITAN ENGINE - أدوات تسريع الفريمات والأداء")
 
     SettingsTab:AddButton("تنظيف الذاكرة العشوائية (RAM Cleaner) 🧹", function()
         pcall(function()
             collectgarbage("collect")
-            NotifySystem("🧹 تنظيف الذاكرة", "تم تفريغ الذاكرة العشوائية بنجاح!", 3)
         end)
     end)
 
@@ -826,12 +821,14 @@ function MAX_UI:CreateWindow(Options)
             for _, obj in ipairs(game:GetDescendants()) do
                 if obj:IsA("BasePart") then
                     obj.Material = Enum.Material.SmoothPlastic
-                elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Smoke") or obj:IsA("Fire") then
+                elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Smoke") or obj:IsA("Fire") or obj:IsA("Sparkles") then
+                    obj.Enabled = false
+                elseif obj:IsA("PostEffect") or obj:IsA("BloomEffect") or obj:IsA("SunRaysEffect") or obj:IsA("BlurEffect") then
                     obj.Enabled = false
                 end
             end
             Lighting.GlobalShadows = false
-            NotifySystem("⚡ تسريع الأداء", "تم تسريع اللعبة ورفع الفريمات!", 3)
+            Lighting.Technology = Enum.Technology.Compatibility
         end)
     end)
 
@@ -839,12 +836,11 @@ function MAX_UI:CreateWindow(Options)
         pcall(function()
             Lighting.FogEnd = 9e9
             Lighting.GlobalShadows = false
-            NotifySystem("🌫️ تحسين الرؤية", "تم إلغاء الضباب والظلال بنجاح!", 3)
         end)
     end)
 
-    -- إشعار الترحيب المباشر عند التشغيل
-    NotifySystem(GetSmartGreeting(), "مرحباً بك يا " .. LocalPlayer.DisplayName .. " في " .. TitleText, 4)
+    -- إشعار الترحيب المباشر
+    NotifySystem(GetSmartGreeting(), "مرحباً بك يا " .. LocalPlayer.DisplayName .. " في " .. TitleText, 3.5)
 
     return WindowObj
 end
