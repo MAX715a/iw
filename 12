@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX ULTRA LUXURY UI LIBRARY (Complete Developer Toast Engine)
--- 🌐 Full Production Code (Mobile & PC Adaptive)
+-- 👑 MAX ULTRA LUXURY UI LIBRARY (Full Developer Notification Engine)
+-- 🌐 Complete Standalone Production Code with Sound & Custom Logo
 -- ============================================================
 
 local MAX_UI = {}
@@ -11,12 +11,13 @@ local RunService      = game:GetService("RunService")
 local CoreGui         = game:GetService("CoreGui")
 local Players         = game:GetService("Players")
 local Stats           = game:GetService("Stats")
+local SoundService    = game:GetService("SoundService")
 
 local LocalPlayer = Players.LocalPlayer
 local IsMobile    = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 local DeviceType  = IsMobile and "Mobile 📱" or "PC 🖥️"
 
--- 🔓 فك قفل الفريمات تلقائياً
+-- 🔓 فك قفل الفريمات
 pcall(function()
     if setfpscap then setfpscap(240)
     elseif set_fps_cap then set_fps_cap(240) end
@@ -57,18 +58,30 @@ local function GetSmartGreeting()
     end
 end
 
+-- 🔊 تشغيل صوت إشعار ناعم
+local function PlayNotifySound()
+    pcall(function()
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://4590662766" -- صوت تنبيه ناعم وفاخر
+        sound.Volume = 0.5
+        sound.Parent = SoundService
+        sound:Play()
+        task.delay(2, function() sound:Destroy() end)
+    end)
+end
+
 function MAX_UI:CreateWindow(Options)
     Options = Options or {}
     local TitleText = Options.Name or "MAX HUB"
-    local LogoId    = Options.Logo or "rbxassetid://6031075931"
+    local LogoId    = Options.Logo or "rbxassetid://96007556931310"
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V10") then
-        ParentGui.MAX_LuxuryEngine_V10:Destroy()
+    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V11") then
+        ParentGui.MAX_LuxuryEngine_V11:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_LuxuryEngine_V10"
+    ScreenGui.Name = "MAX_LuxuryEngine_V11"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Parent = ParentGui
@@ -96,7 +109,7 @@ function MAX_UI:CreateWindow(Options)
     MainStroke.Thickness = 1.5
     MainStroke.Parent = MainFrame
 
-    -- 🔲 زر التصغير المربع
+    -- 🔲 زر التصغير المربع بالشعار
     local ReopenBtn = Instance.new("Frame")
     ReopenBtn.Name = "ReopenSquare"
     ReopenBtn.Size = UDim2.new(0, 46, 0, 46)
@@ -134,9 +147,11 @@ function MAX_UI:CreateWindow(Options)
         ReopenBtn.Visible = false
     end)
 
-    -- 💬 نظام رسائل وإشعارات المطور الفخم (Developer Custom Toast System)
-    function MAX_UI:Notify(Title, Content, Duration)
+    -- 🔔 نظام إشعارات المطور الفخم (Developer Notification Toast with Sound)
+    local function NotifySystem(Title, Content, Duration)
         Duration = Duration or 3.5
+        PlayNotifySound()
+
         local NotifyFrame = Instance.new("Frame")
         NotifyFrame.Size = UDim2.new(0, 250, 0, 54)
         NotifyFrame.Position = UDim2.new(1, 20, 1, -80)
@@ -198,6 +213,8 @@ function MAX_UI:CreateWindow(Options)
             NotifyFrame:Destroy()
         end)
     end
+
+    MAX_UI.Notify = NotifySystem
 
     -- 📊 الهيدر العلوي
     local Topbar = Instance.new("Frame")
@@ -393,7 +410,7 @@ function MAX_UI:CreateWindow(Options)
     ContentArea.BackgroundTransparency = 1
     ContentArea.Parent = MainFrame
 
-    local WindowObj = { Tabs = {}, Accents = {} }
+    local WindowObj = { Tabs = {}, Accents = {}, Notify = NotifySystem }
 
     function WindowObj:CreateTab(TabName, IconId)
         IconId = IconId or "rbxassetid://6031075929"
@@ -697,15 +714,15 @@ function MAX_UI:CreateWindow(Options)
         CardStroke.Color = col
         GreetingLabel.TextColor3 = col
         for _, updateFunc in ipairs(WindowObj.Accents) do updateFunc(col) end
-        MAX_UI:Notify("👑 MAX ENGINE", "تم تحديث الثيم بنجاح!", 2)
+        NotifySystem("👑 MAX ENGINE", "تم تغيير اللون بنجاح!", 2)
     end
 
     SettingsTab:AddColorPicker("تحديد لون الثيم المفضل", function(selectedColor)
         ApplyColor(selectedColor)
     end)
 
-    -- 🌟 إشعار ترحيبي مخصص يظهر عند الفتح تلقائياً
-    MAX_UI:Notify(GetSmartGreeting(), "مرحباً بك يا " .. LocalPlayer.DisplayName .. " في MAX HUB", 4)
+    -- إشعار ترحيبي عند تشغيل السكربت مع صوت تنبيه
+    NotifySystem(GetSmartGreeting(), "مرحباً بك يا " .. LocalPlayer.DisplayName .. " في MAX HUB", 4)
 
     return WindowObj
 end
