@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX TITAN ULTRA LUXURY UI LIBRARY (Engine V22 - Pro Edition)
--- 🌐 Complete Standalone Production Code | Royal Purple Theme
+-- 👑 MAX TITAN ULTRA LUXURY UI LIBRARY (Engine V22 - Anti-Lag Edition)
+-- 🌐 True Stats / Zero-Stuttering / Task-Throttled / Royal Purple
 -- ============================================================
 
 local MAX_UI = {}
@@ -17,23 +17,25 @@ local Lighting        = game:GetService("Lighting")
 local LocalPlayer = Players.LocalPlayer
 local IsMobile    = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 
--- 🔓 فك قفل الفريمات
+-- 🔓 فك قفل الشاشة والتحكم بالمعدل لمنع التقطيع
 pcall(function()
     if setfpscap then setfpscap(240)
     elseif set_fps_cap then set_fps_cap(240) end
 end)
 
--- 👤 جلب صورة سكن/وجه اللاعب ثلاثية الأبعاد
+-- 👤 جلب صورة اللاعب بشكل منفصل بدون تعطيل التحميل
 local PlayerAvatarImage = "rbxassetid://6031075931"
-pcall(function()
-    PlayerAvatarImage = Players:GetUserThumbnailAsync(
-        LocalPlayer.UserId, 
-        Enum.ThumbnailType.HeadShot, 
-        Enum.ThumbnailSize.Size420x420
-    )
+task.spawn(function()
+    pcall(function()
+        PlayerAvatarImage = Players:GetUserThumbnailAsync(
+            LocalPlayer.UserId, 
+            Enum.ThumbnailType.HeadShot, 
+            Enum.ThumbnailSize.Size420x420
+        )
+    end)
 end)
 
--- 🎨 ثيم البنفسجي الملكي والأسود الفاخر
+-- 🎨 ثيم الواجهة
 local Theme = {
     Background  = Color3.fromRGB(11, 12, 17),
     Sidebar     = Color3.fromRGB(8, 9, 13),
@@ -46,14 +48,18 @@ local Theme = {
     Border      = Color3.fromRGB(138, 43, 226)
 }
 
+local ActiveNotifications = {}
+
 local function PlayNotifySound()
-    pcall(function()
-        local sound = Instance.new("Sound")
-        sound.SoundId = "rbxassetid://4590662766"
-        sound.Volume = 0.7
-        sound.Parent = SoundService
-        sound:Play()
-        task.delay(2, function() sound:Destroy() end)
+    task.defer(function()
+        pcall(function()
+            local sound = Instance.new("Sound")
+            sound.SoundId = "rbxassetid://4590662766"
+            sound.Volume = 0.5
+            sound.Parent = SoundService
+            sound:Play()
+            task.delay(2, function() sound:Destroy() end)
+        end)
     end)
 end
 
@@ -68,15 +74,14 @@ local function GetSmartGreeting()
     end
 end
 
--- 🔔 نظام الإشعارات المستقل والعام (يمكن استدعاؤه في أي مكان)
+-- 🔔 نظام الإشعارات السلس والخفيف جداً على الـ CPU
 function MAX_UI:Notify(Title, Content, Duration)
     Duration = Duration or 3.5
     PlayNotifySound()
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    
-    -- إنشاء ScreenGui خاص بالإشعارات إذا لم يكن موجوداً
     local NotifyGui = ParentGui:FindFirstChild("MAX_Titan_NotifyGui")
+    
     if not NotifyGui then
         NotifyGui = Instance.new("ScreenGui")
         NotifyGui.Name = "MAX_Titan_NotifyGui"
@@ -142,13 +147,28 @@ function MAX_UI:Notify(Title, Content, Duration)
     TimeBar.BorderSizePixel = 0
     TimeBar.Parent = NotifyFrame
 
-    TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, -295, 1, -90)}):Play()
+    table.insert(ActiveNotifications, NotifyFrame)
+    local function RepositionNotifications()
+        for index, frame in ipairs(ActiveNotifications) do
+            local targetY = -90 - ((#ActiveNotifications - index) * 70)
+            TweenService:Create(frame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+                Position = UDim2.new(1, -295, 1, targetY)
+            }):Play()
+        end
+    end
+
+    RepositionNotifications()
     TweenService:Create(TimeBar, TweenInfo.new(Duration, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 3)}):Play()
 
     task.delay(Duration, function()
-        TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, 20, 1, -90)}):Play()
-        task.wait(0.35)
+        local idx = table.find(ActiveNotifications, NotifyFrame)
+        if idx then table.remove(ActiveNotifications, idx) end
+        TweenService:Create(NotifyFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+            Position = UDim2.new(1, 20, NotifyFrame.Position.Y.Scale, NotifyFrame.Position.Y.Offset)
+        }):Play()
+        task.wait(0.25)
         NotifyFrame:Destroy()
+        RepositionNotifications()
     end)
 end
 
@@ -265,7 +285,7 @@ function MAX_UI:CreateWindow(Options)
     StatsLabel.Text = TitleText .. "  |  ⚡ FPS: ...  |  📡 Ping: ..."
     StatsLabel.Parent = Topbar
 
-    -- أزرار التحكم
+    -- أزرار النافذة
     local ControlFrame = Instance.new("Frame")
     ControlFrame.Size = UDim2.new(0, 68, 1, 0)
     ControlFrame.Position = UDim2.new(1, -72, 0, 0)
@@ -320,21 +340,24 @@ function MAX_UI:CreateWindow(Options)
         ScreenGui:Destroy()
     end)
 
-    local frameCount = 0
-    local lastTime = tick()
-    RunService.RenderStepped:Connect(function()
-        frameCount = frameCount + 1
-        local currentTime = tick()
-        if currentTime - lastTime >= 0.25 then
-            local realFPS = math.floor(frameCount / (currentTime - lastTime))
-            local pingVal = 0
-            pcall(function()
-                pingVal = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
-            end)
-            StatsLabel.Text = string.format("%s  |  ⚡ FPS: %d  |  📡 Ping: %dms", TitleText, realFPS, pingVal)
-            frameCount = 0
-            lastTime = currentTime
-        end
+    -- 📊 حساب الفريمات والبنق الحقيقي الدقيق بدلاً من التخمين العشوائي
+    task.spawn(function()
+        local lastCalc = tick()
+        local frames = 0
+        RunService.RenderStepped:Connect(function()
+            frames = frames + 1
+            local now = tick()
+            if now - lastCalc >= 0.5 then
+                local realFPS = math.floor(frames / (now - lastCalc))
+                local pingVal = 0
+                pcall(function()
+                    pingVal = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
+                end)
+                StatsLabel.Text = string.format("%s  |  ⚡ FPS: %d  |  📡 Ping: %dms", TitleText, realFPS, pingVal)
+                frames = 0
+                lastCalc = now
+            end
+        end)
     end)
 
     -- الشريط الجانبي
@@ -349,7 +372,7 @@ function MAX_UI:CreateWindow(Options)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    -- بطاقة اللاعب
+    -- بطاقة بروفايل اللاعب
     local WelcomeCard = Instance.new("Frame")
     WelcomeCard.Size = UDim2.new(1, -12, 0, 56)
     WelcomeCard.Position = UDim2.new(0, 6, 0, 6)
@@ -491,7 +514,7 @@ function MAX_UI:CreateWindow(Options)
 
         local TabElements = { Page = PageFrame, Button = TabButton, Icon = TabAvatar, Title = TabTitle }
 
-        -- 🔘 1. عنصر الأزرار العامة
+        -- 🔘 1. الأزرار العامة مع المعالجة المؤجلة لمنع Lag الألعاب
         function TabElements:AddButton(Text, Callback)
             Callback = Callback or function() end
             local Btn = Instance.new("TextButton")
@@ -508,14 +531,15 @@ function MAX_UI:CreateWindow(Options)
             Corner.Parent = Btn
 
             Btn.MouseButton1Click:Connect(function()
-                TweenService:Create(Btn, TweenInfo.new(0.1), {BackgroundColor3 = Theme.Accent}):Play()
-                task.wait(0.1)
-                TweenService:Create(Btn, TweenInfo.new(0.1), {BackgroundColor3 = Theme.ItemBg}):Play()
-                Callback()
+                TweenService:Create(Btn, TweenInfo.new(0.08), {BackgroundColor3 = Theme.Accent}):Play()
+                task.delay(0.08, function()
+                    TweenService:Create(Btn, TweenInfo.new(0.12), {BackgroundColor3 = Theme.ItemBg}):Play()
+                end)
+                task.defer(Callback)
             end)
         end
 
-        -- 🔘 2. عنصر مفاتيح التشغيل والإيقاف
+        -- 🔘 2. مفاتيح التشغيل والإيقاف
         function TabElements:AddToggle(Text, Default, Callback)
             Callback = Callback or function() end
             local Toggled = Default or false
@@ -554,13 +578,13 @@ function MAX_UI:CreateWindow(Options)
             local function UpdateToggle()
                 Toggled = not Toggled
                 Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(40, 40, 50)
-                Callback(Toggled)
+                task.defer(function() Callback(Toggled) end)
             end
 
             Indicator.MouseButton1Click:Connect(UpdateToggle)
         end
 
-        -- 🔘 3. شريط السحب الفاخر المطوّر
+        -- 🔘 3. شريط السحب الخفيف جداً وبدون أي تهنيج
         function TabElements:AddSlider(Text, Min, Max, Default, Callback)
             Callback = Callback or function() end
             local Value = Default or Min
@@ -632,18 +656,13 @@ function MAX_UI:CreateWindow(Options)
             KnobStroke.Parent = DragKnob
 
             local Dragging = false
-            local lastUpdate = 0
 
             local function Update(input)
-                local now = tick()
-                if now - lastUpdate < 0.02 then return end
-                lastUpdate = now
-
                 local pos = math.clamp((input.Position.X - SliderTrack.AbsolutePosition.X) / SliderTrack.AbsoluteSize.X, 0, 1)
                 Value = math.floor(Min + (Max - Min) * pos)
                 ValLabel.Text = "المحدد: " .. tostring(Value)
                 SliderFill.Size = UDim2.new(pos, 0, 1, 0)
-                Callback(Value)
+                task.defer(function() Callback(Value) end)
             end
 
             SliderTrack.InputBegan:Connect(function(input)
@@ -665,7 +684,7 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🔘 4. صندوق النصوص
+        -- 🔘 4. صندوق النص
         function TabElements:AddTextbox(Text, Placeholder, Callback)
             Callback = Callback or function() end
 
@@ -707,7 +726,7 @@ function MAX_UI:CreateWindow(Options)
 
             InputBox.FocusLost:Connect(function(enterPressed)
                 if enterPressed then
-                    Callback(InputBox.Text)
+                    task.defer(function() Callback(InputBox.Text) end)
                 end
             end)
         end
@@ -783,8 +802,8 @@ function MAX_UI:CreateWindow(Options)
                 ItemBtn.MouseButton1Click:Connect(function()
                     Expanded = false
                     Arrow.Text = "▼"
-                    TweenService:Create(DropdownMain, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(1, -6, 0, 36)}):Play()
-                    Callback(opt)
+                    DropdownMain.Size = UDim2.new(1, -6, 0, 36)
+                    task.defer(function() Callback(opt) end)
                 end)
             end
 
@@ -792,11 +811,11 @@ function MAX_UI:CreateWindow(Options)
                 Expanded = not Expanded
                 Arrow.Text = Expanded and "▲" or "▼"
                 local TargetHeight = Expanded and (42 + #ListOptions * 28) or 36
-                TweenService:Create(DropdownMain, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(1, -6, 0, TargetHeight)}):Play()
+                DropdownMain.Size = UDim2.new(1, -6, 0, TargetHeight)
             end)
         end
 
-        -- 🔘 6. الكروت النصية
+        -- 🔘 6. النصوص
         function TabElements:AddLabel(Text)
             local Frame = Instance.new("Frame")
             Frame.Size = UDim2.new(1, -6, 0, 30)
@@ -830,10 +849,17 @@ function MAX_UI:CreateWindow(Options)
         return TabElements
     end
 
-    -- قسم الإعدادات
+    -- ⚙️ قسم الإعدادات
     local SettingsTab = WindowObj:CreateTab("الإعدادات", PlayerAvatarImage)
 
-    SettingsTab:AddLabel("👑 MAX TITAN ENGINE - أدوات تسريع الفريمات والذاكرة")
+    SettingsTab:AddLabel("👑 MAX TITAN ENGINE - أدوات تحسين الأداء والدعم")
+
+    SettingsTab:AddButton("نسخ رابط سيرفر الديسكورد (Discord) 💬", function()
+        pcall(function()
+            setclipboard("https://discord.gg/G2Xt5jhfP")
+        end)
+        MAX_UI:Notify("MAX Discord", "تم نسخ رابط الديسكورد للحافظة بنجاح! 🚀", 3.5)
+    end)
 
     SettingsTab:AddButton("تنظيف الذاكرة العشوائية (RAM Cleaner) 🧹", function()
         pcall(function()
@@ -842,7 +868,7 @@ function MAX_UI:CreateWindow(Options)
         MAX_UI:Notify(TitleText, "تم تنظيف الذاكرة العشوائية! 🧹", 3)
     end)
 
-    SettingsTab:AddButton("تسريع الفريمات (Ultra FPS Boost) ⚡", function()
+    SettingsTab:AddButton("تسريع الفريمات وتقليل الضغط (Ultra FPS Boost) ⚡", function()
         pcall(function()
             for _, obj in ipairs(game:GetDescendants()) do
                 if obj:IsA("BasePart") then
@@ -856,7 +882,7 @@ function MAX_UI:CreateWindow(Options)
             Lighting.GlobalShadows = false
             Lighting.Technology = Enum.Technology.Compatibility
         end)
-        MAX_UI:Notify(TitleText, "تم تفعيل تسريع الفريمات! ⚡", 3)
+        MAX_UI:Notify(TitleText, "تم تفعيل تسريع الفريمات وإلغاء الضغط! ⚡", 3)
     end)
 
     SettingsTab:AddButton("إزالة الضباب والظلال (Clear Fog) 🌫️", function()
@@ -867,7 +893,6 @@ function MAX_UI:CreateWindow(Options)
         MAX_UI:Notify(TitleText, "تمت إزالة الضباب والظلال بنجاح! 🌫️", 3)
     end)
 
-    -- إشعار الترحب التلقائي
     MAX_UI:Notify(GetSmartGreeting(), "مرحباً بك يا " .. LocalPlayer.DisplayName .. " في " .. TitleText, 3.5)
 
     return WindowObj
