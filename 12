@@ -23,7 +23,7 @@ pcall(function()
     elseif set_fps_cap then set_fps_cap(240) end
 end)
 
--- 👤 جلب صورة سكن/وجه اللاعب ثلاثية الأبعاد بدقة عالية
+-- 👤 جلب صورة سكن/وجه اللاعب ثلاثية الأبعاد
 local PlayerAvatarImage = "rbxassetid://6031075931"
 pcall(function()
     PlayerAvatarImage = Players:GetUserThumbnailAsync(
@@ -68,6 +68,90 @@ local function GetSmartGreeting()
     end
 end
 
+-- 🔔 نظام الإشعارات المستقل والعام (يمكن استدعاؤه في أي مكان)
+function MAX_UI:Notify(Title, Content, Duration)
+    Duration = Duration or 3.5
+    PlayNotifySound()
+
+    local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
+    
+    -- إنشاء ScreenGui خاص بالإشعارات إذا لم يكن موجوداً
+    local NotifyGui = ParentGui:FindFirstChild("MAX_Titan_NotifyGui")
+    if not NotifyGui then
+        NotifyGui = Instance.new("ScreenGui")
+        NotifyGui.Name = "MAX_Titan_NotifyGui"
+        NotifyGui.ResetOnSpawn = false
+        NotifyGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        NotifyGui.Parent = ParentGui
+    end
+
+    local NotifyFrame = Instance.new("Frame")
+    NotifyFrame.Size = UDim2.new(0, 280, 0, 62)
+    NotifyFrame.Position = UDim2.new(1, 20, 1, -90)
+    NotifyFrame.BackgroundColor3 = Theme.Header
+    NotifyFrame.ClipsDescendants = true
+    NotifyFrame.Parent = NotifyGui
+
+    local NCorner = Instance.new("UICorner")
+    NCorner.CornerRadius = UDim.new(0, 12)
+    NCorner.Parent = NotifyFrame
+
+    local NStroke = Instance.new("UIStroke")
+    NStroke.Color = Theme.Accent
+    NStroke.Thickness = 1.6
+    NStroke.Parent = NotifyFrame
+
+    local NIcon = Instance.new("ImageLabel")
+    NIcon.Size = UDim2.new(0, 36, 0, 36)
+    NIcon.Position = UDim2.new(0, 10, 0, 13)
+    NIcon.BackgroundTransparency = 1
+    NIcon.Image = PlayerAvatarImage
+    NIcon.Parent = NotifyFrame
+
+    local NIconCorner = Instance.new("UICorner")
+    NIconCorner.CornerRadius = UDim.new(1, 0)
+    NIconCorner.Parent = NIcon
+
+    local NTitle = Instance.new("TextLabel")
+    NTitle.Size = UDim2.new(1, -56, 0, 18)
+    NTitle.Position = UDim2.new(0, 50, 0, 8)
+    NTitle.BackgroundTransparency = 1
+    NTitle.Text = Title or "MAX HUB"
+    NTitle.TextColor3 = Theme.Accent
+    NTitle.Font = Enum.Font.GothamBlack
+    NTitle.TextSize = 12
+    NTitle.TextXAlignment = Enum.TextXAlignment.Left
+    NTitle.Parent = NotifyFrame
+
+    local NText = Instance.new("TextLabel")
+    NText.Size = UDim2.new(1, -56, 0, 28)
+    NText.Position = UDim2.new(0, 50, 0, 26)
+    NText.BackgroundTransparency = 1
+    NText.Text = Content or ""
+    NText.TextColor3 = Theme.TextPrimary
+    NText.Font = Enum.Font.GothamBold
+    NText.TextSize = 10
+    NText.TextWrapped = true
+    NText.TextXAlignment = Enum.TextXAlignment.Left
+    NText.Parent = NotifyFrame
+
+    local TimeBar = Instance.new("Frame")
+    TimeBar.Size = UDim2.new(1, 0, 0, 3)
+    TimeBar.Position = UDim2.new(0, 0, 1, -3)
+    TimeBar.BackgroundColor3 = Theme.Accent
+    TimeBar.BorderSizePixel = 0
+    TimeBar.Parent = NotifyFrame
+
+    TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, -295, 1, -90)}):Play()
+    TweenService:Create(TimeBar, TweenInfo.new(Duration, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 3)}):Play()
+
+    task.delay(Duration, function()
+        TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, 20, 1, -90)}):Play()
+        task.wait(0.35)
+        NotifyFrame:Destroy()
+    end)
+end
+
 function MAX_UI:CreateWindow(Options)
     Options = Options or {}
     local TitleText = Options.Name or "MAX HUB | TITAN EDITION"
@@ -106,7 +190,7 @@ function MAX_UI:CreateWindow(Options)
     MainStroke.Thickness = 2
     MainStroke.Parent = MainFrame
 
-    -- 🔲 زر التصغير العائم بوجه اللاعب
+    -- زر التصغير العائم
     local ReopenBtn = Instance.new("Frame")
     ReopenBtn.Name = "ReopenSquare"
     ReopenBtn.Size = UDim2.new(0, 50, 0, 50)
@@ -148,81 +232,7 @@ function MAX_UI:CreateWindow(Options)
         ReopenBtn.Visible = false
     end)
 
-    -- 🔔 نظام الإشعارات الفاخر بوجه/سكن اللاعب والنص المكتمل
-    local function NotifySystem(Title, Content, Duration)
-        Duration = Duration or 3.5
-        PlayNotifySound()
-
-        local NotifyFrame = Instance.new("Frame")
-        NotifyFrame.Size = UDim2.new(0, 280, 0, 62)
-        NotifyFrame.Position = UDim2.new(1, 20, 1, -90)
-        NotifyFrame.BackgroundColor3 = Theme.Header
-        NotifyFrame.ClipsDescendants = true
-        NotifyFrame.Parent = ScreenGui
-
-        local NCorner = Instance.new("UICorner")
-        NCorner.CornerRadius = UDim.new(0, 12)
-        NCorner.Parent = NotifyFrame
-
-        local NStroke = Instance.new("UIStroke")
-        NStroke.Color = Theme.Accent
-        NStroke.Thickness = 1.6
-        NStroke.Parent = NotifyFrame
-
-        local NIcon = Instance.new("ImageLabel")
-        NIcon.Size = UDim2.new(0, 36, 0, 36)
-        NIcon.Position = UDim2.new(0, 10, 0, 13)
-        NIcon.BackgroundTransparency = 1
-        NIcon.Image = PlayerAvatarImage
-        NIcon.Parent = NotifyFrame
-
-        local NIconCorner = Instance.new("UICorner")
-        NIconCorner.CornerRadius = UDim.new(1, 0)
-        NIconCorner.Parent = NIcon
-
-        local NTitle = Instance.new("TextLabel")
-        NTitle.Size = UDim2.new(1, -56, 0, 18)
-        NTitle.Position = UDim2.new(0, 50, 0, 8)
-        NTitle.BackgroundTransparency = 1
-        NTitle.Text = Title
-        NTitle.TextColor3 = Theme.Accent
-        NTitle.Font = Enum.Font.GothamBlack
-        NTitle.TextSize = 12
-        NTitle.TextXAlignment = Enum.TextXAlignment.Left
-        NTitle.Parent = NotifyFrame
-
-        local NText = Instance.new("TextLabel")
-        NText.Size = UDim2.new(1, -56, 0, 28)
-        NText.Position = UDim2.new(0, 50, 0, 26)
-        NText.BackgroundTransparency = 1
-        NText.Text = Content
-        NText.TextColor3 = Theme.TextPrimary
-        NText.Font = Enum.Font.GothamBold
-        NText.TextSize = 10
-        NText.TextWrapped = true
-        NText.TextXAlignment = Enum.TextXAlignment.Left
-        NText.Parent = NotifyFrame
-
-        local TimeBar = Instance.new("Frame")
-        TimeBar.Size = UDim2.new(1, 0, 0, 3)
-        TimeBar.Position = UDim2.new(0, 0, 1, -3)
-        TimeBar.BackgroundColor3 = Theme.Accent
-        TimeBar.BorderSizePixel = 0
-        TimeBar.Parent = NotifyFrame
-
-        TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, -295, 1, -90)}):Play()
-        TweenService:Create(TimeBar, TweenInfo.new(Duration, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 3)}):Play()
-
-        task.delay(Duration, function()
-            TweenService:Create(NotifyFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Position = UDim2.new(1, 20, 1, -90)}):Play()
-            task.wait(0.35)
-            NotifyFrame:Destroy()
-        end)
-    end
-
-    MAX_UI.Notify = NotifySystem
-
-    -- 📊 الهيدر العلوي
+    -- الهيدر العلوي
     local Topbar = Instance.new("Frame")
     Topbar.Size = UDim2.new(1, -16, 0, 38)
     Topbar.Position = UDim2.new(0, 8, 0, 8)
@@ -255,7 +265,7 @@ function MAX_UI:CreateWindow(Options)
     StatsLabel.Text = TitleText .. "  |  ⚡ FPS: ...  |  📡 Ping: ..."
     StatsLabel.Parent = Topbar
 
-    -- 🔘 أزرار التحكم بالنافذة
+    -- أزرار التحكم
     local ControlFrame = Instance.new("Frame")
     ControlFrame.Size = UDim2.new(0, 68, 1, 0)
     ControlFrame.Position = UDim2.new(1, -72, 0, 0)
@@ -327,7 +337,7 @@ function MAX_UI:CreateWindow(Options)
         end
     end)
 
-    -- 📁 الشريط الجانبي
+    -- الشريط الجانبي
     local SidebarWidth = IsMobile and 155 or 185
     local Sidebar = Instance.new("Frame")
     Sidebar.Size = UDim2.new(0, SidebarWidth, 1, -58)
@@ -339,7 +349,7 @@ function MAX_UI:CreateWindow(Options)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    -- 👑 بطاقة بروفايل سكن اللاعب بجانب اسمه
+    -- بطاقة اللاعب
     local WelcomeCard = Instance.new("Frame")
     WelcomeCard.Size = UDim2.new(1, -12, 0, 56)
     WelcomeCard.Position = UDim2.new(0, 6, 0, 6)
@@ -355,7 +365,6 @@ function MAX_UI:CreateWindow(Options)
     CardStroke.Thickness = 1.4
     CardStroke.Parent = WelcomeCard
 
-    -- 🖼️ صورة سكن/شخصية اللاعب الحقيقية (بجانب اسمه)
     local CardAvatar = Instance.new("ImageLabel")
     CardAvatar.Size = UDim2.new(0, 40, 0, 40)
     CardAvatar.Position = UDim2.new(0, 6, 0.5, -20)
@@ -418,7 +427,7 @@ function MAX_UI:CreateWindow(Options)
     ContentArea.BackgroundTransparency = 1
     ContentArea.Parent = MainFrame
 
-    local WindowObj = { Tabs = {}, Notify = NotifySystem }
+    local WindowObj = { Tabs = {} }
 
     function WindowObj:CreateTab(TabName, CustomIcon)
         local IconId = CustomIcon or PlayerAvatarImage
@@ -503,7 +512,6 @@ function MAX_UI:CreateWindow(Options)
                 task.wait(0.1)
                 TweenService:Create(Btn, TweenInfo.new(0.1), {BackgroundColor3 = Theme.ItemBg}):Play()
                 Callback()
-                NotifySystem(TitleText, "تم تفعيل: " .. Text, 2.5)
             end)
         end
 
@@ -547,20 +555,18 @@ function MAX_UI:CreateWindow(Options)
                 Toggled = not Toggled
                 Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(40, 40, 50)
                 Callback(Toggled)
-                local Status = Toggled and "تم تشغيل: " or "تم إيقاف: "
-                NotifySystem(TitleText, Status .. Text, 2.5)
             end
 
             Indicator.MouseButton1Click:Connect(UpdateToggle)
         end
 
-        -- 🔘 3. شريط السحب الفاخر المطور (الكبير مع الدائرة وقراءة القيمة الفورية)
+        -- 🔘 3. شريط السحب الفاخر المطوّر
         function TabElements:AddSlider(Text, Min, Max, Default, Callback)
             Callback = Callback or function() end
             local Value = Default or Min
 
             local Frame = Instance.new("Frame")
-            Frame.Size = UDim2.new(1, -6, 0, 50) -- شريط متسع وفخم
+            Frame.Size = UDim2.new(1, -6, 0, 50)
             Frame.BackgroundColor3 = Theme.ItemBg
             Frame.Parent = PageFrame
 
@@ -579,7 +585,6 @@ function MAX_UI:CreateWindow(Options)
             Label.TextXAlignment = Enum.TextXAlignment.Left
             Label.Parent = Frame
 
-            -- 📊 النص الرقمي المكتوب الذكي (مثال: المحدد: 150)
             local ValLabel = Instance.new("TextLabel")
             ValLabel.Size = UDim2.new(0, 100, 0, 22)
             ValLabel.Position = UDim2.new(1, -110, 0, 4)
@@ -592,7 +597,7 @@ function MAX_UI:CreateWindow(Options)
             ValLabel.Parent = Frame
 
             local SliderTrack = Instance.new("Frame")
-            SliderTrack.Size = UDim2.new(1, -24, 0, 8) -- شريط عريض ومستقر
+            SliderTrack.Size = UDim2.new(1, -24, 0, 8)
             SliderTrack.Position = UDim2.new(0, 12, 1, -16)
             SliderTrack.BackgroundColor3 = Color3.fromRGB(35, 38, 50)
             SliderTrack.Parent = Frame
@@ -611,7 +616,6 @@ function MAX_UI:CreateWindow(Options)
             FillCorner.CornerRadius = UDim.new(1, 0)
             FillCorner.Parent = SliderFill
 
-            -- 🔘 دائرة السحب الكبيرة الملموسة
             local DragKnob = Instance.new("Frame")
             DragKnob.Size = UDim2.new(0, 18, 0, 18)
             DragKnob.Position = UDim2.new(1, -9, 0.5, -9)
@@ -704,7 +708,6 @@ function MAX_UI:CreateWindow(Options)
             InputBox.FocusLost:Connect(function(enterPressed)
                 if enterPressed then
                     Callback(InputBox.Text)
-                    NotifySystem(TitleText, "تم إدخال: " .. InputBox.Text, 2.5)
                 end
             end)
         end
@@ -782,7 +785,6 @@ function MAX_UI:CreateWindow(Options)
                     Arrow.Text = "▼"
                     TweenService:Create(DropdownMain, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(1, -6, 0, 36)}):Play()
                     Callback(opt)
-                    NotifySystem(TitleText, "تم تحديد: " .. opt, 2.5)
                 end)
             end
 
@@ -828,9 +830,7 @@ function MAX_UI:CreateWindow(Options)
         return TabElements
     end
 
-    -- ============================================================
-    -- ⚙️ قسم الإعدادات وأدوات تسريع اللعبة
-    -- ============================================================
+    -- قسم الإعدادات
     local SettingsTab = WindowObj:CreateTab("الإعدادات", PlayerAvatarImage)
 
     SettingsTab:AddLabel("👑 MAX TITAN ENGINE - أدوات تسريع الفريمات والذاكرة")
@@ -839,6 +839,7 @@ function MAX_UI:CreateWindow(Options)
         pcall(function()
             collectgarbage("collect")
         end)
+        MAX_UI:Notify(TitleText, "تم تنظيف الذاكرة العشوائية! 🧹", 3)
     end)
 
     SettingsTab:AddButton("تسريع الفريمات (Ultra FPS Boost) ⚡", function()
@@ -855,6 +856,7 @@ function MAX_UI:CreateWindow(Options)
             Lighting.GlobalShadows = false
             Lighting.Technology = Enum.Technology.Compatibility
         end)
+        MAX_UI:Notify(TitleText, "تم تفعيل تسريع الفريمات! ⚡", 3)
     end)
 
     SettingsTab:AddButton("إزالة الضباب والظلال (Clear Fog) 🌫️", function()
@@ -862,10 +864,11 @@ function MAX_UI:CreateWindow(Options)
             Lighting.FogEnd = 9e9
             Lighting.GlobalShadows = false
         end)
+        MAX_UI:Notify(TitleText, "تمت إزالة الضباب والظلال بنجاح! 🌫️", 3)
     end)
 
-    -- إشعار الترحيب المباشر مع سكنك
-    NotifySystem(GetSmartGreeting(), "مرحباً بك يا " .. LocalPlayer.DisplayName .. " في " .. TitleText, 3.5)
+    -- إشعار الترحب التلقائي
+    MAX_UI:Notify(GetSmartGreeting(), "مرحباً بك يا " .. LocalPlayer.DisplayName .. " في " .. TitleText, 3.5)
 
     return WindowObj
 end
