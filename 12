@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX ULTRA LUXURY UI LIBRARY (Full Developer Notification Engine)
--- 🌐 Complete Standalone Production Code with Sound & Custom Logo
+-- 👑 MAX ULTRA LUXURY UI LIBRARY (Engine V12 - Full Boost)
+-- 🌐 Ultimate Production Code with Dropdown & FPS Tools
 -- ============================================================
 
 local MAX_UI = {}
@@ -12,10 +12,10 @@ local CoreGui         = game:GetService("CoreGui")
 local Players         = game:GetService("Players")
 local Stats           = game:GetService("Stats")
 local SoundService    = game:GetService("SoundService")
+local Lighting        = game:GetService("Lighting")
 
 local LocalPlayer = Players.LocalPlayer
 local IsMobile    = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
-local DeviceType  = IsMobile and "Mobile 📱" or "PC 🖥️"
 
 -- 🔓 فك قفل الفريمات
 pcall(function()
@@ -37,14 +37,14 @@ local Theme = {
 
 -- 🎨 مكتبة الألوان المجهزة
 local ColorPalette = {
-    { Name = "بنفسجي ملكي نيون", Color = Color3.fromRGB(138, 43, 226) },
-    { Name = "أزرق نيون مشع",     Color = Color3.fromRGB(0, 170, 255) },
-    { Name = "أحمر قرمزي ناري",   Color = Color3.fromRGB(255, 45, 85) },
-    { Name = "أخضر زمردي براق",   Color = Color3.fromRGB(0, 230, 118) },
-    { Name = "أصفر ذهبي ساطع",   Color = Color3.fromRGB(255, 193, 7) },
-    { Name = "وردي نيون ساحر",     Color = Color3.fromRGB(255, 0, 127) },
-    { Name = "سماوي ثلجي هادئ",   Color = Color3.fromRGB(0, 229, 255) },
-    { Name = "برتقالي ناري مميز",  Color = Color3.fromRGB(255, 109, 0) }
+    { Name = "بنفسجي ملكي 💜", Color = Color3.fromRGB(138, 43, 226) },
+    { Name = "أزرق نيون 💙",    Color = Color3.fromRGB(0, 170, 255) },
+    { Name = "أحمر قرمزي ❤️",  Color = Color3.fromRGB(255, 45, 85) },
+    { Name = "أخضر زمردي 💚", Color = Color3.fromRGB(0, 230, 118) },
+    { Name = "أصفر ذهبي 💛",  Color = Color3.fromRGB(255, 193, 7) },
+    { Name = "وردي نيون 💗",    Color = Color3.fromRGB(255, 0, 127) },
+    { Name = "سماوي ثلجي 🩵", Color = Color3.fromRGB(0, 229, 255) },
+    { Name = "برتقالي ناري 🧡", Color = Color3.fromRGB(255, 109, 0) }
 }
 
 local function GetSmartGreeting()
@@ -58,12 +58,12 @@ local function GetSmartGreeting()
     end
 end
 
--- 🔊 تشغيل صوت إشعار ناعم
+-- 🔊 تشغيل صوت تنبيه الإشعارات
 local function PlayNotifySound()
     pcall(function()
         local sound = Instance.new("Sound")
-        sound.SoundId = "rbxassetid://4590662766" -- صوت تنبيه ناعم وفاخر
-        sound.Volume = 0.5
+        sound.SoundId = "rbxassetid://4590662766"
+        sound.Volume = 0.6
         sound.Parent = SoundService
         sound:Play()
         task.delay(2, function() sound:Destroy() end)
@@ -76,12 +76,12 @@ function MAX_UI:CreateWindow(Options)
     local LogoId    = Options.Logo or "rbxassetid://96007556931310"
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V11") then
-        ParentGui.MAX_LuxuryEngine_V11:Destroy()
+    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V12") then
+        ParentGui.MAX_LuxuryEngine_V12:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_LuxuryEngine_V11"
+    ScreenGui.Name = "MAX_LuxuryEngine_V12"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Parent = ParentGui
@@ -109,7 +109,7 @@ function MAX_UI:CreateWindow(Options)
     MainStroke.Thickness = 1.5
     MainStroke.Parent = MainFrame
 
-    -- 🔲 زر التصغير المربع بالشعار
+    -- 🔲 زر التصغير العائم بالشعار
     local ReopenBtn = Instance.new("Frame")
     ReopenBtn.Name = "ReopenSquare"
     ReopenBtn.Size = UDim2.new(0, 46, 0, 46)
@@ -147,7 +147,7 @@ function MAX_UI:CreateWindow(Options)
         ReopenBtn.Visible = false
     end)
 
-    -- 🔔 نظام إشعارات المطور الفخم (Developer Notification Toast with Sound)
+    -- 🔔 نظام الإشعارات الملون مع الصوت
     local function NotifySystem(Title, Content, Duration)
         Duration = Duration or 3.5
         PlayNotifySound()
@@ -300,7 +300,7 @@ function MAX_UI:CreateWindow(Options)
         ScreenGui:Destroy()
     end)
 
-    -- حساب الفريمات
+    -- حساب الفريمات والبنق
     local frameCount = 0
     local lastTime = tick()
     RunService.RenderStepped:Connect(function()
@@ -330,7 +330,7 @@ function MAX_UI:CreateWindow(Options)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    -- 👑 بطاقة الترحيب الجانبية
+    -- 👑 بطاقة الترحيب
     local WelcomeCard = Instance.new("Frame")
     WelcomeCard.Size = UDim2.new(1, -12, 0, 50)
     WelcomeCard.Position = UDim2.new(0, 6, 0, 6)
@@ -627,67 +627,106 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🎨 قائمة الألوان العمودية
-        function TabElements:AddColorPicker(Text, Callback)
+        -- 🎨 قائمة اختيار الألوان المنسدلة الفاخرة (Dropdown Style)
+        function TabElements:AddColorDropdown(Text, Callback)
             Callback = Callback or function() end
+            local Expanded = false
 
-            local TitleLabel = Instance.new("TextLabel")
-            TitleLabel.Size = UDim2.new(1, -6, 0, 22)
-            TitleLabel.BackgroundTransparency = 1
-            TitleLabel.Text = "🎨 " .. Text
-            TitleLabel.TextColor3 = Theme.TextPrimary
-            TitleLabel.Font = Enum.Font.GothamBold
-            TitleLabel.TextSize = 12
-            TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-            TitleLabel.Parent = PageFrame
+            local DropdownMain = Instance.new("Frame")
+            DropdownMain.Size = UDim2.new(1, -6, 0, 36)
+            DropdownMain.BackgroundColor3 = Theme.ItemBg
+            DropdownMain.ClipsDescendants = true
+            DropdownMain.Parent = PageFrame
 
-            local ListContainer = Instance.new("Frame")
-            ListContainer.Size = UDim2.new(1, -6, 0, #ColorPalette * 36)
-            ListContainer.BackgroundTransparency = 1
-            ListContainer.Parent = PageFrame
+            local DropCorner = Instance.new("UICorner")
+            DropCorner.CornerRadius = UDim.new(0, 6)
+            DropCorner.Parent = DropdownMain
+
+            local HeaderBtn = Instance.new("TextButton")
+            HeaderBtn.Size = UDim2.new(1, 0, 0, 36)
+            HeaderBtn.BackgroundTransparency = 1
+            HeaderBtn.Text = ""
+            HeaderBtn.Parent = DropdownMain
+
+            local Title = Instance.new("TextLabel")
+            Title.Size = UDim2.new(1, -40, 1, 0)
+            Title.Position = UDim2.new(0, 10, 0, 0)
+            Title.BackgroundTransparency = 1
+            Title.Text = "🎨 " .. Text
+            Title.TextColor3 = Theme.TextPrimary
+            Title.Font = Enum.Font.GothamBold
+            Title.TextSize = 11
+            Title.TextXAlignment = Enum.TextXAlignment.Left
+            Title.Parent = HeaderBtn
+
+            local Arrow = Instance.new("TextLabel")
+            Arrow.Size = UDim2.new(0, 24, 0, 24)
+            Arrow.Position = UDim2.new(1, -30, 0.5, -12)
+            Arrow.BackgroundTransparency = 1
+            Arrow.Text = "▼"
+            Arrow.TextColor3 = Theme.Accent
+            Arrow.Font = Enum.Font.GothamBold
+            Arrow.TextSize = 10
+            Arrow.Parent = HeaderBtn
+
+            local ItemsHolder = Instance.new("Frame")
+            ItemsHolder.Size = UDim2.new(1, -12, 0, #ColorPalette * 30)
+            ItemsHolder.Position = UDim2.new(0, 6, 0, 38)
+            ItemsHolder.BackgroundTransparency = 1
+            ItemsHolder.Parent = DropdownMain
 
             local ListLayout = Instance.new("UIListLayout")
             ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            ListLayout.Padding = UDim.new(0, 5)
-            ListLayout.Parent = ListContainer
+            ListLayout.Padding = UDim.new(0, 4)
+            ListLayout.Parent = ItemsHolder
 
             for _, item in ipairs(ColorPalette) do
-                local ColorBtn = Instance.new("TextButton")
-                ColorBtn.Size = UDim2.new(1, 0, 0, 32)
-                ColorBtn.BackgroundColor3 = Theme.ItemBg
-                ColorBtn.Text = ""
-                ColorBtn.AutoButtonColor = false
-                ColorBtn.Parent = ListContainer
+                local ItemBtn = Instance.new("TextButton")
+                ItemBtn.Size = UDim2.new(1, 0, 0, 26)
+                ItemBtn.BackgroundColor3 = Color3.fromRGB(24, 26, 36)
+                ItemBtn.Text = ""
+                ItemBtn.AutoButtonColor = false
+                ItemBtn.Parent = ItemsHolder
 
-                local Corner = Instance.new("UICorner")
-                Corner.CornerRadius = UDim.new(0, 6)
-                Corner.Parent = ColorBtn
+                local ItemCorner = Instance.new("UICorner")
+                ItemCorner.CornerRadius = UDim.new(0, 4)
+                ItemCorner.Parent = ItemBtn
 
                 local Box = Instance.new("Frame")
-                Box.Size = UDim2.new(0, 18, 0, 18)
-                Box.Position = UDim2.new(0, 10, 0.5, -9)
+                Box.Size = UDim2.new(0, 14, 0, 14)
+                Box.Position = UDim2.new(0, 8, 0.5, -7)
                 Box.BackgroundColor3 = item.Color
-                Box.Parent = ColorBtn
+                Box.Parent = ItemBtn
 
                 local BoxCorner = Instance.new("UICorner")
-                BoxCorner.CornerRadius = UDim.new(0, 4)
+                BoxCorner.CornerRadius = UDim.new(0, 3)
                 BoxCorner.Parent = Box
 
-                local BtnText = Instance.new("TextLabel")
-                BtnText.Size = UDim2.new(1, -40, 1, 0)
-                BtnText.Position = UDim2.new(0, 36, 0, 0)
-                BtnText.BackgroundTransparency = 1
-                BtnText.Text = item.Name
-                BtnText.TextColor3 = Theme.TextPrimary
-                BtnText.Font = Enum.Font.GothamMedium
-                BtnText.TextSize = 11
-                BtnText.TextXAlignment = Enum.TextXAlignment.Left
-                BtnText.Parent = ColorBtn
+                local ItemText = Instance.new("TextLabel")
+                ItemText.Size = UDim2.new(1, -32, 1, 0)
+                ItemText.Position = UDim2.new(0, 28, 0, 0)
+                ItemText.BackgroundTransparency = 1
+                ItemText.Text = item.Name
+                ItemText.TextColor3 = Theme.TextPrimary
+                ItemText.Font = Enum.Font.GothamMedium
+                ItemText.TextSize = 10
+                ItemText.TextXAlignment = Enum.TextXAlignment.Left
+                ItemText.Parent = ItemBtn
 
-                ColorBtn.MouseButton1Click:Connect(function()
+                ItemBtn.MouseButton1Click:Connect(function()
+                    Expanded = false
+                    Arrow.Text = "▼"
+                    TweenService:Create(DropdownMain, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(1, -6, 0, 36)}):Play()
                     Callback(item.Color)
                 end)
             end
+
+            HeaderBtn.MouseButton1Click:Connect(function()
+                Expanded = not Expanded
+                Arrow.Text = Expanded and "▲" or "▼"
+                local TargetHeight = Expanded and (42 + #ColorPalette * 30) or 36
+                TweenService:Create(DropdownMain, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Size = UDim2.new(1, -6, 0, TargetHeight)}):Play()
+            end)
         end
 
         table.insert(WindowObj.Tabs, TabElements)
@@ -701,6 +740,40 @@ function MAX_UI:CreateWindow(Options)
 
         return TabElements
     end
+
+    -- ============================================================
+    -- 🚀 تبويب الأداء وتنظيف الذاكرة (FPS & RAM Optimizer)
+    -- ============================================================
+    local OptimizerTab = WindowObj:CreateTab("الأداء والذاكرة 🚀")
+
+    OptimizerTab:AddButton("تنظيف الذاكرة العشوائية (RAM Cleaner) 🧹", function()
+        pcall(function()
+            collectgarbage("collect")
+            NotifySystem("🧹 تنظيف الذاكرة", "تم تفريغ الذاكرة العشوائية بنجاح!", 3)
+        end)
+    end)
+
+    OptimizerTab:AddButton("تسريع الفريمات (FPS Boost Ultra) ⚡", function()
+        pcall(function()
+            for _, v in ipairs(game:GetDescendants()) do
+                if v:IsA("BasePart") then
+                    v.Material = Enum.Material.SmoothPlastic
+                elseif v:IsA("Texture") or v:IsA("Decal") then
+                    v:Destroy()
+                end
+            end
+            Lighting.GlobalShadows = false
+            NotifySystem("⚡ تسريع الأداء", "تم إزالة المؤثرات الثقيلة وزيادة الفريمات!", 3)
+        end)
+    end)
+
+    OptimizerTab:AddButton("إزالة الضباب والظلال (Clear Fog) 🌫️", function()
+        pcall(function()
+            Lighting.FogEnd = 9e9
+            Lighting.GlobalShadows = false
+            NotifySystem("🌫️ تحسين الرؤية", "تم إلغاء الضباب والظلال لزيادة أداء الشاشة!", 3)
+        end)
+    end)
 
     -- ============================================================
     -- 🎨 تبويب الإعدادات المدمج
@@ -717,7 +790,7 @@ function MAX_UI:CreateWindow(Options)
         NotifySystem("👑 MAX ENGINE", "تم تغيير اللون بنجاح!", 2)
     end
 
-    SettingsTab:AddColorPicker("تحديد لون الثيم المفضل", function(selectedColor)
+    SettingsTab:AddColorDropdown("اختر لون الثيم المفضل", function(selectedColor)
         ApplyColor(selectedColor)
     end)
 
