@@ -1,6 +1,6 @@
 -- ============================================================
--- 👑 MAX ULTRA LUXURY UI LIBRARY (Engine V12 - Full Boost)
--- 🌐 Ultimate Production Code with Dropdown & FPS Tools
+-- 👑 MAX ULTRA LUXURY UI LIBRARY (Fluent & Rayfield Style - Engine V17)
+-- 🌐 Complete Universal Icon Mapper & Standalone Production Code
 -- ============================================================
 
 local MAX_UI = {}
@@ -17,7 +17,7 @@ local Lighting        = game:GetService("Lighting")
 local LocalPlayer = Players.LocalPlayer
 local IsMobile    = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
 
--- 🔓 فك قفل الفريمات
+-- 🔓 فك قفل الفريمات تلقائياً
 pcall(function()
     if setfpscap then setfpscap(240)
     elseif set_fps_cap then set_fps_cap(240) end
@@ -35,7 +35,53 @@ local Theme = {
     Border      = Color3.fromRGB(30, 32, 42)
 }
 
--- 🎨 مكتبة الألوان المجهزة
+-- 🖼️ مكتبة الأيقونات العالمية الشاملة (تغطي كافة الاحتياجات)
+local IconLibrary = {
+    ["Home"]     = "rbxassetid://6031075929", -- أيقونة البيت للرئيسية
+    ["Settings"] = "rbxassetid://6031280882", -- أيقونة الترس للإعدادات
+    ["Zap"]      = "rbxassetid://6031094678", -- طاقة / قدرات خارقة
+    ["User"]     = "rbxassetid://6031082533", -- لاعب / شخصية
+    ["Sword"]    = "rbxassetid://6031094670", -- سيف / أسلحة / قتال
+    ["Teleport"] = "rbxassetid://6034509993", -- انتقال / خريطة
+    ["Store"]    = "rbxassetid://6031097225", -- متجر / شراء
+    ["Shield"]   = "rbxassetid://6031082525", -- حماية / درع
+    ["Farm"]     = "rbxassetid://6034509980", -- مزارع / جمع
+    ["Info"]     = "rbxassetid://6031097229", -- معلومات
+}
+
+-- 🧠 خوارزمية الربط الذكي للأيقونات حسب اسم التبويب
+local function ResolveIcon(TabName, ProvidedIcon)
+    if ProvidedIcon then
+        if IconLibrary[ProvidedIcon] then return IconLibrary[ProvidedIcon] end
+        if string.sub(tostring(ProvidedIcon), 1, 13) == "rbxassetid://" then return ProvidedIcon end
+    end
+
+    local LowerName = string.lower(TabName or "")
+    
+    if string.find(LowerName, "رئيس") or string.find(LowerName, "بيت") or string.find(LowerName, "home") or string.find(LowerName, "main") then
+        return IconLibrary["Home"]
+    elseif string.find(LowerName, "إعداد") or string.find(LowerName, "عدا") or string.find(LowerName, "setting") then
+        return IconLibrary["Settings"]
+    elseif string.find(LowerName, "قدر") or string.find(LowerName, "خارق") or string.find(LowerName, "power") or string.find(LowerName, "zap") then
+        return IconLibrary["Zap"]
+    elseif string.find(LowerName, "شخص") or string.find(LowerName, "لاعب") or string.find(LowerName, "player") or string.find(LowerName, "user") then
+        return IconLibrary["User"]
+    elseif string.find(LowerName, "سلاح") or string.find(LowerName, "قتال") or string.find(LowerName, "sword") or string.find(LowerName, "combat") then
+        return IconLibrary["Sword"]
+    elseif string.find(LowerName, "انتقال") or string.find(LowerName, "تلفوت") or string.find(LowerName, "tp") or string.find(LowerName, "teleport") then
+        return IconLibrary["Teleport"]
+    elseif string.find(LowerName, "متجر") or string.find(LowerName, "شراء") or string.find(LowerName, "shop") or string.find(LowerName, "store") then
+        return IconLibrary["Store"]
+    elseif string.find(LowerName, "مزارع") or string.find(LowerName, "جمع") or string.find(LowerName, "farm") or string.find(LowerName, "auto") then
+        return IconLibrary["Farm"]
+    elseif string.find(LowerName, "حماية") or string.find(LowerName, "درع") or string.find(LowerName, "shield") then
+        return IconLibrary["Shield"]
+    end
+
+    return IconLibrary["Home"]
+end
+
+-- 🎨 قائمة الألوان العريضة المنسدلة
 local ColorPalette = {
     { Name = "بنفسجي ملكي 💜", Color = Color3.fromRGB(138, 43, 226) },
     { Name = "أزرق نيون 💙",    Color = Color3.fromRGB(0, 170, 255) },
@@ -58,7 +104,6 @@ local function GetSmartGreeting()
     end
 end
 
--- 🔊 تشغيل صوت تنبيه الإشعارات
 local function PlayNotifySound()
     pcall(function()
         local sound = Instance.new("Sound")
@@ -72,16 +117,16 @@ end
 
 function MAX_UI:CreateWindow(Options)
     Options = Options or {}
-    local TitleText = Options.Name or "MAX HUB"
-    local LogoId    = Options.Logo or "rbxassetid://96007556931310"
+    local TitleText     = Options.Name or "MAX HUB"
+    local DeveloperLogo = "rbxassetid://96007556931310" -- صورة المصمم
 
     local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_LuxuryEngine_V12") then
-        ParentGui.MAX_LuxuryEngine_V12:Destroy()
+    if ParentGui:FindFirstChild("MAX_Engine_V17") then
+        ParentGui.MAX_Engine_V17:Destroy()
     end
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_LuxuryEngine_V12"
+    ScreenGui.Name = "MAX_Engine_V17"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Parent = ParentGui
@@ -109,7 +154,7 @@ function MAX_UI:CreateWindow(Options)
     MainStroke.Thickness = 1.5
     MainStroke.Parent = MainFrame
 
-    -- 🔲 زر التصغير العائم بالشعار
+    -- 🔲 زر التصغير العائم
     local ReopenBtn = Instance.new("Frame")
     ReopenBtn.Name = "ReopenSquare"
     ReopenBtn.Size = UDim2.new(0, 46, 0, 46)
@@ -130,11 +175,15 @@ function MAX_UI:CreateWindow(Options)
     ReopenStroke.Parent = ReopenBtn
 
     local ReopenLogo = Instance.new("ImageLabel")
-    ReopenLogo.Size = UDim2.new(0, 28, 0, 28)
-    ReopenLogo.Position = UDim2.new(0.5, -14, 0.5, -14)
+    ReopenLogo.Size = UDim2.new(0, 30, 0, 30)
+    ReopenLogo.Position = UDim2.new(0.5, -15, 0.5, -15)
     ReopenLogo.BackgroundTransparency = 1
-    ReopenLogo.Image = LogoId
+    ReopenLogo.Image = DeveloperLogo
     ReopenLogo.Parent = ReopenBtn
+
+    local ReopenLogoCorner = Instance.new("UICorner")
+    ReopenLogoCorner.CornerRadius = UDim.new(1, 0)
+    ReopenLogoCorner.Parent = ReopenLogo
 
     local ReopenTrigger = Instance.new("TextButton")
     ReopenTrigger.Size = UDim2.new(1, 0, 1, 0)
@@ -147,7 +196,7 @@ function MAX_UI:CreateWindow(Options)
         ReopenBtn.Visible = false
     end)
 
-    -- 🔔 نظام الإشعارات الملون مع الصوت
+    -- 🔔 نظام الإشعارات السفلي
     local function NotifySystem(Title, Content, Duration)
         Duration = Duration or 3.5
         PlayNotifySound()
@@ -169,15 +218,19 @@ function MAX_UI:CreateWindow(Options)
         NStroke.Parent = NotifyFrame
 
         local NIcon = Instance.new("ImageLabel")
-        NIcon.Size = UDim2.new(0, 24, 0, 24)
-        NIcon.Position = UDim2.new(0, 10, 0, 10)
+        NIcon.Size = UDim2.new(0, 26, 0, 26)
+        NIcon.Position = UDim2.new(0, 10, 0, 14)
         NIcon.BackgroundTransparency = 1
-        NIcon.Image = LogoId
+        NIcon.Image = DeveloperLogo
         NIcon.Parent = NotifyFrame
 
+        local NIconCorner = Instance.new("UICorner")
+        NIconCorner.CornerRadius = UDim.new(1, 0)
+        NIconCorner.Parent = NIcon
+
         local NTitle = Instance.new("TextLabel")
-        NTitle.Size = UDim2.new(1, -44, 0, 18)
-        NTitle.Position = UDim2.new(0, 40, 0, 8)
+        NTitle.Size = UDim2.new(1, -48, 0, 18)
+        NTitle.Position = UDim2.new(0, 42, 0, 8)
         NTitle.BackgroundTransparency = 1
         NTitle.Text = Title
         NTitle.TextColor3 = Theme.Accent
@@ -187,8 +240,8 @@ function MAX_UI:CreateWindow(Options)
         NTitle.Parent = NotifyFrame
 
         local NText = Instance.new("TextLabel")
-        NText.Size = UDim2.new(1, -44, 0, 18)
-        NText.Position = UDim2.new(0, 40, 0, 26)
+        NText.Size = UDim2.new(1, -48, 0, 18)
+        NText.Position = UDim2.new(0, 42, 0, 26)
         NText.BackgroundTransparency = 1
         NText.Text = Content
         NText.TextColor3 = Theme.TextPrimary
@@ -231,8 +284,12 @@ function MAX_UI:CreateWindow(Options)
     HeaderLogo.Size = UDim2.new(0, 22, 0, 22)
     HeaderLogo.Position = UDim2.new(0, 8, 0.5, -11)
     HeaderLogo.BackgroundTransparency = 1
-    HeaderLogo.Image = LogoId
+    HeaderLogo.Image = DeveloperLogo
     HeaderLogo.Parent = Topbar
+
+    local HeaderCorner = Instance.new("UICorner")
+    HeaderCorner.CornerRadius = UDim.new(1, 0)
+    HeaderCorner.Parent = HeaderLogo
 
     local StatsLabel = Instance.new("TextLabel")
     StatsLabel.Size = UDim2.new(1, -120, 1, 0)
@@ -300,7 +357,6 @@ function MAX_UI:CreateWindow(Options)
         ScreenGui:Destroy()
     end)
 
-    -- حساب الفريمات والبنق
     local frameCount = 0
     local lastTime = tick()
     RunService.RenderStepped:Connect(function()
@@ -330,7 +386,7 @@ function MAX_UI:CreateWindow(Options)
     SidebarCorner.CornerRadius = UDim.new(0, 10)
     SidebarCorner.Parent = Sidebar
 
-    -- 👑 بطاقة الترحيب
+    -- 👑 بطاقة البروفايل
     local WelcomeCard = Instance.new("Frame")
     WelcomeCard.Size = UDim2.new(1, -12, 0, 50)
     WelcomeCard.Position = UDim2.new(0, 6, 0, 6)
@@ -350,9 +406,7 @@ function MAX_UI:CreateWindow(Options)
     UserAvatar.Size = UDim2.new(0, 34, 0, 34)
     UserAvatar.Position = UDim2.new(0, 6, 0.5, -17)
     UserAvatar.BackgroundTransparency = 1
-    pcall(function()
-        UserAvatar.Image = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
-    end)
+    UserAvatar.Image = DeveloperLogo
     UserAvatar.Parent = WelcomeCard
 
     local AvatarCorner = Instance.new("UICorner")
@@ -412,8 +466,9 @@ function MAX_UI:CreateWindow(Options)
 
     local WindowObj = { Tabs = {}, Accents = {}, Notify = NotifySystem }
 
-    function WindowObj:CreateTab(TabName, IconId)
-        IconId = IconId or "rbxassetid://6031075929"
+    function WindowObj:CreateTab(TabName, CustomIcon)
+        local IconId = ResolveIcon(TabName, CustomIcon)
+
         local TabButton = Instance.new("TextButton")
         TabButton.Size = UDim2.new(1, 0, 0, 32)
         TabButton.BackgroundColor3 = Theme.ItemBg
@@ -627,7 +682,6 @@ function MAX_UI:CreateWindow(Options)
             end)
         end
 
-        -- 🎨 قائمة اختيار الألوان المنسدلة الفاخرة (Dropdown Style)
         function TabElements:AddColorDropdown(Text, Callback)
             Callback = Callback or function() end
             local Expanded = false
@@ -742,43 +796,9 @@ function MAX_UI:CreateWindow(Options)
     end
 
     -- ============================================================
-    -- 🚀 تبويب الأداء وتنظيف الذاكرة (FPS & RAM Optimizer)
+    -- ⚙️ تبويب الإعدادات التلقائي
     -- ============================================================
-    local OptimizerTab = WindowObj:CreateTab("الأداء والذاكرة 🚀")
-
-    OptimizerTab:AddButton("تنظيف الذاكرة العشوائية (RAM Cleaner) 🧹", function()
-        pcall(function()
-            collectgarbage("collect")
-            NotifySystem("🧹 تنظيف الذاكرة", "تم تفريغ الذاكرة العشوائية بنجاح!", 3)
-        end)
-    end)
-
-    OptimizerTab:AddButton("تسريع الفريمات (FPS Boost Ultra) ⚡", function()
-        pcall(function()
-            for _, v in ipairs(game:GetDescendants()) do
-                if v:IsA("BasePart") then
-                    v.Material = Enum.Material.SmoothPlastic
-                elseif v:IsA("Texture") or v:IsA("Decal") then
-                    v:Destroy()
-                end
-            end
-            Lighting.GlobalShadows = false
-            NotifySystem("⚡ تسريع الأداء", "تم إزالة المؤثرات الثقيلة وزيادة الفريمات!", 3)
-        end)
-    end)
-
-    OptimizerTab:AddButton("إزالة الضباب والظلال (Clear Fog) 🌫️", function()
-        pcall(function()
-            Lighting.FogEnd = 9e9
-            Lighting.GlobalShadows = false
-            NotifySystem("🌫️ تحسين الرؤية", "تم إلغاء الضباب والظلال لزيادة أداء الشاشة!", 3)
-        end)
-    end)
-
-    -- ============================================================
-    -- 🎨 تبويب الإعدادات المدمج
-    -- ============================================================
-    local SettingsTab = WindowObj:CreateTab("الإعدادات ⚙️")
+    local SettingsTab = WindowObj:CreateTab("الإعدادات", "Settings")
 
     local function ApplyColor(col)
         Theme.Accent = col
@@ -787,15 +807,44 @@ function MAX_UI:CreateWindow(Options)
         CardStroke.Color = col
         GreetingLabel.TextColor3 = col
         for _, updateFunc in ipairs(WindowObj.Accents) do updateFunc(col) end
-        NotifySystem("👑 MAX ENGINE", "تم تغيير اللون بنجاح!", 2)
+        NotifySystem("👑 MAX ENGINE", "تم تطبيق اللون بنجاح!", 2)
     end
 
-    SettingsTab:AddColorDropdown("اختر لون الثيم المفضل", function(selectedColor)
+    SettingsTab:AddColorDropdown("اختيار لون الثيم المفضل", function(selectedColor)
         ApplyColor(selectedColor)
     end)
 
-    -- إشعار ترحيبي عند تشغيل السكربت مع صوت تنبيه
-    NotifySystem(GetSmartGreeting(), "مرحباً بك يا " .. LocalPlayer.DisplayName .. " في MAX HUB", 4)
+    SettingsTab:AddButton("تنظيف الذاكرة العشوائية (RAM Cleaner) 🧹", function()
+        pcall(function()
+            collectgarbage("collect")
+            NotifySystem("🧹 تنظيف الذاكرة", "تم تفريغ الذاكرة العشوائية بنجاح!", 3)
+        end)
+    end)
+
+    SettingsTab:AddButton("تسريع الفريمات (Ultra FPS Boost) ⚡", function()
+        pcall(function()
+            for _, obj in ipairs(game:GetDescendants()) do
+                if obj:IsA("BasePart") then
+                    obj.Material = Enum.Material.SmoothPlastic
+                elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Smoke") or obj:IsA("Fire") then
+                    obj.Enabled = false
+                end
+            end
+            Lighting.GlobalShadows = false
+            NotifySystem("⚡ تسريع الأداء", "تم تسريع اللعبة ورفع الفريمات!", 3)
+        end)
+    end)
+
+    SettingsTab:AddButton("إزالة الضباب والظلال (Clear Fog) 🌫️", function()
+        pcall(function()
+            Lighting.FogEnd = 9e9
+            Lighting.GlobalShadows = false
+            NotifySystem("🌫️ تحسين الرؤية", "تم إلغاء الضباب والظلال بنجاح!", 3)
+        end)
+    end)
+
+    -- إشعار الترحيب المباشر عند التشغيل
+    NotifySystem(GetSmartGreeting(), "مرحباً بك يا " .. LocalPlayer.DisplayName .. " في " .. TitleText, 4)
 
     return WindowObj
 end
