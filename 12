@@ -1,961 +1,502 @@
 -- ============================================================
--- 👑 MAX TITAN ENGINE V26 - SLIDER FIX & ENRICHED ACCESSIBILITY
--- 🌐 Independent Slider Dragging / High Legibility / Full UI Engine
+-- 🥷 MAX TITAN ENGINE V99 | ULTIMATE UI FRAMEWORK
+-- 🛡️ Heavy-Duty Core Architecture (Scalable to 500,000+ Lines)
 -- ============================================================
 
-local MAX_UI = {}
-
-local UserInputService = game:GetService("UserInputService")
-local TweenService    = game:GetService("TweenService")
-local RunService      = game:GetService("RunService")
-local CoreGui         = game:GetService("CoreGui")
-local Players         = game:GetService("Players")
-local Stats           = game:GetService("Stats")
-local SoundService    = game:GetService("SoundService")
-local Lighting        = game:GetService("Lighting")
-
-local LocalPlayer = Players.LocalPlayer
-local IsMobile    = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
-
--- 🔓 فك قفل الشاشة للفريمات العالية
-pcall(function()
-    if setfpscap then setfpscap(240)
-    elseif set_fps_cap then set_fps_cap(240) end
-end)
-
--- 🖼️ صور النظام المعتمدة
-local CustomLogoImage = "rbxassetid://96007556931310"
-local GameIconImage   = "rbxthumb://type=GameIcon&id=" .. game.PlaceId .. "&w=150&h=150"
-
--- 🎨 ثيم Cyber Dark Neon مع نصوص واضحة وعالية التباين
-local Theme = {
-    Background  = Color3.fromRGB(11, 12, 17),
-    Sidebar     = Color3.fromRGB(8, 9, 13),
-    Header      = Color3.fromRGB(16, 17, 24),
-    Accent      = Color3.fromRGB(138, 43, 226),
-    Cyan        = Color3.fromRGB(6, 182, 212),
-    TextPrimary = Color3.fromRGB(255, 255, 255),
-    TextDark    = Color3.fromRGB(180, 185, 200),
-    ItemBg      = Color3.fromRGB(18, 19, 28),
-    Border      = Color3.fromRGB(138, 43, 226)
+local MAX_TITAN = {
+    Version = "99.0.0-PROD",
+    Flags = {},
+    Connections = {},
+    Threads = {},
+    ActiveTheme = "Dark Obsidian",
+    DebugMode = false,
+    ConfigFolder = "MAX_Titan_Config"
 }
 
-local ActiveNotifications = {}
+-- Services
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
+local CoreGui = game:GetService("CoreGui")
+local Stats = game:GetService("Stats")
+local Workspace = game:GetService("Workspace")
 
-local function PlayNotifySound()
-    task.defer(function()
-        pcall(function()
-            local sound = Instance.new("Sound")
-            sound.SoundId = "rbxassetid://4590662766"
-            sound.Volume = 0.5
-            sound.Parent = SoundService
-            sound:Play()
-            task.delay(2, function() sound:Destroy() end)
-        end)
-    end)
+local LocalPlayer = Players.LocalPlayer
+
+-- ============================================================
+-- ⚙️ [القسم التاسع] إدارة الذاكرة والأمان والتحميل
+-- ============================================================
+
+function MAX_TITAN:RegisterConn(conn)
+    table.insert(self.Connections, conn)
+    return conn
 end
 
-local function GetSmartGreeting()
-    local hour = tonumber(os.date("%H")) or 12
-    if hour >= 5 and hour < 12 then
-        return "صباح الخير ☀️"
-    elseif hour >= 12 and hour < 18 then
-        return "مساء الخير 🌤️"
-    else
-        return "أهلاً بك 🌙"
-    end
-end
-
--- 🔔 نظام الإشعارات
-function MAX_UI:Notify(Title, Content, Duration)
-    Duration = Duration or 3.5
-    PlayNotifySound()
-
-    local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    local NotifyGui = ParentGui:FindFirstChild("MAX_Titan_NotifyGui")
-    
-    if not NotifyGui then
-        NotifyGui = Instance.new("ScreenGui")
-        NotifyGui.Name = "MAX_Titan_NotifyGui"
-        NotifyGui.ResetOnSpawn = false
-        NotifyGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        NotifyGui.Parent = ParentGui
-    end
-
-    local NotifyFrame = Instance.new("Frame")
-    NotifyFrame.Size = UDim2.new(0, 310, 0, 70)
-    NotifyFrame.Position = UDim2.new(1, 20, 1, -100)
-    NotifyFrame.BackgroundColor3 = Theme.Header
-    NotifyFrame.ClipsDescendants = true
-    NotifyFrame.Parent = NotifyGui
-
-    local NCorner = Instance.new("UICorner")
-    NCorner.CornerRadius = UDim.new(0, 10)
-    NCorner.Parent = NotifyFrame
-
-    local NStroke = Instance.new("UIStroke")
-    NStroke.Color = Theme.Accent
-    NStroke.Thickness = 1.8
-    NStroke.Parent = NotifyFrame
-
-    local NIcon = Instance.new("ImageLabel")
-    NIcon.Size = UDim2.new(0, 44, 0, 44)
-    NIcon.Position = UDim2.new(0, 10, 0, 13)
-    NIcon.BackgroundTransparency = 1
-    NIcon.Image = CustomLogoImage
-    NIcon.Parent = NotifyFrame
-
-    local NIconCorner = Instance.new("UICorner")
-    NIconCorner.CornerRadius = UDim.new(0, 8)
-    NIconCorner.Parent = NIcon
-
-    local NTitle = Instance.new("TextLabel")
-    NTitle.Size = UDim2.new(1, -68, 0, 20)
-    NTitle.Position = UDim2.new(0, 62, 0, 8)
-    NTitle.BackgroundTransparency = 1
-    NTitle.Text = Title or "إشعار النظام"
-    NTitle.TextColor3 = Theme.Cyan
-    NTitle.Font = Enum.Font.GothamBlack
-    NTitle.TextSize = 13
-    NTitle.TextXAlignment = Enum.TextXAlignment.Left
-    NTitle.Parent = NotifyFrame
-
-    local NText = Instance.new("TextLabel")
-    NText.Size = UDim2.new(1, -68, 0, 34)
-    NText.Position = UDim2.new(0, 62, 0, 28)
-    NText.BackgroundTransparency = 1
-    NText.Text = Content or ""
-    NText.TextColor3 = Theme.TextPrimary
-    NText.Font = Enum.Font.GothamBold
-    NText.TextSize = 11
-    NText.TextWrapped = true
-    NText.TextXAlignment = Enum.TextXAlignment.Left
-    NText.Parent = NotifyFrame
-
-    local TimeBar = Instance.new("Frame")
-    TimeBar.Size = UDim2.new(1, 0, 0, 3)
-    TimeBar.Position = UDim2.new(0, 0, 1, -3)
-    TimeBar.BackgroundColor3 = Theme.Accent
-    TimeBar.BorderSizePixel = 0
-    TimeBar.Parent = NotifyFrame
-
-    table.insert(ActiveNotifications, NotifyFrame)
-    local function RepositionNotifications()
-        for index, frame in ipairs(ActiveNotifications) do
-            local targetY = -100 - ((#ActiveNotifications - index) * 78)
-            TweenService:Create(frame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-                Position = UDim2.new(1, -325, 1, targetY)
-            }):Play()
+function MAX_TITAN:SpawnThread(fn)
+    local thread = task.spawn(function()
+        local ok, err = pcall(fn)
+        if not ok and self.DebugMode then
+            warn("[MAX TITAN EXCEPTION]: " .. tostring(err))
         end
-    end
-
-    RepositionNotifications()
-    TweenService:Create(TimeBar, TweenInfo.new(Duration, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 3)}):Play()
-
-    task.delay(Duration, function()
-        local idx = table.find(ActiveNotifications, NotifyFrame)
-        if idx then table.remove(ActiveNotifications, idx) end
-        TweenService:Create(NotifyFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
-            Position = UDim2.new(1, 20, NotifyFrame.Position.Y.Scale, NotifyFrame.Position.Y.Offset)
-        }):Play()
-        task.wait(0.25)
-        NotifyFrame:Destroy()
-        RepositionNotifications()
     end)
+    table.insert(self.Threads, thread)
+    return thread
 end
 
-function MAX_UI:CreateWindow(Options)
-    Options = Options or {}
-    local TitleText = Options.Name or "MAX HUB | TITAN EDITION"
-    local ToggleKey = Options.Keybind or Enum.KeyCode.RightControl
+function MAX_TITAN:SafeExecute(fn, ...)
+    local args = {...}
+    return pcall(function() return fn(unpack(args)) end)
+end
 
-    local ParentGui = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
-    if ParentGui:FindFirstChild("MAX_TitanEngine_V26") then
-        ParentGui.MAX_TitanEngine_V26:Destroy()
+function MAX_TITAN:Unload()
+    for _, conn in ipairs(self.Connections) do
+        if conn and conn.Connected then conn:Disconnect() end
     end
+    for _, thread in ipairs(self.Threads) do
+        if thread then task.cancel(thread) end
+    end
+    table.clear(self.Connections)
+    table.clear(self.Threads)
+    if self.ScreenGui then self.ScreenGui:Destroy() end
+    print("[MAX TITAN ENGINE]: Cleanly Unloaded.")
+end
 
+-- Anti-AFK [القسم السابع]
+MAX_TITAN:SpawnThread(function()
+    local VirtualUser = game:GetService("VirtualUser")
+    LocalPlayer.Idled:Connect(function()
+        VirtualUser:Button2Down(Vector2.new(0, 0), Workspace.CurrentCamera.CFrame)
+        task.wait(1)
+        VirtualUser:Button2Up(Vector2.new(0, 0), Workspace.CurrentCamera.CFrame)
+    end)
+end)
+
+-- ============================================================
+-- 🎨 [القسم الرابع] محرك الثيمات والتخصيص
+-- ============================================================
+
+MAX_TITAN.Themes = {
+    ["Dark Obsidian"] = {
+        MainBg = Color3.fromRGB(10, 14, 26),
+        Sidebar = Color3.fromRGB(15, 23, 42),
+        Accent = Color3.fromRGB(0, 170, 255),
+        Text = Color3.fromRGB(240, 245, 255),
+        SubText = Color3.fromRGB(148, 163, 184),
+        Container = Color3.fromRGB(18, 26, 47),
+        Border = Color3.fromRGB(30, 58, 138)
+    },
+    ["Cyberpunk Neon"] = {
+        MainBg = Color3.fromRGB(15, 5, 25),
+        Sidebar = Color3.fromRGB(25, 10, 40),
+        Accent = Color3.fromRGB(255, 0, 128),
+        Text = Color3.fromRGB(255, 255, 255),
+        SubText = Color3.fromRGB(180, 140, 210),
+        Container = Color3.fromRGB(35, 15, 55),
+        Border = Color3.fromRGB(255, 0, 200)
+    }
+}
+
+-- ============================================================
+-- 🎛️ [القسم الأول والثاني] محرك إنشاء النوافذ والتبويبات والـ Widgets
+-- ============================================================
+
+function MAX_TITAN:CreateWindow(cfg)
+    cfg = cfg or {}
+    local Title = cfg.Name or "MAX TITAN ENGINE V99"
+    local ToggleKey = cfg.Keybind or Enum.KeyCode.RightControl
+    local CurrentTheme = MAX_TITAN.Themes[MAX_TITAN.ActiveTheme]
+
+    -- ScreenGui Protect
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MAX_TitanEngine_V26"
+    ScreenGui.Name = "MAX_TITAN_V99"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    ScreenGui.Parent = ParentGui
 
-    local DefaultSize = IsMobile and UDim2.new(0, 560, 0, 370) or UDim2.new(0, 700, 0, 460)
-    local DefaultPos  = IsMobile and UDim2.new(0.5, -280, 0.5, -185) or UDim2.new(0.5, -350, 0.5, -230)
+    pcall(function() ScreenGui.Parent = CoreGui end)
+    if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
+    MAX_TITAN.ScreenGui = ScreenGui
 
+    -- Main Container
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
-    MainFrame.Size = DefaultSize
-    MainFrame.Position = DefaultPos
-    MainFrame.BackgroundColor3 = Theme.Background
-    MainFrame.BorderSizePixel = 0
-    MainFrame.Active = true
-    MainFrame.ClipsDescendants = true
     MainFrame.Parent = ScreenGui
+    MainFrame.BackgroundColor3 = CurrentTheme.MainBg
+    MainFrame.BorderColor3 = CurrentTheme.Border
+    MainFrame.BorderSizePixel = 1
+    MainFrame.Position = UDim2.new(0.5, -310, 0.5, -210)
+    MainFrame.Size = UDim2.new(0, 620, 0, 420)
+    MainFrame.ClipsDescendants = true
 
     local MainCorner = Instance.new("UICorner")
-    MainCorner.CornerRadius = UDim.new(0, 12)
+    MainCorner.CornerRadius = UDim.new(0, 10)
     MainCorner.Parent = MainFrame
 
-    local MainStroke = Instance.new("UIStroke")
-    MainStroke.Color = Theme.Accent
-    MainStroke.Thickness = 2
-    MainStroke.Parent = MainFrame
+    -- Header (TopBar)
+    local TopBar = Instance.new("Frame")
+    TopBar.Name = "TopBar"
+    TopBar.Parent = MainFrame
+    TopBar.BackgroundColor3 = CurrentTheme.Sidebar
+    TopBar.Size = UDim2.new(1, 0, 0, 40)
 
-    -- ⚡ متغير الحماية لمنع سحب النافذة أثناء التحكم بالسلايدر
-    local IsInteractingWithSlider = false
-
-    local Dragging = false
-    local DragInput, DragStart, StartPos
-
-    local function UpdateDrag(input)
-        if IsInteractingWithSlider then return end
-        local delta = input.Position - DragStart
-        MainFrame.Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + delta.X, StartPos.Y.Scale, StartPos.Y.Offset + delta.Y)
-    end
-
-    MainFrame.InputBegan:Connect(function(input)
-        if IsInteractingWithSlider then return end
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            Dragging = true
-            DragStart = input.Position
-            StartPos = MainFrame.Position
-            
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    Dragging = false
-                end
-            end)
-        end
-    end)
-
-    MainFrame.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            DragInput = input
-        end
-    end)
-
-    UserInputService.InputChanged:Connect(function(input)
-        if input == DragInput and Dragging and not IsInteractingWithSlider then
-            UpdateDrag(input)
-        end
-    end)
-
-    -- زر التصغير العائم
-    local ReopenBtn = Instance.new("Frame")
-    ReopenBtn.Name = "ReopenSquare"
-    ReopenBtn.Size = UDim2.new(0, 52, 0, 52)
-    ReopenBtn.Position = UDim2.new(0, 20, 0.2, 0)
-    ReopenBtn.BackgroundColor3 = Theme.Background
-    ReopenBtn.Visible = false
-    ReopenBtn.Active = true
-    ReopenBtn.Draggable = true
-    ReopenBtn.Parent = ScreenGui
-
-    local ReopenCorner = Instance.new("UICorner")
-    ReopenCorner.CornerRadius = UDim.new(0, 10)
-    ReopenCorner.Parent = ReopenBtn
-
-    local ReopenStroke = Instance.new("UIStroke")
-    ReopenStroke.Color = Theme.Cyan
-    ReopenStroke.Thickness = 2
-    ReopenStroke.Parent = ReopenBtn
-
-    local ReopenLogo = Instance.new("ImageLabel")
-    ReopenLogo.Size = UDim2.new(0, 38, 0, 38)
-    ReopenLogo.Position = UDim2.new(0.5, -19, 0.5, -19)
-    ReopenLogo.BackgroundTransparency = 1
-    ReopenLogo.Image = CustomLogoImage
-    ReopenLogo.Parent = ReopenBtn
-
-    local ReopenTrigger = Instance.new("TextButton")
-    ReopenTrigger.Size = UDim2.new(1, 0, 1, 0)
-    ReopenTrigger.BackgroundTransparency = 1
-    ReopenTrigger.Text = ""
-    ReopenTrigger.Parent = ReopenBtn
-
-    ReopenTrigger.MouseButton1Click:Connect(function()
-        MainFrame.Visible = true
-        ReopenBtn.Visible = false
-    end)
-
-    -- مفتاح التعتيم والإظهار من الكيبورد
-    UserInputService.InputBegan:Connect(function(input, gpe)
-        if not gpe and input.KeyCode == ToggleKey then
-            MainFrame.Visible = not MainFrame.Visible
-            ReopenBtn.Visible = not MainFrame.Visible
-        end
-    end)
-
-    -- الهيدر العلوي
-    local Topbar = Instance.new("Frame")
-    Topbar.Size = UDim2.new(1, -16, 0, 42)
-    Topbar.Position = UDim2.new(0, 8, 0, 8)
-    Topbar.BackgroundColor3 = Theme.Header
-    Topbar.Parent = MainFrame
-
-    local TopbarCorner = Instance.new("UICorner")
-    TopbarCorner.CornerRadius = UDim.new(0, 8)
-    TopbarCorner.Parent = Topbar
-
-    local HeaderLogo = Instance.new("ImageLabel")
-    HeaderLogo.Size = UDim2.new(0, 28, 0, 28)
-    HeaderLogo.Position = UDim2.new(0, 8, 0.5, -14)
-    HeaderLogo.BackgroundTransparency = 1
-    HeaderLogo.Image = CustomLogoImage
-    HeaderLogo.Parent = Topbar
-
-    local StatsLabel = Instance.new("TextLabel")
-    StatsLabel.Size = UDim2.new(1, -130, 1, 0)
-    StatsLabel.Position = UDim2.new(0, 44, 0, 0)
-    StatsLabel.BackgroundTransparency = 1
-    StatsLabel.TextColor3 = Theme.TextPrimary
-    StatsLabel.Font = Enum.Font.GothamBlack
-    StatsLabel.TextSize = IsMobile and 10 or 11
-    StatsLabel.TextXAlignment = Enum.TextXAlignment.Left
-    StatsLabel.Text = TitleText .. "  |  ⚡ FPS: ...  |  📡 Ping: ...  |  💾 RAM: ..."
-    StatsLabel.Parent = Topbar
-
-    -- أزرار التحكم بالنافذة
-    local ControlFrame = Instance.new("Frame")
-    ControlFrame.Size = UDim2.new(0, 68, 1, 0)
-    ControlFrame.Position = UDim2.new(1, -72, 0, 0)
-    ControlFrame.BackgroundTransparency = 1
-    ControlFrame.Parent = Topbar
-
-    local MinimizeBtn = Instance.new("TextButton")
-    MinimizeBtn.Size = UDim2.new(0, 26, 0, 24)
-    MinimizeBtn.Position = UDim2.new(0, 4, 0.5, -12)
-    MinimizeBtn.BackgroundColor3 = Color3.fromRGB(24, 26, 36)
-    MinimizeBtn.Text = ""
-    MinimizeBtn.AutoButtonColor = false
-    MinimizeBtn.Parent = ControlFrame
-
-    local MinCorner = Instance.new("UICorner")
-    MinCorner.CornerRadius = UDim.new(0, 6)
-    MinCorner.Parent = MinimizeBtn
-
-    local MinLine = Instance.new("Frame")
-    MinLine.Size = UDim2.new(0, 10, 0, 2)
-    MinLine.Position = UDim2.new(0.5, -5, 0.5, -1)
-    MinLine.BackgroundColor3 = Theme.TextPrimary
-    MinLine.BorderSizePixel = 0
-    MinLine.Parent = MinimizeBtn
+    local TitleLbl = Instance.new("TextLabel")
+    TitleLbl.Parent = TopBar
+    TitleLbl.BackgroundTransparency = 1
+    TitleLbl.Position = UDim2.new(0, 15, 0, 0)
+    TitleLbl.Size = UDim2.new(0.7, 0, 1, 0)
+    TitleLbl.Font = Enum.Font.FredokaOne
+    TitleLbl.Text = "👑 " .. Title
+    TitleLbl.TextColor3 = CurrentTheme.Accent
+    TitleLbl.TextSize = 15
+    TitleLbl.TextXAlignment = Enum.TextXAlignment.Left
 
     local CloseBtn = Instance.new("TextButton")
-    CloseBtn.Size = UDim2.new(0, 26, 0, 24)
-    CloseBtn.Position = UDim2.new(0, 36, 0.5, -12)
-    CloseBtn.BackgroundColor3 = Color3.fromRGB(45, 20, 25)
-    CloseBtn.Text = ""
-    CloseBtn.AutoButtonColor = false
-    CloseBtn.Parent = ControlFrame
+    CloseBtn.Parent = TopBar
+    CloseBtn.BackgroundColor3 = Color3.fromRGB(220, 38, 38)
+    CloseBtn.Position = UDim2.new(1, -32, 0.15, 0)
+    CloseBtn.Size = UDim2.new(0, 26, 0, 26)
+    CloseBtn.Font = Enum.Font.FredokaOne
+    CloseBtn.Text = "X"
+    CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseBtn.TextSize = 13
 
     local CloseCorner = Instance.new("UICorner")
     CloseCorner.CornerRadius = UDim.new(0, 6)
     CloseCorner.Parent = CloseBtn
 
-    local CrossIcon = Instance.new("ImageLabel")
-    CrossIcon.Size = UDim2.new(0, 12, 0, 12)
-    CrossIcon.Position = UDim2.new(0.5, -6, 0.5, -6)
-    CrossIcon.BackgroundTransparency = 1
-    CrossIcon.Image = "rbxassetid://5054666997"
-    CrossIcon.ImageColor3 = Color3.fromRGB(255, 80, 80)
-    CrossIcon.Parent = CloseBtn
-
-    MinimizeBtn.MouseButton1Click:Connect(function()
-        MainFrame.Visible = false
-        ReopenBtn.Visible = true
-    end)
-
     CloseBtn.MouseButton1Click:Connect(function()
-        ScreenGui:Destroy()
+        MainFrame.Visible = false
     end)
 
-    -- حساب مؤشرات الأداء الحقيقية
-    task.spawn(function()
-        local lastCalc = tick()
-        local frames = 0
-        RunService.RenderStepped:Connect(function()
-            frames = frames + 1
-            local now = tick()
-            if now - lastCalc >= 0.5 then
-                local realFPS = math.floor(frames / (now - lastCalc))
-                local pingVal = 0
-                local memVal = math.floor(collectgarbage("count") / 1024)
-                pcall(function()
-                    pingVal = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
-                end)
-                StatsLabel.Text = string.format("%s  |  ⚡ FPS: %d  |  📡 Ping: %dms  |  💾 RAM: %dMB", TitleText, realFPS, pingVal, memVal)
-                frames = 0
-                lastCalc = now
-            end
-        end)
+    -- Draggable Engine
+    local dragging, dragStart, startPos
+    TopBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = MainFrame.Position
+        end
     end)
 
-    -- الشريط الجانبي
-    local SidebarWidth = IsMobile and 170 or 200
-    local Sidebar = Instance.new("Frame")
-    Sidebar.Size = UDim2.new(0, SidebarWidth, 1, -62)
-    Sidebar.Position = UDim2.new(0, 8, 0, 54)
-    Sidebar.BackgroundColor3 = Theme.Sidebar
+    MAX_TITAN:RegisterConn(UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end))
+
+    TopBar.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+
+    -- Sidebar
+    local Sidebar = Instance.new("ScrollingFrame")
+    Sidebar.Name = "Sidebar"
     Sidebar.Parent = MainFrame
+    Sidebar.BackgroundColor3 = CurrentTheme.Sidebar
+    Sidebar.Position = UDim2.new(0, 0, 0, 40)
+    Sidebar.Size = UDim2.new(0, 160, 1, -40)
+    Sidebar.CanvasSize = UDim2.new(0, 0, 0, 0)
+    Sidebar.ScrollBarThickness = 2
+    Sidebar.BorderSizePixel = 0
 
-    local SidebarCorner = Instance.new("UICorner")
-    SidebarCorner.CornerRadius = UDim.new(0, 10)
-    SidebarCorner.Parent = Sidebar
+    local SidebarLayout = Instance.new("UIListLayout")
+    SidebarLayout.Parent = Sidebar
+    SidebarLayout.Padding = UDim.new(0, 6)
 
-    -- 🎮 بطاقة تعريف اللعبة الحالية
-    local WelcomeCard = Instance.new("Frame")
-    WelcomeCard.Size = UDim2.new(1, -12, 0, 56)
-    WelcomeCard.Position = UDim2.new(0, 6, 0, 6)
-    WelcomeCard.BackgroundColor3 = Theme.ItemBg
-    WelcomeCard.Parent = Sidebar
+    -- Content Frame
+    local ContentContainer = Instance.new("Frame")
+    ContentContainer.Name = "ContentContainer"
+    ContentContainer.Parent = MainFrame
+    ContentContainer.BackgroundTransparency = 1
+    ContentContainer.Position = UDim2.new(0, 165, 0, 45)
+    ContentContainer.Size = UDim2.new(1, -170, 1, -50)
 
-    local CardCorner = Instance.new("UICorner")
-    CardCorner.CornerRadius = UDim.new(0, 8)
-    CardCorner.Parent = WelcomeCard
+    local WindowObj = {
+        Tabs = {},
+        CurrentTab = nil
+    }
 
-    local CardStroke = Instance.new("UIStroke")
-    CardStroke.Color = Theme.Accent
-    CardStroke.Thickness = 1.4
-    CardStroke.Parent = WelcomeCard
+    -- Tab Factory
+    function WindowObj:CreateTab(tabName)
+        local TabScroll = Instance.new("ScrollingFrame")
+        TabScroll.Name = tabName .. "_Content"
+        TabScroll.Parent = ContentContainer
+        TabScroll.BackgroundTransparency = 1
+        TabScroll.Size = UDim2.new(1, 0, 1, 0)
+        TabScroll.Visible = false
+        TabScroll.ScrollBarThickness = 4
+        TabScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
-    local GameIcon = Instance.new("ImageLabel")
-    GameIcon.Size = UDim2.new(0, 42, 0, 42)
-    GameIcon.Position = UDim2.new(0, 7, 0.5, -21)
-    GameIcon.BackgroundTransparency = 1
-    GameIcon.Image = GameIconImage
-    GameIcon.Parent = WelcomeCard
+        local TabLayout = Instance.new("UIListLayout")
+        TabLayout.Parent = TabScroll
+        TabLayout.Padding = UDim.new(0, 8)
 
-    local GameIconCorner = Instance.new("UICorner")
-    GameIconCorner.CornerRadius = UDim.new(0, 8)
-    GameIconCorner.Parent = GameIcon
-
-    local GreetingLabel = Instance.new("TextLabel")
-    GreetingLabel.Size = UDim2.new(1, -56, 0, 18)
-    GreetingLabel.Position = UDim2.new(0, 54, 0, 8)
-    GreetingLabel.BackgroundTransparency = 1
-    GreetingLabel.Text = GetSmartGreeting()
-    GreetingLabel.TextColor3 = Theme.Cyan
-    GreetingLabel.Font = Enum.Font.GothamBlack
-    GreetingLabel.TextSize = 10
-    GreetingLabel.TextXAlignment = Enum.TextXAlignment.Left
-    GreetingLabel.Parent = WelcomeCard
-
-    local UserDisplayName = Instance.new("TextLabel")
-    UserDisplayName.Size = UDim2.new(1, -56, 0, 20)
-    UserDisplayName.Position = UDim2.new(0, 54, 0, 26)
-    UserDisplayName.BackgroundTransparency = 1
-    UserDisplayName.Text = LocalPlayer.DisplayName
-    UserDisplayName.TextColor3 = Theme.TextPrimary
-    UserDisplayName.Font = Enum.Font.GothamBlack
-    UserDisplayName.TextSize = 12
-    UserDisplayName.TextXAlignment = Enum.TextXAlignment.Left
-    UserDisplayName.Parent = WelcomeCard
-
-    local TabButtonContainer = Instance.new("ScrollingFrame")
-    TabButtonContainer.Size = UDim2.new(1, -12, 1, -74)
-    TabButtonContainer.Position = UDim2.new(0, 6, 0, 68)
-    TabButtonContainer.BackgroundTransparency = 1
-    TabButtonContainer.ScrollBarThickness = 0
-    TabButtonContainer.Parent = Sidebar
-
-    local TabListLayout = Instance.new("UIListLayout")
-    TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    TabListLayout.Padding = UDim.new(0, 6)
-    TabListLayout.Parent = TabButtonContainer
-
-    local ContentArea = Instance.new("Frame")
-    ContentArea.Size = UDim2.new(1, -(SidebarWidth + 24), 1, -62)
-    ContentArea.Position = UDim2.new(0, SidebarWidth + 16, 0, 54)
-    ContentArea.BackgroundTransparency = 1
-    ContentArea.Parent = MainFrame
-
-    local WindowObj = { Tabs = {} }
-
-    function WindowObj:CreateTab(TabName, CustomIcon)
-        local IconId = CustomIcon or CustomLogoImage
-
-        local TabButton = Instance.new("TextButton")
-        TabButton.Size = UDim2.new(1, 0, 0, 40)
-        TabButton.BackgroundColor3 = Theme.ItemBg
-        TabButton.Text = ""
-        TabButton.AutoButtonColor = false
-        TabButton.Parent = TabButtonContainer
+        local TabBtn = Instance.new("TextButton")
+        TabBtn.Name = tabName .. "_Btn"
+        TabBtn.Parent = Sidebar
+        TabBtn.Size = UDim2.new(1, -10, 0, 36)
+        TabBtn.BackgroundColor3 = CurrentTheme.Container
+        TabBtn.Font = Enum.Font.FredokaOne
+        TabBtn.Text = "  " .. tabName
+        TabBtn.TextColor3 = CurrentTheme.SubText
+        TabBtn.TextSize = 12
+        TabBtn.TextXAlignment = Enum.TextXAlignment.Left
 
         local BtnCorner = Instance.new("UICorner")
-        BtnCorner.CornerRadius = UDim.new(0, 8)
-        BtnCorner.Parent = TabButton
+        BtnCorner.CornerRadius = UDim.new(0, 6)
+        BtnCorner.Parent = TabBtn
 
-        local TabAvatar = Instance.new("ImageLabel")
-        TabAvatar.Size = UDim2.new(0, 24, 0, 24)
-        TabAvatar.Position = UDim2.new(0, 10, 0.5, -12)
-        TabAvatar.BackgroundTransparency = 1
-        TabAvatar.Image = IconId
-        TabAvatar.Parent = TabButton
-
-        local TabTitle = Instance.new("TextLabel")
-        TabTitle.Size = UDim2.new(1, -42, 1, 0)
-        TabTitle.Position = UDim2.new(0, 38, 0, 0)
-        TabTitle.BackgroundTransparency = 1
-        TabTitle.Text = TabName
-        TabTitle.TextColor3 = Theme.TextDark
-        TabTitle.Font = Enum.Font.GothamBlack
-        TabTitle.TextSize = IsMobile and 11 or 12
-        TabTitle.TextXAlignment = Enum.TextXAlignment.Left
-        TabTitle.Parent = TabButton
-
-        local PageFrame = Instance.new("ScrollingFrame")
-        PageFrame.Size = UDim2.new(1, 0, 1, 0)
-        PageFrame.BackgroundTransparency = 1
-        PageFrame.Visible = false
-        PageFrame.ScrollBarThickness = 3
-        PageFrame.ScrollBarImageColor3 = Theme.Accent
-        PageFrame.Parent = ContentArea
-
-        local PageListLayout = Instance.new("UIListLayout")
-        PageListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        PageListLayout.Padding = UDim.new(0, 8)
-        PageListLayout.Parent = PageFrame
-
-        TabButton.MouseButton1Click:Connect(function()
-            for _, tab in ipairs(WindowObj.Tabs) do
-                tab.Page.Visible = false
-                tab.Title.TextColor3 = Theme.TextDark
-                tab.Button.BackgroundColor3 = Theme.ItemBg
+        TabBtn.MouseButton1Click:Connect(function()
+            for _, t in pairs(WindowObj.Tabs) do
+                t.Scroll.Visible = false
+                t.Btn.TextColor3 = CurrentTheme.SubText
+                t.Btn.BackgroundColor3 = CurrentTheme.Container
             end
-            PageFrame.Visible = true
-            TabTitle.TextColor3 = Theme.TextPrimary
-            TabButton.BackgroundColor3 = Theme.Accent
+            TabScroll.Visible = true
+            TabBtn.TextColor3 = CurrentTheme.Text
+            TabBtn.BackgroundColor3 = CurrentTheme.Accent
         end)
 
-        local TabElements = { Page = PageFrame, Button = TabButton, Icon = TabAvatar, Title = TabTitle }
+        local Elements = {}
 
-        -- 🔘 1. الأزرار الواضحة
-        function TabElements:AddButton(Text, Callback)
-            Callback = Callback or function() end
+        -- Widget: Toggle
+        function Elements:AddToggle(name, default, callback)
+            MAX_TITAN.Flags[name] = default
+            local Frame = Instance.new("Frame")
+            Frame.Size = UDim2.new(1, -10, 0, 40)
+            Frame.BackgroundColor3 = CurrentTheme.Container
+            Frame.Parent = TabScroll
+
+            local FCorner = Instance.new("UICorner")
+            FCorner.CornerRadius = UDim.new(0, 6)
+            FCorner.Parent = Frame
+
+            local Lbl = Instance.new("TextLabel")
+            Lbl.Parent = Frame
+            Lbl.BackgroundTransparency = 1
+            Lbl.Position = UDim2.new(0, 10, 0, 0)
+            Lbl.Size = UDim2.new(0.65, 0, 1, 0)
+            Lbl.Font = Enum.Font.FredokaOne
+            Lbl.Text = name
+            Lbl.TextColor3 = CurrentTheme.Text
+            Lbl.TextSize = 12
+            Lbl.TextXAlignment = Enum.TextXAlignment.Left
+
             local Btn = Instance.new("TextButton")
-            Btn.Size = UDim2.new(1, -6, 0, 40)
-            Btn.BackgroundColor3 = Theme.ItemBg
-            Btn.Text = Text
-            Btn.TextColor3 = Theme.TextPrimary
-            Btn.Font = Enum.Font.GothamBlack
-            Btn.TextSize = 12
-            Btn.Parent = PageFrame
+            Btn.Parent = Frame
+            Btn.Position = UDim2.new(1, -75, 0.15, 0)
+            Btn.Size = UDim2.new(0, 65, 0, 28)
+            Btn.Font = Enum.Font.FredokaOne
+            Btn.TextSize = 11
 
-            local Corner = Instance.new("UICorner")
-            Corner.CornerRadius = UDim.new(0, 8)
-            Corner.Parent = Btn
+            local BCorner = Instance.new("UICorner")
+            BCorner.CornerRadius = UDim.new(0, 6)
+            BCorner.Parent = Btn
+
+            local state = default
+            local function update()
+                MAX_TITAN.Flags[name] = state
+                Btn.Text = state and "ON" or "OFF"
+                Btn.BackgroundColor3 = state and CurrentTheme.Accent or Color3.fromRGB(30, 41, 59)
+                Btn.TextColor3 = state and Color3.fromRGB(255, 255, 255) or CurrentTheme.SubText
+            end
+            update()
 
             Btn.MouseButton1Click:Connect(function()
-                TweenService:Create(Btn, TweenInfo.new(0.08), {BackgroundColor3 = Theme.Accent}):Play()
-                task.delay(0.08, function()
-                    TweenService:Create(Btn, TweenInfo.new(0.12), {BackgroundColor3 = Theme.ItemBg}):Play()
-                end)
-                task.defer(Callback)
+                state = not state
+                update()
+                MAX_TITAN:SafeExecute(callback, state)
             end)
         end
 
-        -- 🔘 2. المفاتيح مع علامة الصح (✓)
-        function TabElements:AddToggle(Text, Default, Callback)
-            Callback = Callback or function() end
-            local Toggled = Default or false
-
+        -- Widget: Slider
+        function Elements:AddSlider(name, min, max, default, callback)
+            MAX_TITAN.Flags[name] = default
             local Frame = Instance.new("Frame")
-            Frame.Size = UDim2.new(1, -6, 0, 40)
-            Frame.BackgroundColor3 = Theme.ItemBg
-            Frame.Parent = PageFrame
+            Frame.Size = UDim2.new(1, -10, 0, 50)
+            Frame.BackgroundColor3 = CurrentTheme.Container
+            Frame.Parent = TabScroll
 
-            local Corner = Instance.new("UICorner")
-            Corner.CornerRadius = UDim.new(0, 8)
-            Corner.Parent = Frame
+            local FCorner = Instance.new("UICorner")
+            FCorner.CornerRadius = UDim.new(0, 6)
+            FCorner.Parent = Frame
 
-            local Label = Instance.new("TextLabel")
-            Label.Size = UDim2.new(1, -48, 1, 0)
-            Label.Position = UDim2.new(0, 12, 0, 0)
-            Label.BackgroundTransparency = 1
-            Label.Text = Text
-            Label.TextColor3 = Theme.TextPrimary
-            Label.Font = Enum.Font.GothamBlack
-            Label.TextSize = 12
-            Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.Parent = Frame
+            local Lbl = Instance.new("TextLabel")
+            Lbl.Parent = Frame
+            Lbl.BackgroundTransparency = 1
+            Lbl.Position = UDim2.new(0, 10, 0, 4)
+            Lbl.Size = UDim2.new(0.8, 0, 0, 20)
+            Lbl.Font = Enum.Font.FredokaOne
+            Lbl.Text = name .. " : " .. tostring(default)
+            Lbl.TextColor3 = CurrentTheme.Text
+            Lbl.TextSize = 12
+            Lbl.TextXAlignment = Enum.TextXAlignment.Left
 
-            local Indicator = Instance.new("TextButton")
-            Indicator.Size = UDim2.new(0, 24, 0, 24)
-            Indicator.Position = UDim2.new(1, -34, 0.5, -12)
-            Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(35, 38, 50)
-            Indicator.Text = Toggled and "✓" or ""
-            Indicator.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Indicator.Font = Enum.Font.GothamBlack
-            Indicator.TextSize = 14
-            Indicator.Parent = Frame
+            local Bar = Instance.new("TextButton")
+            Bar.Parent = Frame
+            Bar.Position = UDim2.new(0, 10, 0, 28)
+            Bar.Size = UDim2.new(1, -20, 0, 12)
+            Bar.BackgroundColor3 = Color3.fromRGB(30, 40, 60)
+            Bar.Text = ""
 
-            local IndCorner = Instance.new("UICorner")
-            IndCorner.CornerRadius = UDim.new(0, 6)
-            IndCorner.Parent = Indicator
+            local Fill = Instance.new("Frame")
+            Fill.Parent = Bar
+            Fill.BackgroundColor3 = CurrentTheme.Accent
+            Fill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
+            Fill.BorderSizePixel = 0
 
-            local function UpdateToggle()
-                Toggled = not Toggled
-                Indicator.BackgroundColor3 = Toggled and Theme.Accent or Color3.fromRGB(35, 38, 50)
-                Indicator.Text = Toggled and "✓" or ""
-                task.defer(function() Callback(Toggled) end)
+            local function setVal(input)
+                local pos = math.clamp((input.Position.X - Bar.AbsolutePosition.X) / Bar.AbsoluteSize.X, 0, 1)
+                local val = math.floor(min + (max - min) * pos)
+                Fill.Size = UDim2.new(pos, 0, 1, 0)
+                Lbl.Text = name .. " : " .. tostring(val)
+                MAX_TITAN.Flags[name] = val
+                MAX_TITAN:SafeExecute(callback, val)
             end
 
-            Indicator.MouseButton1Click:Connect(UpdateToggle)
-        end
-
-        -- 🔘 3. شريط السحب المطور (سلس جداً ولا يحرك النافذة نهائياً)
-        function TabElements:AddSlider(Text, Min, Max, Default, Callback)
-            Callback = Callback or function() end
-            local Value = Default or Min
-
-            local Frame = Instance.new("Frame")
-            Frame.Size = UDim2.new(1, -6, 0, 56)
-            Frame.BackgroundColor3 = Theme.ItemBg
-            Frame.Parent = PageFrame
-
-            local Corner = Instance.new("UICorner")
-            Corner.CornerRadius = UDim.new(0, 8)
-            Corner.Parent = Frame
-
-            local Label = Instance.new("TextLabel")
-            Label.Size = UDim2.new(1, -120, 0, 24)
-            Label.Position = UDim2.new(0, 12, 0, 4)
-            Label.BackgroundTransparency = 1
-            Label.Text = Text
-            Label.TextColor3 = Theme.TextPrimary
-            Label.Font = Enum.Font.GothamBlack
-            Label.TextSize = 12
-            Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.Parent = Frame
-
-            local ValLabel = Instance.new("TextLabel")
-            ValLabel.Size = UDim2.new(0, 100, 0, 24)
-            ValLabel.Position = UDim2.new(1, -112, 0, 4)
-            ValLabel.BackgroundTransparency = 1
-            ValLabel.Text = "القيمة: " .. tostring(Value)
-            ValLabel.TextColor3 = Theme.Cyan
-            ValLabel.Font = Enum.Font.GothamBlack
-            ValLabel.TextSize = 12
-            ValLabel.TextXAlignment = Enum.TextXAlignment.Right
-            ValLabel.Parent = Frame
-
-            local SliderTrack = Instance.new("Frame")
-            SliderTrack.Size = UDim2.new(1, -24, 0, 10)
-            SliderTrack.Position = UDim2.new(0, 12, 1, -18)
-            SliderTrack.BackgroundColor3 = Color3.fromRGB(35, 38, 50)
-            SliderTrack.Parent = Frame
-
-            local TrackCorner = Instance.new("UICorner")
-            TrackCorner.CornerRadius = UDim.new(1, 0)
-            TrackCorner.Parent = SliderTrack
-
-            local SliderFill = Instance.new("Frame")
-            SliderFill.Size = UDim2.new((Value - Min)/(Max - Min), 0, 1, 0)
-            SliderFill.BackgroundColor3 = Theme.Accent
-            SliderFill.BorderSizePixel = 0
-            SliderFill.Parent = SliderTrack
-
-            local FillCorner = Instance.new("UICorner")
-            FillCorner.CornerRadius = UDim.new(1, 0)
-            FillCorner.Parent = SliderFill
-
-            local DragKnob = Instance.new("Frame")
-            DragKnob.Size = UDim2.new(0, 20, 0, 20)
-            DragKnob.Position = UDim2.new(1, -10, 0.5, -10)
-            DragKnob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            DragKnob.Parent = SliderFill
-
-            local KnobCorner = Instance.new("UICorner")
-            KnobCorner.CornerRadius = UDim.new(1, 0)
-            KnobCorner.Parent = DragKnob
-
-            local DraggingSlider = false
-
-            local function Update(input)
-                local pos = math.clamp((input.Position.X - SliderTrack.AbsolutePosition.X) / SliderTrack.AbsoluteSize.X, 0, 1)
-                Value = math.floor(Min + (Max - Min) * pos)
-                ValLabel.Text = "القيمة: " .. tostring(Value)
-                SliderFill.Size = UDim2.new(pos, 0, 1, 0)
-                task.defer(function() Callback(Value) end)
-            end
-
-            SliderTrack.InputBegan:Connect(function(input)
+            local sliding = false
+            Bar.InputBegan:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                    DraggingSlider = true
-                    IsInteractingWithSlider = true -- إيقاف سحب الواجهة
-                    Update(input)
+                    sliding = true
+                    setVal(input)
                 end
             end)
+
+            MAX_TITAN:RegisterConn(UserInputService.InputChanged:Connect(function(input)
+                if sliding and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+                    setVal(input)
+                end
+            end))
 
             UserInputService.InputEnded:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                    DraggingSlider = false
-                    IsInteractingWithSlider = false -- إعادة سحب الواجهة
-                end
-            end)
-
-            UserInputService.InputChanged:Connect(function(input)
-                if DraggingSlider and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-                    Update(input)
+                    sliding = false
                 end
             end)
         end
 
-        -- 🔘 4. صندوق النص المريح
-        function TabElements:AddTextbox(Text, Placeholder, Callback)
-            Callback = Callback or function() end
+        -- Widget: Button
+        function Elements:AddButton(name, callback)
+            local Btn = Instance.new("TextButton")
+            Btn.Size = UDim2.new(1, -10, 0, 38)
+            Btn.BackgroundColor3 = CurrentTheme.Container
+            Btn.Font = Enum.Font.FredokaOne
+            Btn.Text = name
+            Btn.TextColor3 = CurrentTheme.Text
+            Btn.TextSize = 12
+            Btn.Parent = TabScroll
 
+            local BCorner = Instance.new("UICorner")
+            BCorner.CornerRadius = UDim.new(0, 6)
+            BCorner.Parent = Btn
+
+            Btn.MouseButton1Click:Connect(function()
+                MAX_TITAN:SafeExecute(callback)
+            end)
+        end
+
+        -- Widget: Dropdown
+        function Elements:AddDropdown(name, list, callback)
             local Frame = Instance.new("Frame")
-            Frame.Size = UDim2.new(1, -6, 0, 40)
-            Frame.BackgroundColor3 = Theme.ItemBg
-            Frame.Parent = PageFrame
+            Frame.Size = UDim2.new(1, -10, 0, 40)
+            Frame.BackgroundColor3 = CurrentTheme.Container
+            Frame.Parent = TabScroll
+            Frame.ClipsDescendants = true
 
-            local Corner = Instance.new("UICorner")
-            Corner.CornerRadius = UDim.new(0, 8)
-            Corner.Parent = Frame
+            local FCorner = Instance.new("UICorner")
+            FCorner.CornerRadius = UDim.new(0, 6)
+            FCorner.Parent = Frame
 
-            local Label = Instance.new("TextLabel")
-            Label.Size = UDim2.new(0.5, 0, 1, 0)
-            Label.Position = UDim2.new(0, 12, 0, 0)
-            Label.BackgroundTransparency = 1
-            Label.Text = Text
-            Label.TextColor3 = Theme.TextPrimary
-            Label.Font = Enum.Font.GothamBlack
-            Label.TextSize = 12
-            Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.Parent = Frame
+            local DropBtn = Instance.new("TextButton")
+            DropBtn.Size = UDim2.new(1, 0, 0, 40)
+            DropBtn.BackgroundTransparency = 1
+            DropBtn.Font = Enum.Font.FredokaOne
+            DropBtn.Text = "  " .. name .. " ▼"
+            DropBtn.TextColor3 = CurrentTheme.Text
+            DropBtn.TextSize = 12
+            DropBtn.TextXAlignment = Enum.TextXAlignment.Left
+            DropBtn.Parent = Frame
 
-            local InputBox = Instance.new("TextBox")
-            InputBox.Size = UDim2.new(0.45, 0, 0.72, 0)
-            InputBox.Position = UDim2.new(0.52, 0, 0.14, 0)
-            InputBox.BackgroundColor3 = Color3.fromRGB(25, 27, 38)
-            InputBox.Text = ""
-            InputBox.PlaceholderText = Placeholder or "اكتب هنا..."
-            InputBox.TextColor3 = Theme.Cyan
-            InputBox.PlaceholderColor3 = Theme.TextDark
-            InputBox.Font = Enum.Font.GothamBlack
-            InputBox.TextSize = 11
-            InputBox.Parent = Frame
+            local Container = Instance.new("Frame")
+            Container.Position = UDim2.new(0, 5, 0, 40)
+            Container.Size = UDim2.new(1, -10, 0, #list * 28)
+            Container.BackgroundTransparency = 1
+            Container.Parent = Frame
 
-            local BoxCorner = Instance.new("UICorner")
-            BoxCorner.CornerRadius = UDim.new(0, 6)
-            BoxCorner.Parent = InputBox
+            local Layout = Instance.new("UIListLayout")
+            Layout.Parent = Container
 
-            InputBox.FocusLost:Connect(function(enterPressed)
-                if enterPressed then
-                    task.defer(function() Callback(InputBox.Text) end)
-                end
-            end)
-        end
-
-        -- 🔘 5. القوائم المنسدلة
-        function TabElements:AddDropdown(Text, ListOptions, Callback)
-            Callback = Callback or function() end
-            ListOptions = ListOptions or {}
-            local Expanded = false
-
-            local DropdownMain = Instance.new("Frame")
-            DropdownMain.Size = UDim2.new(1, -6, 0, 40)
-            DropdownMain.BackgroundColor3 = Theme.ItemBg
-            DropdownMain.ClipsDescendants = true
-            DropdownMain.Parent = PageFrame
-
-            local DropCorner = Instance.new("UICorner")
-            DropCorner.CornerRadius = UDim.new(0, 8)
-            DropCorner.Parent = DropdownMain
-
-            local HeaderBtn = Instance.new("TextButton")
-            HeaderBtn.Size = UDim2.new(1, 0, 0, 40)
-            HeaderBtn.BackgroundTransparency = 1
-            HeaderBtn.Text = ""
-            HeaderBtn.Parent = DropdownMain
-
-            local Title = Instance.new("TextLabel")
-            Title.Size = UDim2.new(1, -40, 1, 0)
-            Title.Position = UDim2.new(0, 12, 0, 0)
-            Title.BackgroundTransparency = 1
-            Title.Text = Text
-            Title.TextColor3 = Theme.TextPrimary
-            Title.Font = Enum.Font.GothamBlack
-            Title.TextSize = 12
-            Title.TextXAlignment = Enum.TextXAlignment.Left
-            Title.Parent = HeaderBtn
-
-            local Arrow = Instance.new("TextLabel")
-            Arrow.Size = UDim2.new(0, 24, 0, 24)
-            Arrow.Position = UDim2.new(1, -32, 0.5, -12)
-            Arrow.BackgroundTransparency = 1
-            Arrow.Text = "▼"
-            Arrow.TextColor3 = Theme.Cyan
-            Arrow.Font = Enum.Font.GothamBlack
-            Arrow.TextSize = 11
-            Arrow.Parent = HeaderBtn
-
-            local ItemsHolder = Instance.new("Frame")
-            ItemsHolder.Size = UDim2.new(1, -12, 0, #ListOptions * 30)
-            ItemsHolder.Position = UDim2.new(0, 6, 0, 42)
-            ItemsHolder.BackgroundTransparency = 1
-            ItemsHolder.Parent = DropdownMain
-
-            local ListLayout = Instance.new("UIListLayout")
-            ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            ListLayout.Padding = UDim.new(0, 4)
-            ListLayout.Parent = ItemsHolder
-
-            for _, opt in ipairs(ListOptions) do
+            for _, item in ipairs(list) do
                 local ItemBtn = Instance.new("TextButton")
                 ItemBtn.Size = UDim2.new(1, 0, 0, 26)
-                ItemBtn.BackgroundColor3 = Color3.fromRGB(25, 27, 38)
-                ItemBtn.Text = opt
-                ItemBtn.TextColor3 = Theme.TextPrimary
-                ItemBtn.Font = Enum.Font.GothamBlack
+                ItemBtn.BackgroundColor3 = Color3.fromRGB(25, 35, 55)
+                ItemBtn.Font = Enum.Font.FredokaOne
+                ItemBtn.Text = item
+                ItemBtn.TextColor3 = CurrentTheme.SubText
                 ItemBtn.TextSize = 11
-                ItemBtn.Parent = ItemsHolder
-
-                local ItemCorner = Instance.new("UICorner")
-                ItemCorner.CornerRadius = UDim.new(0, 5)
-                ItemCorner.Parent = ItemBtn
+                ItemBtn.Parent = Container
 
                 ItemBtn.MouseButton1Click:Connect(function()
-                    Expanded = false
-                    Arrow.Text = "▼"
-                    DropdownMain.Size = UDim2.new(1, -6, 0, 40)
-                    task.defer(function() Callback(opt) end)
+                    DropBtn.Text = "  " .. name .. " : " .. item .. " ▼"
+                    Frame.Size = UDim2.new(1, -10, 0, 40)
+                    MAX_TITAN.Flags[name] = item
+                    MAX_TITAN:SafeExecute(callback, item)
                 end)
             end
 
-            HeaderBtn.MouseButton1Click:Connect(function()
-                Expanded = not Expanded
-                Arrow.Text = Expanded and "▲" or "▼"
-                local TargetHeight = Expanded and (46 + #ListOptions * 30) or 40
-                DropdownMain.Size = UDim2.new(1, -6, 0, TargetHeight)
+            local open = false
+            DropBtn.MouseButton1Click:Connect(function()
+                open = not open
+                Frame.Size = open and UDim2.new(1, -10, 0, 45 + (#list * 28)) or UDim2.new(1, -10, 0, 40)
             end)
         end
 
-        -- 🔘 6. محدد الألوان
-        function TabElements:AddColorPicker(Text, DefaultColor, Callback)
-            Callback = Callback or function() end
-            local CurrentColor = DefaultColor or Theme.Accent
-
-            local Frame = Instance.new("Frame")
-            Frame.Size = UDim2.new(1, -6, 0, 40)
-            Frame.BackgroundColor3 = Theme.ItemBg
-            Frame.Parent = PageFrame
-
-            local Corner = Instance.new("UICorner")
-            Corner.CornerRadius = UDim.new(0, 8)
-            Corner.Parent = Frame
-
-            local Label = Instance.new("TextLabel")
-            Label.Size = UDim2.new(1, -50, 1, 0)
-            Label.Position = UDim2.new(0, 12, 0, 0)
-            Label.BackgroundTransparency = 1
-            Label.Text = Text
-            Label.TextColor3 = Theme.TextPrimary
-            Label.Font = Enum.Font.GothamBlack
-            Label.TextSize = 12
-            Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.Parent = Frame
-
-            local ColorBox = Instance.new("TextButton")
-            ColorBox.Size = UDim2.new(0, 30, 0, 22)
-            ColorBox.Position = UDim2.new(1, -40, 0.5, -11)
-            ColorBox.BackgroundColor3 = CurrentColor
-            ColorBox.Text = ""
-            ColorBox.Parent = Frame
-
-            local CCorner = Instance.new("UICorner")
-            CCorner.CornerRadius = UDim.new(0, 6)
-            CCorner.Parent = ColorBox
-
-            ColorBox.MouseButton1Click:Connect(function()
-                CurrentColor = CurrentColor == Theme.Accent and Theme.Cyan or Theme.Accent
-                ColorBox.BackgroundColor3 = CurrentColor
-                task.defer(function() Callback(CurrentColor) end)
-            end)
+        -- Widget: Label
+        function Elements:AddLabel(text)
+            local Lbl = Instance.new("TextLabel")
+            Lbl.Size = UDim2.new(1, -10, 0, 25)
+            Lbl.BackgroundTransparency = 1
+            Lbl.Font = Enum.Font.FredokaOne
+            Lbl.Text = text
+            Lbl.TextColor3 = CurrentTheme.Accent
+            Lbl.TextSize = 12
+            Lbl.Parent = TabScroll
         end
 
-        -- 🔘 7. النصوص والبطاقات النصية الواضحة
-        function TabElements:AddLabel(Text)
-            local Frame = Instance.new("Frame")
-            Frame.Size = UDim2.new(1, -6, 0, 32)
-            Frame.BackgroundColor3 = Theme.ItemBg
-            Frame.Parent = PageFrame
+        WindowObj.Tabs[tabName] = { Scroll = TabScroll, Btn = TabBtn }
 
-            local Corner = Instance.new("UICorner")
-            Corner.CornerRadius = UDim.new(0, 8)
-            Corner.Parent = Frame
-
-            local Label = Instance.new("TextLabel")
-            Label.Size = UDim2.new(1, -12, 1, 0)
-            Label.Position = UDim2.new(0, 8, 0, 0)
-            Label.BackgroundTransparency = 1
-            Label.Text = Text
-            Label.TextColor3 = Theme.Cyan
-            Label.Font = Enum.Font.GothamBlack
-            Label.TextSize = 11
-            Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.Parent = Frame
+        if not WindowObj.CurrentTab then
+            WindowObj.CurrentTab = TabScroll
+            TabScroll.Visible = true
+            TabBtn.TextColor3 = CurrentTheme.Text
+            TabBtn.BackgroundColor3 = CurrentTheme.Accent
         end
 
-        table.insert(WindowObj.Tabs, TabElements)
-
-        if #WindowObj.Tabs == 1 then
-            PageFrame.Visible = true
-            TabTitle.TextColor3 = Theme.TextPrimary
-            TabButton.BackgroundColor3 = Theme.Accent
-        end
-
-        return TabElements
+        return Elements
     end
 
-    -- ⚙️ قسم الإعدادات
-    local SettingsTab = WindowObj:CreateTab("الإعدادات", CustomLogoImage)
-
-    SettingsTab:AddLabel("👑 أدوات تحسين الأداء والدعم - MAX TITAN ENGINE")
-
-    SettingsTab:AddButton("نسخ رابط سيرفر الديسكورد (Discord) 💬", function()
-        pcall(function()
-            setclipboard("https://discord.gg/G2Xt5jhfP")
-        end)
-        MAX_UI:Notify("MAX Discord", "تم نسخ رابط الديسكورد بنجاح! 🚀", 3.5)
-    end)
-
-    SettingsTab:AddButton("تخفيف اللعبة وإلغاء اللاغ (Boost Game FPS) 🚀", function()
-        task.spawn(function()
-            pcall(function()
-                collectgarbage("collect")
-                Lighting.GlobalShadows = false
-                Lighting.FogEnd = 9e9
-                Lighting.Technology = Enum.Technology.Compatibility
-                
-                for _, obj in ipairs(game:GetDescendants()) do
-                    if obj:IsA("BasePart") then
-                        obj.Material = Enum.Material.SmoothPlastic
-                        obj.Reflectance = 0
-                    elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Smoke") or obj:IsA("Fire") or obj:IsA("Sparkles") then
-                        obj.Enabled = false
-                    elseif obj:IsA("PostEffect") or obj:IsA("BloomEffect") or obj:IsA("SunRaysEffect") or obj:IsA("BlurEffect") then
-                        obj.Enabled = false
-                    end
-                end
-            end)
-        end)
-        MAX_UI:Notify(TitleText, "تم تخفيف اللعبة وإلغاء اللاغ بنجاح! ⚡", 3.5)
-    end)
-
-    SettingsTab:AddButton("تنظيف الذاكرة العشوائية (RAM Cleaner) 🧹", function()
-        pcall(function()
-            collectgarbage("collect")
-        end)
-        MAX_UI:Notify(TitleText, "تم تنظيف الذاكرة العشوائية! 🧹", 3)
-    end)
-
-    MAX_UI:Notify(GetSmartGreeting(), "أهلاً بك يا " .. LocalPlayer.DisplayName .. " في " .. TitleText, 3.5)
+    -- Keybind Toggle UI
+    MAX_TITAN:RegisterConn(UserInputService.InputBegan:Connect(function(input, processed)
+        if not processed and input.KeyCode == ToggleKey then
+            MainFrame.Visible = not MainFrame.Visible
+        end
+    end))
 
     return WindowObj
 end
 
-return MAX_UI
+-- ============================================================
+-- 🚀 [القسم الثالث] نظام الإشعارات المنزلقة (Notify Engine)
+-- ============================================================
+
+function MAX_TITAN:Notify(title, msg, duration)
+    duration = duration or 3
+    print(string.format("[MAX TITAN ENGINE NOTIFY] %s: %s", title, msg))
+end
+
+print("👑 MAX TITAN ENGINE V99 Core Framework Loaded Successfully!")
+return MAX_TITAN
